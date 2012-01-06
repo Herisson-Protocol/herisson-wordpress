@@ -1,5 +1,5 @@
 <?php
-    global $wpdb, $herisson_domains;
+    global $wpdb;
     $options = get_option('HerissonOptions');
 ?>
 <div class="herisson">

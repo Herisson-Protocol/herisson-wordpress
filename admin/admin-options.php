@@ -16,7 +16,7 @@ if( !isset($_SERVER['REQUEST_URI']) ) {
  */
 function herisson_manage_options() {
 
-    global $wpdb, $herisson_domains;
+    global $wpdb;
 
     $options = get_option('HerissonOptions');
 
@@ -75,62 +75,6 @@ function herisson_manage_options() {
 
     echo '
 		<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
-			<tr valign="top">
-				<th scope="row">' . __('AWS Access Key ID', HERISSONTD) . ':</th>
-				<td>
-					<input type="text" size="50" name="AWSAccessKeyId" value="' . htmlentities($options['AWSAccessKeyId'], ENT_QUOTES, "UTF-8") . '" />
-					<p>
-					' . sprintf(__("The Amazon Web Services Access Key ID is required to add books from Amazon: <a target='%s' href='%s'>free registration</a>.", HERISSONTD), "_blank", "https://aws-portal.amazon.com/gp/aws/developer/registration/index.html") . '
-					</p>
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row">' . __('AWS Secret Access Key', HERISSONTD) . ':</th>
-				<td>
-					<input type="text" size="75" name="SecretAccessKey" value="' . htmlentities($options['SecretAccessKey'], ENT_QUOTES, "UTF-8") . '" />
-					<p>
-					' . sprintf(__("The Amazon Web Services Secret Access Key is required to add books from Amazon: <a target='%s' href='%s'>free registration</a>.", HERISSONTD), "_blank", "https://aws-portal.amazon.com/gp/aws/developer/registration/index.html") . '
-					</p>
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row">' . __('Amazon Associates Tracking ID', HERISSONTD) . ':</th>
-				<td>
-					<input type="text" name="associate" value="' . htmlentities($options['associate'], ENT_QUOTES, "UTF-8") . '" />
-					<p>
-					' . __("The Amazon Associates Tracking ID is required in order to link to Amazon book product pages using the <code>book_url()</code> template tag. This enables you to earn commissions if your visitors purchase the linked books.", HERISSONTD) . '
-					</p>
-					<p>
-					' . sprintf(__("If you don't have an Amazon Associates Tracking ID, you can either <a target='%s' href='%s'>register</a> or consider entering mine (if you're feeling generous): <strong>%s</strong>", HERISSONTD), "_blank", "http://associates.amazon.com", "passforchrimi-20") . '
-					</p>
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row">' . __('Amazon Domain', HERISSONTD) . ':</th>
-				<td>
-					<select name="domain">
-	';
-
-    foreach ( (array) $herisson_domains as $domain => $country ) {
-        if ( $domain == $options['domain'] )
-            $selected = ' selected="selected"';
-        else
-            $selected = '';
-
-        echo "<option value='$domain'$selected>$country (Amazon$domain)</option>";
-    }
-
-    echo '
-
-					</select>
-					<p>
-					' . __("If you choose to link to your book's product page on Amazon.com using the <code>book_url()</code> template tag, you can specify which country-specific Amazon site to link to. Herisson will also use this domain when searching.", HERISSONTD) . '
-					</p>
-					<p>
-					' . __("NOTE: If you have country-specific books in your catalogue and then change your domain setting, some old links might stop working.", HERISSONTD) . '
-					</p>
-				</td>
-			</tr>
 			<tr valign="top">
 				<th scope="row">' . __('Widget Book Image', HERISSONTD) . ':</th>
 				<td>

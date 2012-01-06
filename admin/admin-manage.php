@@ -10,7 +10,7 @@
 
 function herisson_manage_books() {
 
-    global $wpdb, $herisson_statuses, $userdata;
+    global $wpdb, $userdata;
 
     get_currentuserinfo();
 
@@ -185,29 +185,6 @@ function herisson_manage_books() {
 					</td>
 				</tr>';
 
-			// Status.
-            echo '
-				<tr class="form-field">
-					<th valign="top" scope="row">
-						<label for="status-0">' . __("Book Status", HERISSONTD) . ':</label>
-					</th>
-					<td>
-						<select name="status[]" id="status-0">
-							';
-				foreach ( (array) $herisson_statuses as $status => $name ) {
-					$selected = '';
-					if ( $existing->status == $status )
-						$selected = ' selected="selected"';
-
-					echo '
-									<option value="' . $status . '"' . $selected . '>' . $name . '</option>
-								';
-				}
-
-				echo '
-						</select>
-					</td>
-				</tr>';
 
 			// Added Date.
 			if (!$options['hideAddedDate'])
@@ -572,13 +549,6 @@ function herisson_manage_books() {
 							</td>';
 							
 // Added Begin
-					foreach ( (array) $herisson_statuses as $current_status => $status_name ) {
-						if ( $book->status == $current_status )
-					echo '
-							<td>
-								<a href="' . $herisson_url->urls['manage'] . '&amp;status=' . $book->status . '">' . $status_name . '</a>
-							</td>';
-					}
 
 					if ($options['multiuserMode']) {
 						if ( current_user_can('administrator') ) {
