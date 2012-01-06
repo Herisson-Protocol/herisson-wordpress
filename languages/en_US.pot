@@ -1,0 +1,986 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Herisson\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-09-20 20:37-0700\n"
+"PO-Revision-Date: 2011-09-20 20:37-0700\n"
+"Last-Translator: Scott Olson <scott@affordable-techsupport.com>\n"
+"Language-Team: Scott Olson <scott@affordable-techsupport.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: herisson.php:57
+msgid "Future Book"
+msgstr ""
+
+#: herisson.php:58
+msgid "Book on Hold"
+msgstr ""
+
+#: herisson.php:59
+msgid "Current Book"
+msgstr ""
+
+#: herisson.php:60
+msgid "Completed Book"
+msgstr ""
+
+#: herisson.php:69
+msgid "International"
+msgstr ""
+
+#: herisson.php:70
+msgid "United Kingdom"
+msgstr ""
+
+#: herisson.php:71
+msgid "France"
+msgstr ""
+
+#: herisson.php:72
+msgid "Germany"
+msgstr ""
+
+#: herisson.php:73
+msgid "Japan"
+msgstr ""
+
+#: herisson.php:74
+msgid "Canada"
+msgstr ""
+
+#: herisson.php:113
+msgid "Herisson has detected a problem."
+msgstr ""
+
+#: herisson.php:113
+#, php-format
+msgid "You are missing one of both: Amazon Web Services Access Key ID or Secret Access Key. Enter them <a href=\"%s\">here</a>."
+msgstr ""
+
+#: herisson.php:131
+msgid "(Herisson only works with WordPress 3.0 and above)"
+msgstr ""
+
+#: herisson.php:321
+#, php-format
+msgid "Oops! The template file %s could not be found in the Herisson default_template or custom_template directories."
+msgstr ""
+
+#: admin/admin-add.php:27
+msgid "Error adding book!"
+msgstr ""
+
+#: admin/admin-add.php:35
+msgid "Book Added"
+msgstr ""
+
+#: admin/admin-add.php:37
+#: admin/admin-manage.php:629
+msgid "Manage Books"
+msgstr ""
+
+#: admin/admin-add.php:38
+msgid "Edit This Book"
+msgstr ""
+
+#: admin/admin-add.php:39
+msgid "View Library"
+msgstr ""
+
+#: admin/admin-add.php:40
+msgid "View Site"
+msgstr ""
+
+#: admin/admin-add.php:49
+#: admin/admin-manage.php:452
+#: admin/admin-options.php:66
+msgid "Herisson"
+msgstr ""
+
+#: admin/admin-add.php:54
+msgid "Search Results"
+msgstr ""
+
+#: admin/admin-add.php:72
+#: admin/admin-options.php:26
+#: admin/admin-options.php:36
+#: admin/admin-options.php:47
+msgid "Oops!"
+msgstr ""
+
+#: admin/admin-add.php:73
+msgid "I couldn't fetch the results for your search, because you don't have cURL installed!"
+msgstr ""
+
+#: admin/admin-add.php:74
+msgid "To solve this problem, please switch your <strong>HTTP Library</strong> setting to <strong>Snoopy</strong>, which works on virtually all server setups."
+msgstr ""
+
+#: admin/admin-add.php:75
+#, php-format
+msgid "You can change your options <a href='%s'>here</a>."
+msgstr ""
+
+#: admin/admin-add.php:83
+#, php-format
+msgid "Sorry, but amazon%s did not return any results for the ISBN number <code>%s</code>."
+msgstr ""
+
+#: admin/admin-add.php:85
+#, php-format
+msgid "Sorry, but amazon%s did not return any results for the book &ldquo;%s&rdquo;"
+msgstr ""
+
+#: admin/admin-add.php:88
+#, php-format
+msgid "You searched for the ISBN <code>%s</code>. amazon%s returned these results:"
+msgstr ""
+
+#: admin/admin-add.php:90
+#, php-format
+msgid "You searched for the book &ldquo;%s&rdquo;. amazon%s returned these results:"
+msgstr ""
+
+#: admin/admin-add.php:108
+msgid "by "
+msgstr ""
+
+#: admin/admin-add.php:108
+msgid "No author"
+msgstr ""
+
+#: admin/admin-add.php:114
+msgid "Use This Result"
+msgstr ""
+
+#: admin/admin-add.php:126
+msgid "Search for a Book to Add"
+msgstr ""
+
+#: admin/admin-add.php:133
+msgid "Enter some information about the book that you'd like to add, and I'll try to fetch the information directly from Amazon."
+msgstr ""
+
+#: admin/admin-add.php:139
+#, php-format
+msgid "Herisson is currently set to search the <strong>amazon%s</strong> domain; you can change this setting and others in the <a href='%s'>options page</a>."
+msgstr ""
+
+#: admin/admin-add.php:151
+msgid "ISBN"
+msgstr ""
+
+#: admin/admin-add.php:154
+msgid "or"
+msgstr ""
+
+#: admin/admin-add.php:156
+#: admin/admin-add.php:180
+msgid "Title"
+msgstr ""
+
+#: admin/admin-add.php:159
+#: admin/admin-add.php:183
+#: admin/admin-manage.php:514
+msgid "Author"
+msgstr ""
+
+#: admin/admin-add.php:159
+msgid "optional"
+msgstr ""
+
+#: admin/admin-add.php:162
+msgid "Search"
+msgstr ""
+
+#: admin/admin-add.php:170
+msgid "Add a Book Manually"
+msgstr ""
+
+#: admin/admin-add.php:186
+msgid "Link to image"
+msgstr ""
+
+#: admin/admin-add.php:187
+msgid "Remember, leeching images from other people's servers is improper. Upload your own images or use Amazon's."
+msgstr ""
+
+#: admin/admin-add.php:190
+msgid "Add Book"
+msgstr ""
+
+#: admin/admin-manage.php:32
+#: admin/admin-manage.php:48
+msgid " Book"
+msgstr ""
+
+#: admin/admin-manage.php:34
+#: admin/admin-manage.php:50
+msgid " Books"
+msgstr ""
+
+#: admin/admin-manage.php:38
+msgid " Updated"
+msgstr ""
+
+#: admin/admin-manage.php:54
+msgid " Deleted"
+msgstr ""
+
+#: admin/admin-manage.php:79
+msgid "Edit Book"
+msgstr ""
+
+#: admin/admin-manage.php:94
+#: admin/admin-manage.php:513
+msgid "Book"
+msgstr ""
+
+#: admin/admin-manage.php:109
+msgid "Book Title"
+msgstr ""
+
+#: admin/admin-manage.php:121
+msgid "Book Author"
+msgstr ""
+
+#: admin/admin-manage.php:133
+msgid "Book ASIN"
+msgstr ""
+
+#: admin/admin-manage.php:145
+msgid "Book Image URL"
+msgstr ""
+
+#: admin/admin-manage.php:158
+msgid "Book Visibility"
+msgstr ""
+
+#: admin/admin-manage.php:168
+#: admin/admin-manage.php:176
+msgid "Private"
+msgstr ""
+
+#: admin/admin-manage.php:169
+#: admin/admin-manage.php:177
+msgid "Public"
+msgstr ""
+
+#: admin/admin-manage.php:183
+msgid "<code>Public Visibility</code> enables a book to appear publicly within the sidebar widget and library."
+msgstr ""
+
+#: admin/admin-manage.php:184
+msgid "<code>Private Visibility</code> restricts the visibility of a book to within the administrative interface."
+msgstr ""
+
+#: admin/admin-manage.php:192
+msgid "Book Status"
+msgstr ""
+
+#: admin/admin-manage.php:219
+msgid "Date Added to Library"
+msgstr ""
+
+#: admin/admin-manage.php:223
+msgid "This date should have been automatically added when the book was added to the Library via the Amazon search form or manual book form. Otherwise, the date must be manually added with the format: <code>YYYY-MM-DD</code>"
+msgstr ""
+
+#: admin/admin-manage.php:234
+msgid "Date Book Started"
+msgstr ""
+
+#: admin/admin-manage.php:238
+msgid "This date should be automatically added when the <code>Book Status</code> is changed from <code>Future Book</code> to <code>Current Book</code>. Otherwise, the date must be manually added with the format: <code>YYYY-MM-DD</code>"
+msgstr ""
+
+#: admin/admin-manage.php:249
+msgid "Date Book Completed"
+msgstr ""
+
+#: admin/admin-manage.php:253
+msgid "This date should be automatically added when the <code>Book Status</code> is changed from <code>Current Book</code> to <code>Completed Book</code>. Otherwise, the date must be manually added with the format: <code>YYYY-MM-DD</code>"
+msgstr ""
+
+#: admin/admin-manage.php:264
+msgid "Book Total Pages"
+msgstr ""
+
+#: admin/admin-manage.php:275
+msgid "Book Completed Pages"
+msgstr ""
+
+#: admin/admin-manage.php:287
+msgid "Book Rating"
+msgstr ""
+
+#: admin/admin-manage.php:307
+msgid "Book Review"
+msgstr ""
+
+#: admin/admin-manage.php:311
+msgid "If you desire, you may link this book to a <code>blog post review</code> by entering the <code>blog post's ID</code>. In order to discover the blog post's ID, list 'All Posts' (within the 'Posts' menu) and hover your mouse over the review's blog post title. The ID will appear in the status bar of your browser within the link (i.e. post=23 where '23' is the post ID). The blog post review will be linked within the sidebar widget and the book's library page."
+msgstr ""
+
+#: admin/admin-manage.php:322
+msgid "Book Reader"
+msgstr ""
+
+#: admin/admin-manage.php:329
+msgid "The current user responsible for reading and reviewing this book is selected in the dropdown."
+msgstr ""
+
+#: admin/admin-manage.php:330
+msgid "You may change the user responsible for reading and reviewing this book by selecting the user in the dropdown."
+msgstr ""
+
+#: admin/admin-manage.php:342
+msgid "Save"
+msgstr ""
+
+#: admin/admin-manage.php:430
+msgid "Pages"
+msgstr ""
+
+#: admin/admin-manage.php:455
+msgid "Search Books"
+msgstr ""
+
+#: admin/admin-manage.php:463
+msgid "Show All Books"
+msgstr ""
+
+#: admin/admin-manage.php:468
+msgid "View Library Page"
+msgstr ""
+
+#: admin/admin-manage.php:515
+msgid "Status"
+msgstr ""
+
+#: admin/admin-manage.php:521
+msgid "Reader"
+msgstr ""
+
+#: admin/admin-manage.php:527
+msgid "Started"
+msgstr ""
+
+#: admin/admin-manage.php:528
+msgid "Finished"
+msgstr ""
+
+#: admin/admin-manage.php:533
+msgid "Added"
+msgstr ""
+
+#: admin/admin-manage.php:559
+msgid "Book Cover"
+msgstr ""
+
+#: admin/admin-manage.php:565
+msgid "View"
+msgstr ""
+
+#: admin/admin-manage.php:566
+msgid "Edit"
+msgstr ""
+
+#: admin/admin-manage.php:566
+msgid "Are you sure you wish to delete this book permanently?"
+msgstr ""
+
+#: admin/admin-manage.php:566
+msgid "Delete"
+msgstr ""
+
+#: admin/admin-manage.php:630
+#, php-format
+msgid "No books to display. To add some books, head over <a href='%s'>here</a>."
+msgstr ""
+
+#: admin/admin-options.php:27
+msgid "You don\\'t appear to have cURL installed!"
+msgstr ""
+
+#: admin/admin-options.php:28
+msgid "Since you can\\'t use cURL, I\\'ve switched your HTTP Library setting to <strong>Snoopy</strong> instead, which should work."
+msgstr ""
+
+#: admin/admin-options.php:37
+#: admin/admin-options.php:48
+msgid "Naughty naughty! That wasn\\'t a valid value for the image size setting!"
+msgstr ""
+
+#: admin/admin-options.php:38
+msgid "Don\\'t worry, I\\'ve set it to Small for you."
+msgstr ""
+
+#: admin/admin-options.php:49
+msgid "Don\\'t worry, I\\'ve set it to Medium for you."
+msgstr ""
+
+#: admin/admin-options.php:58
+msgid "Options Saved"
+msgstr ""
+
+#: admin/admin-options.php:79
+msgid "AWS Access Key ID"
+msgstr ""
+
+#: admin/admin-options.php:83
+#, php-format
+msgid "The Amazon Web Services Access Key ID is required to add books from Amazon: <a target='%s' href='%s'>free registration</a>."
+msgstr ""
+
+#: admin/admin-options.php:88
+msgid "AWS Secret Access Key"
+msgstr ""
+
+#: admin/admin-options.php:92
+#, php-format
+msgid "The Amazon Web Services Secret Access Key is required to add books from Amazon: <a target='%s' href='%s'>free registration</a>."
+msgstr ""
+
+#: admin/admin-options.php:97
+msgid "Amazon Associates Tracking ID"
+msgstr ""
+
+#: admin/admin-options.php:101
+msgid "The Amazon Associates Tracking ID is required in order to link to Amazon book product pages using the <code>book_url()</code> template tag. This enables you to earn commissions if your visitors purchase the linked books."
+msgstr ""
+
+#: admin/admin-options.php:104
+#, php-format
+msgid "If you don't have an Amazon Associates Tracking ID, you can either <a target='%s' href='%s'>register</a> or consider entering mine (if you're feeling generous): <strong>%s</strong>"
+msgstr ""
+
+#: admin/admin-options.php:109
+msgid "Amazon Domain"
+msgstr ""
+
+#: admin/admin-options.php:127
+msgid "If you choose to link to your book's product page on Amazon.com using the <code>book_url()</code> template tag, you can specify which country-specific Amazon site to link to. Herisson will also use this domain when searching."
+msgstr ""
+
+#: admin/admin-options.php:130
+msgid "NOTE: If you have country-specific books in your catalogue and then change your domain setting, some old links might stop working."
+msgstr ""
+
+#: admin/admin-options.php:135
+msgid "Widget Book Image"
+msgstr ""
+
+#: admin/admin-options.php:138
+#: admin/admin-options.php:157
+#: admin/function-options.php:49
+msgid "Small"
+msgstr ""
+
+#: admin/admin-options.php:139
+#: admin/admin-options.php:158
+#: admin/function-options.php:62
+msgid "Medium"
+msgstr ""
+
+#: admin/admin-options.php:140
+#: admin/admin-options.php:159
+msgid "Large"
+msgstr ""
+
+#: admin/admin-options.php:143
+msgid "Adjusts the size (small, medium, large) of the Amazon.com book images used in the <code>Widget</code>."
+msgstr ""
+
+#: admin/admin-options.php:146
+#: admin/admin-options.php:165
+msgid "NOTE: This change will only be applied to books you add from this point onwards."
+msgstr ""
+
+#: admin/admin-options.php:154
+msgid "Library Book Image"
+msgstr ""
+
+#: admin/admin-options.php:162
+msgid "Adjusts the size (small, medium, large) of the Amazon.com book images used in the <code>Library</code>."
+msgstr ""
+
+#: admin/admin-options.php:173
+msgid "Date Format String"
+msgstr ""
+
+#: admin/admin-options.php:177
+#, php-format
+msgid "Determines how to format the book's <code>added</code>, <code>started</code> and <code>finished</code> dates: <a target='%s' href='%s'>acceptable variables</a>."
+msgstr ""
+
+#: admin/admin-options.php:182
+msgid "Timestamp Toggle"
+msgstr ""
+
+#: admin/admin-options.php:186
+msgid "When checked, <code>added</code>, <code>started</code> and <code>finished</code> dates will be displayed with day precision only, however when time is set, it will be saved."
+msgstr ""
+
+#: admin/admin-options.php:191
+msgid "Added Date Toggle"
+msgstr ""
+
+#: admin/admin-options.php:195
+msgid "When checked, <code>added</code> date will be hidden in the Manager and Book pages"
+msgstr ""
+
+#: admin/admin-options.php:200
+msgid "Admin Menu Layout"
+msgstr ""
+
+#: admin/admin-options.php:202
+msgid "Single"
+msgstr ""
+
+#: admin/admin-options.php:205
+msgid "Multiple"
+msgstr ""
+
+#: admin/admin-options.php:208
+msgid "When set to 'Single', Herisson will add a top-level menu with submenus containing the 'Add a Book', 'Manage Books' and 'Options' screens."
+msgstr ""
+
+#: admin/admin-options.php:211
+msgid "When set to 'Multiple', Herisson will insert those menus under 'Posts', 'Tools' and 'Settings' respectively."
+msgstr ""
+
+#: admin/admin-options.php:216
+msgid "Admin Manage Books"
+msgstr ""
+
+#: admin/admin-options.php:220
+msgid "Limits the total number of books displayed <code>per page</code> within the administrative 'Manage Books' menu."
+msgstr ""
+
+#: admin/admin-options.php:225
+msgid "Widget Total Books Displayed"
+msgstr ""
+
+#: admin/admin-options.php:229
+msgid "Limits the total number of books displayed within the sidebar widget in all selected categories."
+msgstr ""
+
+#: admin/admin-options.php:237
+msgid "Widget Current Books Toggle"
+msgstr ""
+
+#: admin/admin-options.php:241
+msgid "When checked, your <code>Current Books</code> will be hidden within the sidebar widget."
+msgstr ""
+
+#: admin/admin-options.php:246
+msgid "Widget Planned Books Toggle"
+msgstr ""
+
+#: admin/admin-options.php:250
+msgid "When checked, your <code>Planned Books</code> will be hidden within the sidebar widget."
+msgstr ""
+
+#: admin/admin-options.php:255
+msgid "Widget Completed Books Toggle"
+msgstr ""
+
+#: admin/admin-options.php:259
+msgid "When checked, your <code>Completed Books</code> will be hidden within the sidebar widget."
+msgstr ""
+
+#: admin/admin-options.php:264
+msgid "Widget Books on Hold Toggle"
+msgstr ""
+
+#: admin/admin-options.php:268
+msgid "When checked, your <code>Books on Hold</code> will be hidden within the sidebar widget."
+msgstr ""
+
+#: admin/admin-options.php:273
+msgid "Widget Complete Library Toggle"
+msgstr ""
+
+#: admin/admin-options.php:277
+msgid "When checked, the <code>Complete Library</code> link/button will be hidden within the sidebar widget."
+msgstr ""
+
+#: admin/admin-options.php:285
+msgid "Clean Library URLs Toggle"
+msgstr ""
+
+#: admin/admin-options.php:289
+msgid "When checked, <code>mod_rewrite</code> enable clean URLs for the book library and book pages (MUST have an Apache webserver with <code>mod_rewrite</code> enabled)."
+msgstr ""
+
+#: admin/admin-options.php:292
+msgid "<code>mod_rewrite</code> disabled: <code>.../index.php?herisson_single=true&herisson_author=timothy-keller&herisson_title=the-prodigal-god</code>"
+msgstr ""
+
+#: admin/admin-options.php:295
+msgid "<code>mod_rewrite</code> enabled: <code>.../library/timothy-keller/the-prodigal-god/</code>"
+msgstr ""
+
+#: admin/admin-options.php:298
+#, php-format
+msgid "If you enable this option, you MUST have a custom permalink structure set up: <a href='%s'>Options &raquo; Permalinks</a>"
+msgstr ""
+
+#: admin/admin-options.php:301
+msgid "Permalink Base:"
+msgstr ""
+
+#: admin/admin-options.php:309
+msgid "Template Directory"
+msgstr ""
+
+#: admin/admin-options.php:313
+msgid "The default template directory is <code>default_templates/</code>. This should not be changed if these template files are compatible with your theme."
+msgstr ""
+
+#: admin/admin-options.php:316
+#, php-format
+msgid "The custom template directory is <code>custom_templates/</code>. These template files can be customized to suit your theme. You will need to integrate the code calling your theme's header, sidebar, and footer into the <code>library.php</code> and <code>single.php</code> files (there are placement hints within the files) using a <a target='%s' href='%s'>FTP Manager</a> and/or a <a target='%s' href='%s'>Quality File Editor</a>. Your theme's <code>page.php</code> file (or a similar file) will contain the code that will need to integrated. Take note of the code before the <code>div class=content</code> and the code after its corresponding closing <code>div</code>."
+msgstr ""
+
+#: admin/admin-options.php:319
+msgid "The template directory for the Twenty Ten Theme is <code>custom_templates/twentyten/</code>."
+msgstr ""
+
+#: admin/admin-options.php:322
+msgid "The template directory for the Twenty Eleven Theme is <code>custom_templates/twentyeleven/</code>."
+msgstr ""
+
+#: admin/admin-options.php:325
+msgid "The template directory for the Weaver 2 Column Theme is <code>custom_templates/weaver/</code>."
+msgstr ""
+
+#: admin/admin-options.php:333
+msgid "HTTP Library"
+msgstr ""
+
+#: admin/admin-options.php:336
+msgid "Snoopy"
+msgstr ""
+
+#: admin/admin-options.php:337
+msgid "cURL"
+msgstr ""
+
+#: admin/admin-options.php:340
+#: admin/admin-options.php:349
+msgid "If this is confusing, no worries. Unless you're having problems searching for books, the default setting will be fine."
+msgstr ""
+
+#: admin/admin-options.php:345
+msgid "Proxy Hostname/Port"
+msgstr ""
+
+#: admin/admin-options.php:354
+msgid "Debug Mode"
+msgstr ""
+
+#: admin/admin-options.php:358
+#, php-format
+msgid "When checked, Herisson will produce debugging output that might help you troubleshoot, solve problems, and <a target='%s' href='%s'>report bugs</a>."
+msgstr ""
+
+#: admin/admin-options.php:363
+msgid "User Mode"
+msgstr ""
+
+#: admin/admin-options.php:367
+msgid "When unchecked, <code>Single-User Mode</code> is enabled: ONLY <code>Administrators</code> can add books, manage the library, and modify the options."
+msgstr ""
+
+#: admin/admin-options.php:370
+msgid "When checked, <code>Multi-User Mode</code> is enabled: <code>Authors</code> and <code>Editors</code> can add books and manage the books they've added to the library; however, they can not modify the options."
+msgstr ""
+
+#: admin/admin-options.php:373
+msgid "In <code>Multi-User Mode</code>, <code>Administrators</code> can add books, manage all books added to the library (by all users), modify the options, and view/modify the users responsible for reading/reviewing books."
+msgstr ""
+
+#: admin/admin-options.php:382
+msgid "Update Options"
+msgstr ""
+
+#: includes/admin.php:25
+#: includes/admin.php:42
+#: templates/custom_templates/library.php:5
+#: templates/custom_templates/twentyeleven/library.php:6
+msgid "Herisson"
+msgstr ""
+
+#: includes/admin.php:26
+#: includes/admin.php:43
+msgid "Add a Book"
+msgstr ""
+
+#: includes/admin.php:28
+#: includes/admin.php:34
+#: includes/admin.php:45
+#: includes/admin.php:51
+msgid "Library Options"
+msgstr ""
+
+#: includes/admin.php:28
+#: includes/admin.php:45
+msgid "Options"
+msgstr ""
+
+#: includes/admin.php:32
+#: includes/admin.php:49
+msgid "Add to Library"
+msgstr ""
+
+#: includes/admin.php:33
+#: includes/admin.php:50
+msgid "Manage Library"
+msgstr ""
+
+#: includes/amazon.php:103
+msgid "cURL is not installed correctly."
+msgstr ""
+
+#: includes/amazon.php:147
+#, php-format
+msgid "For some reason, I couldn't search for your book on amazon%s."
+msgstr ""
+
+#: includes/amazon.php:148
+msgid "Amazon's Web Services may be down, or there may be a problem with your server configuration."
+msgstr ""
+
+#: includes/amazon.php:152
+msgid "Try changing your HTTP Library setting to <strong>cURL</strong>."
+msgstr ""
+
+#: includes/functions.php:153
+msgid "Not Started"
+msgstr ""
+
+#: includes/functions.php:169
+msgid "Not Finished"
+msgstr ""
+
+#: includes/functions.php:245
+msgid "Total books in all categories: "
+msgstr ""
+
+#: includes/functions.php:247
+msgid "Books read in the last year: "
+msgstr ""
+
+#: includes/functions.php:249
+msgid "Books read in the last month: "
+msgstr ""
+
+#: includes/functions.php:251
+msgid "Average books read per year: "
+msgstr ""
+
+#: includes/functions.php:388
+msgid "an absolute"
+msgstr ""
+
+#: includes/functions.php:392
+msgid "a current"
+msgstr ""
+
+#: includes/functions.php:394
+#, php-format
+msgid "<b>%s</b><br><br>"
+msgstr ""
+
+#: includes/functions.php:569
+msgid "(No Review)"
+msgstr ""
+
+#: includes/functions.php:571
+msgid "Review"
+msgstr ""
+
+#: includes/functions.php:666
+msgid "Planned Book"
+msgstr ""
+
+#: includes/functions.php:670
+msgid " of "
+msgstr ""
+
+#: includes/functions.php:670
+msgid " Pages Read"
+msgstr ""
+
+#: includes/functions.php:687
+msgid "Unrated"
+msgstr ""
+
+#: includes/widget.php:15
+msgid "You don't appear to have the Herisson plugin installed, or have an old version; you'll need to install or upgrade before this widget can display your data."
+msgstr ""
+
+#: templates/custom_templates/library.php:7
+#: templates/custom_templates/single.php:10
+#: templates/custom_templates/twentyeleven/library.php:8
+msgid "Library Admin: "
+msgstr ""
+
+#: templates/custom_templates/library.php:10
+#: templates/custom_templates/twentyeleven/library.php:11
+msgid "Current Books "
+msgstr ""
+
+#: templates/custom_templates/library.php:14
+#: templates/custom_templates/library.php:25
+#: templates/custom_templates/library.php:36
+#: templates/custom_templates/library.php:47
+#: templates/custom_templates/twentyeleven/library.php:15
+#: templates/custom_templates/twentyeleven/library.php:26
+#: templates/custom_templates/twentyeleven/library.php:37
+#: templates/custom_templates/twentyeleven/library.php:48
+msgid " by "
+msgstr ""
+
+#: templates/custom_templates/library.php:18
+#: templates/custom_templates/library.php:29
+#: templates/custom_templates/library.php:40
+#: templates/custom_templates/library.php:51
+#: templates/custom_templates/sidebar.php:14
+#: templates/custom_templates/sidebar.php:24
+#: templates/custom_templates/sidebar.php:34
+#: templates/custom_templates/sidebar.php:44
+#: templates/custom_templates/twentyeleven/library.php:19
+#: templates/custom_templates/twentyeleven/library.php:30
+#: templates/custom_templates/twentyeleven/library.php:41
+#: templates/custom_templates/twentyeleven/library.php:52
+#: templates/custom_templates/twentyeleven/sidebar.php:14
+#: templates/custom_templates/twentyeleven/sidebar.php:24
+#: templates/custom_templates/twentyeleven/sidebar.php:34
+#: templates/custom_templates/twentyeleven/sidebar.php:44
+msgid "None"
+msgstr ""
+
+#: templates/custom_templates/library.php:21
+#: templates/custom_templates/twentyeleven/library.php:22
+msgid "Planned Books "
+msgstr ""
+
+#: templates/custom_templates/library.php:32
+#: templates/custom_templates/twentyeleven/library.php:33
+msgid "Completed Books "
+msgstr ""
+
+#: templates/custom_templates/library.php:43
+#: templates/custom_templates/twentyeleven/library.php:44
+msgid "Books on Hold "
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:8
+#: templates/custom_templates/twentyeleven/sidebar.php:8
+msgid "Current Books:"
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:11
+#: templates/custom_templates/sidebar.php:21
+#: templates/custom_templates/sidebar.php:31
+#: templates/custom_templates/sidebar.php:41
+#: templates/custom_templates/twentyeleven/sidebar.php:11
+#: templates/custom_templates/twentyeleven/sidebar.php:21
+#: templates/custom_templates/twentyeleven/sidebar.php:31
+#: templates/custom_templates/twentyeleven/sidebar.php:41
+msgid "By "
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:11
+#: templates/custom_templates/sidebar.php:21
+#: templates/custom_templates/sidebar.php:31
+#: templates/custom_templates/sidebar.php:41
+#: templates/custom_templates/single.php:22
+#: templates/custom_templates/twentyeleven/sidebar.php:11
+#: templates/custom_templates/twentyeleven/sidebar.php:21
+#: templates/custom_templates/twentyeleven/sidebar.php:31
+#: templates/custom_templates/twentyeleven/sidebar.php:41
+msgid "Amazon Customer Reviews"
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:18
+#: templates/custom_templates/twentyeleven/sidebar.php:18
+msgid "Planned Books:"
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:28
+#: templates/custom_templates/twentyeleven/sidebar.php:28
+msgid "Completed Books:"
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:31
+#: templates/custom_templates/single.php:25
+#: templates/custom_templates/twentyeleven/sidebar.php:31
+msgid "My Rating:"
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:38
+#: templates/custom_templates/twentyeleven/sidebar.php:38
+msgid "Books on Hold:"
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:49
+#: templates/custom_templates/single.php:38
+#: templates/custom_templates/twentyeleven/sidebar.php:49
+msgid "Complete Library"
+msgstr ""
+
+#: templates/custom_templates/sidebar.php:50
+#: templates/custom_templates/twentyeleven/sidebar.php:50
+msgid "View Complete Library"
+msgstr ""
+
+#: templates/custom_templates/single.php:16
+msgid "Title:"
+msgstr ""
+
+#: templates/custom_templates/single.php:17
+msgid "Author:"
+msgstr ""
+
+#: templates/custom_templates/single.php:19
+msgid "Description:"
+msgstr ""
+
+#: templates/custom_templates/single.php:19
+msgid "Amazon Detail Page"
+msgstr ""
+
+#: templates/custom_templates/single.php:22
+msgid "Reviews:"
+msgstr ""
+
+#: templates/custom_templates/single.php:24
+msgid "Progress:"
+msgstr ""
+
+#: templates/custom_templates/single.php:32
+msgid "Started:"
+msgstr ""
+
+#: templates/custom_templates/single.php:33
+msgid "Finished:"
+msgstr ""
+
+#: templates/custom_templates/single.php:40
+msgid "Return to Herisson"
+msgstr ""
+
+#: templates/custom_templates/single.php:43
+msgid "That particular book does not exist."
+msgstr ""
+
