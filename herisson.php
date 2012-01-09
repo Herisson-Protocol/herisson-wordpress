@@ -96,8 +96,12 @@ function herisson_install() {
     // Until the nasty bug with duplicate indexes is fixed, we should hide dbDelta output.
     ob_start();
     $sql = file_get_contents(HERISSON_BASE_DIR.'install/init_db.sql');
-	$sql = preg_replace("/#PREFIX#/",$wpdb->prefix,$sql);
+    $sql = preg_replace("/#PREFIX#/",$wpdb->prefix,$sql);
     dbDelta($sql);
+
+    $sql = file_get_contents(HERISSON_BASE_DIR.'install/init_data.sql');
+    $sql = preg_replace("/#PREFIX#/",$wpdb->prefix,$sql);
+    $wpdb->query($sql);
 
     $log = ob_get_contents();
     ob_end_clean();

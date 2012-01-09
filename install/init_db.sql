@@ -3,10 +3,7 @@
 ---- bookmarks
 -------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `#PREFIX#herisson_bookmarks`;
-
-
-CREATE TABLE `#PREFIX#herisson_bookmarks`
+CREATE TABLE `wp_herisson_bookmarks`
 (
 	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
 	`url` VARCHAR(1024),
@@ -15,20 +12,18 @@ CREATE TABLE `#PREFIX#herisson_bookmarks`
 	`description` TEXT,
 	`is_public` TINYINT default 1,
 	`is_activated` TINYINT default 0,
-	`expires_at` DATETIME default '0',
-	`updated` DATETIME default '0',
+	`expires_at` DATETIME default '2038-12-31',
+ `updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ type_id INTEGER(10),
 	PRIMARY KEY (`id`),
 	KEY `title`(`title`),
-	KEY `description`(`description`),
+	KEY `description`(`description`(1000)),
 	KEY `url`(`url`)
 );
 
 -------------------------------------------------------------------------------
 ---- tags
 -------------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#PREFIX#herisson_tags`;
-
 
 CREATE TABLE `#PREFIX#herisson_tags`
 (
@@ -41,9 +36,6 @@ CREATE TABLE `#PREFIX#herisson_tags`
 -------------------------------------------------------------------------------
 ---- bookmarks_tags
 -------------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `#PREFIX#herisson_bookmarks_tags`;
-
 
 CREATE TABLE `#PREFIX#herisson_bookmarks_tags`
 (
@@ -59,9 +51,6 @@ CREATE TABLE `#PREFIX#herisson_bookmarks_tags`
 ---- friends
 -------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `#PREFIX#herisson_friends`;
-
-
 CREATE TABLE `#PREFIX#herisson_friends`
 (
 	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
@@ -75,4 +64,16 @@ CREATE TABLE `#PREFIX#herisson_friends`
 	KEY `name`(`name`),
 	KEY `url`(`url`),
 	KEY `email`(`email`)
+);
+
+-------------------------------------------------------------------------------
+---- types
+-------------------------------------------------------------------------------
+
+CREATE TABLE `#PREFIX#herisson_types`
+(
+	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255),
+	PRIMARY KEY (`id`),
+	KEY `name`(`name`)
 );
