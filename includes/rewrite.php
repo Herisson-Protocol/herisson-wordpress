@@ -33,14 +33,14 @@ class herisson_url {
      * Constructor. Populates {@link $multiple} and {@link $single}.
      */
     function herisson_url() {
-        $this->multiple = array(
-            'add'		=> get_option('siteurl') . '/wp-admin/post-new.php?page=library_menu',
-            'manage'	=> get_option('siteurl') . '/wp-admin/admin.php?page=manage_books',
-            'options'	=> get_option('siteurl') . '/wp-admin/options-general.php?page=herisson_options'
-        );
+#        $this->multiple = array(
+#            'add'		=> get_option('siteurl') . '/wp-admin/post-new.php?page=herisson_menu',
+#            'manage'	=> get_option('siteurl') . '/wp-admin/admin.php?page=manage_bookmarks',
+#            'options'	=> get_option('siteurl') . '/wp-admin/options-general.php?page=herisson_options'
+#        );
         $this->single = array(
-            'add'		=> get_option('siteurl') . '/wp-admin/admin.php?page=library_menu',
-            'manage'	=> get_option('siteurl') . '/wp-admin/admin.php?page=manage_books',
+            'add_bookmark'		=> get_option('siteurl') . '/wp-admin/admin.php?page=herisson_add_bookmark',
+            'manage_bookmarks'	=> get_option('siteurl') . '/wp-admin/admin.php?page=herisson_manage_bookmarks',
             'options'	=> get_option('siteurl') . '/wp-admin/admin.php?page=herisson_options'
         );
     }

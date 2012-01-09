@@ -245,10 +245,9 @@ function update_bookmark( $query ) {
     $fields = apply_filters('add_bookmark_fields', $fields);
 
     // If an ID is specified, we're doing an update; otherwise, we're doing an insert.
-    $insert = empty($fields['b_id']);
+    $insert = empty($fields['id']);
 
-    $valid_fields = array('b_id', 'b_added', 'b_started', 'b_finished', 'b_title', 'b_nice_title', 'b_author', 'b_nice_author',
-						'b_image', 'b_limage', 'b_asin', 'b_status', 'b_tpages', 'b_cpages', 'b_rating', 'b_post');
+    $valid_fields = array('id', 'title', 'url', 'description');
 
     if ( $insert ) {
         $colums = $values = '';
@@ -262,7 +261,7 @@ function update_bookmark( $query ) {
 
         get_currentuserinfo();
         $reader_id = $userdata->ID;
-        $columns .= ", b_reader";
+        $columns .= ", reader";
         $values .= ", '$reader_id'";
 
         $columns = preg_replace('#^, #', '', $columns);
@@ -274,7 +273,7 @@ function update_bookmark( $query ) {
 		VALUES($values)
             ");
 
-        $id = $wpdb->get_var("SELECT MAX(b_id) FROM {$wpdb->prefix}herisson");
+        $id = $wpdb->get_var("SELECT MAX(id) FROM {$wpdb->prefix}herisson_bookmarks");
 
 
         if ( $id > 0 ) {
@@ -284,8 +283,8 @@ function update_bookmark( $query ) {
             return false;
         }
     } else {
-        $id = intval($fields['b_id']);
-        unset($fields['b_id']);
+        $id = intval($fields['id']);
+        unset($fields['id']);
 
         $set = '';
         foreach ( (array) $fields as $field => $value ) {
@@ -300,7 +299,7 @@ function update_bookmark( $query ) {
         $wpdb->query("
 		UPDATE {$wpdb->prefix}herisson
 		SET $set
-		WHERE b_id = $id
+		WHERE id = $id
             ");
 
         do_action('bookmark_updated', $id);

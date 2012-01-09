@@ -4,11 +4,11 @@
  * @package herisson
  */
 
-if ( !function_exists('herisson_add_book') ) {
+if ( !function_exists('herisson_add_bookark') ) {
 /**
  * The write admin page deals with the searching for and ultimate addition of books to the database.
  */
-    function herisson_add_book() {
+    function herisson_add_bookmark() {
 
         $_POST = stripslashes_deep($_POST);
 
@@ -122,72 +122,52 @@ if ( !function_exists('herisson_add_book') ) {
         }
 
         echo '
-		<div class="herisson-add-grouping">
-		<h3>' . __("Search for a Book to Add", HERISSONTD) . '</h3>';
-
-        if ( !$thispage )
-            $thispage = $herisson_urls['add'];
-
-        echo '
-
-		<p>' . __("Enter some information about the book that you'd like to add, and I'll try to fetch the information directly from Amazon.", HERISSONTD) . '</p>';
-
-		if ($options['multiuserMode']) {
-		    if ( current_user_can('administrator') ) {
-		
-		echo '
-		<p>' . sprintf(__("Herisson is currently set to search the <strong>amazon%s</strong> domain; you can change this setting and others in the <a href='%s'>options page</a>.", HERISSONTD), $options['domain'], $herisson_url->urls['options']) . '</p>';
-			}
-		}
-
-		echo '
-		<form method="post" action="' . $thispage . '">
-		';
-
-        if ( function_exists('wp_nonce_field') )
-            wp_nonce_field('herisson-add');
-
-        echo '
-			<p><label for="isbn"><acronym title="International Standard Book Number">' . __("ISBN", HERISSONTD) . '</acronym>:</label><br />
-			<input type="text" name="u_isbn" id="isbn" size="25" value="' . $results[0]['asin'] . '" /></p>
-
-			<p><strong>' . __("or", HERISSONTD) . '</strong></p>
-
-			<p><label for="title">' . __("Title", HERISSONTD) . ':</label><br />
-			<input type="text" name="u_title" id="title" size="50" value="' . $results[0]['title'] . '" /></p>
-
-			<p><label for="title">' . __("Author", HERISSONTD) . ' (' . __("optional", HERISSONTD) . '):</label><br />
-			<input type="text" name="u_author" id="author" size="50" value="' . $results[0]['author'] . '" /></p>
-
-			<p><input class="button" type="submit" value="' . __("Search", HERISSONTD) . '" /></p>
-
-		</form>
-
-		</div>
 
 		<div class="herisson-add-grouping">
 
-			<h3>' . __("Add a Book Manually", HERISSONTD) . '</h3>
+			<h3>' . __("Add a bookmark", HERISSONTD) . '</h3>
 
-			<form method="post" action="' . get_option('siteurl') . '/wp-content/plugins/herisson/admin/function-add.php">
+			<form method="post" action="' . get_option('siteurl') . '/wp-content/plugins/herisson/admin/action-add-bookmark.php">
+			 ';
 
-			';
+    if ( function_exists('wp_nonce_field') ) wp_nonce_field('herisson-add-bookmark');
 
-        if ( function_exists('wp_nonce_field') )
-            wp_nonce_field('herisson-manual-add');
+    echo '
+				<p><label for="title">' . __("Title", HERISSONTD) . ':</label><br />
+				<input type="text" name="title" id="title" size="50" /></p>
 
-        echo '
-				<p><label for="custom_title">' . __("Title", HERISSONTD) . ':</label><br />
-				<input type="text" name="custom_title" id="custom_title" size="50" /></p>
+				<p><label for="author">' . __("Url", HERISSONTD) . ':</label><br />
+				<input type="text" name="url" id="url" size="50" /></p>
 
-				<p><label for="custom_author">' . __("Author", HERISSONTD) . ':</label><br />
-				<input type="text" name="custom_author" id="custom_author" size="50" /></p>
+				<p><label for="tags">' . __("Tags", HERISSONTD) . ':</label><br />
+				<input type="text" name="tags" id="tags" size="50" /></p>
 
-				<p><label for="custom_image">' . __("Link to image", HERISSONTD) . ':</label><br />
-				<small>' . __("Remember, leeching images from other people's servers is improper. Upload your own images or use Amazon's.", HERISSONTD) . '</small><br />
-				<input type="text" name="custom_image" id="custom_image" size="50" /></p>
+				<p><label for="description">' . __("Description", HERISSONTD) . ':</label><br />
+				<textarea rows="3" cols="55" name="description"></textarea></p>
 
-				<p><input class="button" type="submit" value="' . __("Add Book", HERISSONTD) . '" /></p>
+				<p><input class="button" type="submit" value="' . __("Add bookmark", HERISSONTD) . '" /></p>
+
+			</form>
+
+			</div>
+
+		<div class="herisson-add-grouping">
+
+			<h3>' . __("Import from Del.icio.us", HERISSONTD) . '</h3>
+
+			<form method="post" action="' . get_option('siteurl') . '/wp-content/plugins/herisson/admin/action-import-bookmarks.php">
+			 ';
+
+    if ( function_exists('wp_nonce_field') ) wp_nonce_field('herisson-import-bookmarks');
+
+    echo '
+				<p><label for="title">' . __("Login", HERISSONTD) . ':</label><br />
+				<input type="text" name="title" id="title" size="50" /></p>
+
+				<p><label for="author">' . __("Password", HERISSONTD) . ':</label><br />
+				<input type="password" name="password" id="password" size="50" /></p>
+
+				<p><input class="button" type="submit" value="' . __("Import bookmarks", HERISSONTD) . '" /></p>
 
 			</form>
 

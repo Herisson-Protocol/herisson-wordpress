@@ -5,23 +5,23 @@
  */
 
 /**
- * The array index of the current book in the {@link $books} array.
- * @global integer $GLOBALS['current_book']
- * @name $current_book
+ * The array index of the current bookmark in the {@link $bookmarks} array.
+ * @global integer $GLOBALS['current_bookmark']
+ * @name $current_bookmark
  */
-$current_book = 0;
+$current_bookmark = 0;
 /**
- * The array of books for the current query.
- * @global array $GLOBALS['books']
- * @name $books
+ * The array of bookmarks for the current query.
+ * @global array $GLOBALS['bookmarks']
+ * @name $bookmarks
  */
-$books = null;
+$bookmarks = null;
 /**
- * The current book in the loop.
- * @global object $GLOBALS['book']
- * @name $book
+ * The current bookmark in the loop.
+ * @global object $GLOBALS['bookmark']
+ * @name $bookmark
  */
-$book = null;
+$bookmark = null;
 
 /**
  * Formats a date according to the date format option.
@@ -45,25 +45,25 @@ function herisson_empty_date( $date ) {
 }
 
 /**
- * Prints the book's title.
+ * Prints the bookmark's title.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_title( $echo = true ) {
-    global $book;
-    $title = stripslashes(apply_filters('book_title', $book->title));
+function bookmark_title( $echo = true ) {
+    global $bookmark;
+    $title = stripslashes(apply_filters('bookmark_title', $bookmark->title));
     if ( $echo )
         echo $title;
     return $title;
 }
 
 /**
- * Prints the book's reader.
+ * Prints the bookmark's reader.
  * @param bool $echo Wether or not to echo the results.
  */
-function book_reader( $echo=true ) {
-    global $book;
+function bookmark_reader( $echo=true ) {
+    global $bookmark;
 
-    $user_info = get_userdata($book->reader);
+    $user_info = get_userdata($bookmark->reader);
 
     if ( $echo )
         echo $user_info->display_name;
@@ -94,24 +94,24 @@ function print_reader( $echo=true, $reader_id = 0) {
 }
 
 /**
- * Prints the author of the book.
+ * Prints the author of the bookmark.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_author( $echo = true ) {
-    global $book;
-    $author = apply_filters('book_author', $book->author);
+function bookmark_author( $echo = true ) {
+    global $bookmark;
+    $author = apply_filters('bookmark_author', $bookmark->author);
     if ( $echo )
         echo $author;
     return $author;
 }
 
 /**
- * Prints a URL to the book's Widget image, usually used within an HTML img element.
+ * Prints a URL to the bookmark's Widget image, usually used within an HTML img element.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_image( $echo = true ) {
-    global $book;
-    $image = apply_filters('book_image', $book->image);
+function bookmark_image( $echo = true ) {
+    global $bookmark;
+    $image = apply_filters('bookmark_image', $bookmark->image);
     if ( $echo )
         echo $image;
     return $image;
@@ -119,12 +119,12 @@ function book_image( $echo = true ) {
 
 // Added Begin
 /**
- * Prints a URL to the book's Library image, usually used within an HTML img element.
+ * Prints a URL to the bookmark's Library image, usually used within an HTML img element.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_limage( $echo = true ) {
-    global $book;
-    $limage = apply_filters('book_limage', $book->limage);
+function bookmark_limage( $echo = true ) {
+    global $bookmark;
+    $limage = apply_filters('bookmark_limage', $bookmark->limage);
     if ( $echo )
         echo $limage;
     return $limage;
@@ -132,27 +132,27 @@ function book_limage( $echo = true ) {
 // Added End
 
 /**
- * Prints the date when the book was added to the database.
+ * Prints the date when the bookmark was added to the database.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_added( $echo = true ) {
-    global $book;
-    $added = apply_filters('book_added', $book->added);
+function bookmark_added( $echo = true ) {
+    global $bookmark;
+    $added = apply_filters('bookmark_added', $bookmark->added);
     if ( $echo )
         echo $added;
     return $added;
 }
 
 /**
- * Prints the date when the book's status was changed from unread to reading.
+ * Prints the date when the bookmark's status was changed from unread to reading.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_started( $echo = true ) {
-    global $book;
-    if ( herisson_empty_date($book->started) )
+function bookmark_started( $echo = true ) {
+    global $bookmark;
+    if ( herisson_empty_date($bookmark->started) )
         $started = __('Not Started', HERISSONTD);
     else
-        $started = apply_filters('book_started', $book->started);
+        $started = apply_filters('bookmark_started', $bookmark->started);
     if ( $echo )
         echo $started;
     return $started;
@@ -160,26 +160,26 @@ function book_started( $echo = true ) {
 }
 
 /**
- * Prints the date when the book's status was changed from reading to read.
+ * Prints the date when the bookmark's status was changed from reading to read.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_finished( $echo = true ) {
-    global $book;
-    if ( herisson_empty_date($book->finished) )
+function bookmark_finished( $echo = true ) {
+    global $bookmark;
+    if ( herisson_empty_date($bookmark->finished) )
         $finished = __('Not Finished', HERISSONTD);
     else
-        $finished = apply_filters('book_finished', $book->finished);
+        $finished = apply_filters('bookmark_finished', $bookmark->finished);
     if ( $echo )
         echo $finished;
     return $finished;
 }
 
 /**
- * Prints the current book's status with optional overrides for messages.
+ * Prints the current bookmark's status with optional overrides for messages.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_status( $echo = true, $unread = '', $reading = '', $read = '', $onhold = '' ) {
-    global $book, $herisson_statuses;
+function bookmark_status( $echo = true, $unread = '', $reading = '', $read = '', $onhold = '' ) {
+    global $bookmark, $herisson_statuses;
 
     if ( empty($unread) )
         $unread = $herisson_statuses['unread'];
@@ -190,7 +190,7 @@ function book_status( $echo = true, $unread = '', $reading = '', $read = '', $on
     if ( empty($onhold) )
         $onhold = $herisson_statuses['onhold'];
 
-    switch ( $book->status ) {
+    switch ( $bookmark->status ) {
         case 'unread':
             $text = $unread;
             break;
@@ -213,11 +213,11 @@ function book_status( $echo = true, $unread = '', $reading = '', $read = '', $on
 }
 
 /**
- * Prints the number of books started and finished within a given time period.
+ * Prints the number of bookmarks started and finished within a given time period.
  * @param string $interval The time interval, eg  "1 year", "3 month"
  * @param bool $echo Whether or not to echo the results.
  */
-function books_read_since( $interval, $echo = true ) {
+function bookmarks_read_since( $interval, $echo = true ) {
     global $wpdb;
 
     $interval = $wpdb->escape($interval);
@@ -231,34 +231,34 @@ function books_read_since( $interval, $echo = true ) {
         ");
 
     if ( $echo )
-//        echo "$num book".($num != 1 ? 's' : '');
+//        echo "$num bookmark".($num != 1 ? 's' : '');
         echo "<b>$num</b>";
     return $num;
 }
 
 /**
- * Prints book reading statistics.
+ * Prints bookmark reading statistics.
  * @param string $time_period The period to measure average over, eg "year", "month".
  */
-function print_book_stats($time_period = 'year')
+function print_bookmark_stats($time_period = 'year')
 {
-	echo '<br>' . __("Total books in all categories: ", HERISSONTD);
-	total_books(0);
+	echo '<br>' . __("Total bookmarks in all categories: ", HERISSONTD);
+	total_bookmarks(0);
 	echo '<br>' . __("Books read in the last year: ", HERISSONTD);
-	books_read_since('1 year');
+	bookmarks_read_since('1 year');
 	echo '<br>' . __("Books read in the last month: ", HERISSONTD);
-	books_read_since('1 month');
-	echo '<br>' . __("Average books read per year: ", HERISSONTD);
-	average_books($time_period, true, false);
+	bookmarks_read_since('1 month');
+	echo '<br>' . __("Average bookmarks read per year: ", HERISSONTD);
+	average_bookmarks($time_period, true, false);
 }
 
 /**
- * Prints the total number of books in the library.
+ * Prints the total number of bookmarks in the library.
  * @param string $status A comma-separated list of statuses to include in the count. If ommitted, all statuses will be counted.
  * @param bool $echo Whether or not to echo the results.
- * @param int $userID Counting only userID's books.
+ * @param int $userID Counting only userID's bookmarks.
  */
-function total_books($status = '', $echo = true , $userID = 0) {
+function total_bookmarks($status = '', $echo = true , $userID = 0) {
     global $wpdb;
 
 	$reader = get_reader_visibility_filter($userID, false);
@@ -310,22 +310,22 @@ function total_books($status = '', $echo = true , $userID = 0) {
 }
 
 /**
- * Prints the average number of books read in the given time limit.
+ * Prints the average number of bookmarks read in the given time limit.
  * Unless $absolute is true, the average is computed based on the weighted average of
- * books read witin the last 365 days and those read within the last 30 days.
+ * bookmarks read witin the last 365 days and those read within the last 30 days.
  * @param string $time_period The period to measure average over, eg "year", "month".
  * @param bool $echo Whether or not to echo the results.
  * @param bool $absolute If true, the average is computed based on the oldest finished date.
  */
-function average_books($time_period = 'week', $echo = true, $absolute = true)
+function average_bookmarks($time_period = 'week', $echo = true, $absolute = true)
 {
     global $wpdb;
 
 	if ($absolute)
 	{
-		$books_per_day = $wpdb->get_var("
+		$bookmarks_per_day = $wpdb->get_var("
 		SELECT
-			( COUNT(*) / ( TO_DAYS(CURDATE()) - TO_DAYS(MIN(b_finished)) ) ) AS books_per_day_in_year
+			( COUNT(*) / ( TO_DAYS(CURDATE()) - TO_DAYS(MIN(b_finished)) ) ) AS bookmarks_per_day_in_year
 		FROM
 			{$wpdb->prefix}herisson
 		WHERE
@@ -335,9 +335,9 @@ function average_books($time_period = 'week', $echo = true, $absolute = true)
 	}
 	else
 	{
-		$books_per_day_in_year = $wpdb->get_var("
+		$bookmarks_per_day_in_year = $wpdb->get_var("
 		SELECT
-			( COUNT(*) / ( TO_DAYS(CURDATE()) - TO_DAYS(MIN(b_finished)) ) ) AS books_per_day_in_year
+			( COUNT(*) / ( TO_DAYS(CURDATE()) - TO_DAYS(MIN(b_finished)) ) ) AS bookmarks_per_day_in_year
 		FROM
 			{$wpdb->prefix}herisson
 		WHERE
@@ -345,9 +345,9 @@ function average_books($time_period = 'week', $echo = true, $absolute = true)
 		AND TO_DAYS(b_finished) >= (TO_DAYS(CURDATE()) - 365)
 			");
 
-		$books_per_day_in_month = $wpdb->get_var("
+		$bookmarks_per_day_in_month = $wpdb->get_var("
 		SELECT
-			( COUNT(*) / ( TO_DAYS(CURDATE()) - TO_DAYS(MIN(b_finished)) ) ) AS books_per_day_in_month
+			( COUNT(*) / ( TO_DAYS(CURDATE()) - TO_DAYS(MIN(b_finished)) ) ) AS bookmarks_per_day_in_month
 		FROM
 			{$wpdb->prefix}herisson
 		WHERE
@@ -356,25 +356,25 @@ function average_books($time_period = 'week', $echo = true, $absolute = true)
 			");
 
 		// Give twice the weight for the last month's average than the total of last year's.
-		$books_per_day = ((2.0 * $books_per_day_in_month) + $books_per_day_in_year) / 3.0;
+		$bookmarks_per_day = ((2.0 * $bookmarks_per_day_in_month) + $bookmarks_per_day_in_year) / 3.0;
 	}
 
     $average = 0;
     switch ( $time_period ) {
         case 'year':
-            $average = round($books_per_day * 365);
+            $average = round($bookmarks_per_day * 365);
             break;
 
         case 'month':
-            $average = round($books_per_day * 31);
+            $average = round($bookmarks_per_day * 31);
             break;
 
         case 'week':
-            $average = round($books_per_day * 7);
+            $average = round($bookmarks_per_day * 7);
 			break;
 
         case 'day':
-            $average = round($books_per_day * 1);
+            $average = round($bookmarks_per_day * 1);
             break;
 
         default:
@@ -398,24 +398,24 @@ function average_books($time_period = 'week', $echo = true, $absolute = true)
 }
 
 /**
- * Prints the URL to an internal page displaying data about the book.
+ * Prints the URL to an internal page displaying data about the bookmark.
  * @param bool $echo Whether or not to echo the results.
- * @param int $id The ID of the book to link to. If ommitted, the current book's ID will be used.
+ * @param int $id The ID of the bookmark to link to. If ommitted, the current bookmark's ID will be used.
  */
-function book_permalink( $echo = true, $id = 0 ) {
-    global $book, $wpdb;
+function bookmark_permalink( $echo = true, $id = 0 ) {
+    global $bookmark, $wpdb;
     $options = get_option('HerissonOptions');
 
-    if ( !empty($book) && empty($id) )
-        $the_book = $book;
+    if ( !empty($bookmark) && empty($id) )
+        $the_bookmark = $bookmark;
     elseif ( !empty($id) )
-        $the_book = get_book(intval($id));
+        $the_bookmark = get_bookmark(intval($id));
 
-    if ( $the_book->id < 1 )
+    if ( $the_bookmark->id < 1 )
         return;
 
-    $author = $the_book->nice_author;
-    $title = $the_book->nice_title;
+    $author = $the_bookmark->nice_author;
+    $title = $the_bookmark->nice_title;
 
 
 
@@ -424,7 +424,7 @@ function book_permalink( $echo = true, $id = 0 ) {
     else
         $url = get_option('home') . "/index.php?herisson_author=$author&amp;herisson_title=$title";
 
-    $url = apply_filters('book_permalink', $url);
+    $url = apply_filters('bookmark_permalink', $url);
     if ( $echo )
         echo $url;
     return $url;
@@ -432,17 +432,17 @@ function book_permalink( $echo = true, $id = 0 ) {
 
 
 /**
- * Prints the URL to an internal page displaying books by a certain reader.
+ * Prints the URL to an internal page displaying bookmarks by a certain reader.
  * @param bool $echo Wether or not to echo the results.
- * @param int $reader The reader id. If omitted, links to all books.
+ * @param int $reader The reader id. If omitted, links to all bookmarks.
  */
-function book_reader_permalink( $echo = true, $reader = 0) {
-    global $book, $wpdb;
+function bookmark_reader_permalink( $echo = true, $reader = 0) {
+    global $bookmark, $wpdb;
 
     $options = get_option('HerissonOptions');
 
     if ( !$reader )
-        $reader = $book->reader;
+        $reader = $bookmark->reader;
 
     if ( !$reader )
         return;
@@ -459,23 +459,23 @@ function book_reader_permalink( $echo = true, $reader = 0) {
 }
 
 /**
- * Prints a URL to the book's Amazon detail page. If the book is a custom one, it will print a URL to the book's permalink page.
+ * Prints a URL to the bookmark's Amazon detail page. If the bookmark is a custom one, it will print a URL to the bookmark's permalink page.
  * @param bool $echo Whether or not to echo the results.
  * @param string $domain The Amazon domain to link to. If ommitted, the default domain will be used.
- * @see book_permalink()
- * @see is_custom_book()
+ * @see bookmark_permalink()
+ * @see is_custom_bookmark()
  */
-function book_url( $echo = true, $domain = null ) {
-    global $book;
+function bookmark_url( $echo = true, $domain = null ) {
+    global $bookmark;
     $options = get_option('HerissonOptions');
 
     if ( empty($domain) )
         $domain = $options['domain'];
 
-    if ( is_custom_book() )
-        return book_permalink($echo);
+    if ( is_custom_bookmark() )
+        return bookmark_permalink($echo);
     else {
-        $url = apply_filters('book_url', "http://www.amazon{$domain}/exec/obidos/ASIN/{$book->asin}/ref=nosim/{$options['associate']}");
+        $url = apply_filters('bookmark_url', "http://www.amazon{$domain}/exec/obidos/ASIN/{$bookmark->asin}/ref=nosim/{$options['associate']}");
         if ( $echo )
             echo $url;
         return $url;
@@ -484,13 +484,13 @@ function book_url( $echo = true, $domain = null ) {
 
 // Added Begin
 /**
- * Prints the target for the URL to the book's page (Amazon detail page or details page).
+ * Prints the target for the URL to the bookmark's page (Amazon detail page or details page).
  * @param bool $echo Whether or not to echo the results.
  */
-function book_target( $echo = true ) {
-	global $book;
+function bookmark_target( $echo = true ) {
+	global $bookmark;
 
-	if ( is_custom_book() )
+	if ( is_custom_bookmark() )
 		$target_window = "_self";
 	else
 		$target_window = "_blank";
@@ -502,25 +502,25 @@ function book_target( $echo = true ) {
 // Added End
 
 /**
- * Returns true if the current book is linked to a post, false if it isn't.
+ * Returns true if the current bookmark is linked to a post, false if it isn't.
  */
-function book_has_post() {
-    global $book;
+function bookmark_has_post() {
+    global $bookmark;
 
-    return ( $book->post > 0 );
+    return ( $bookmark->post > 0 );
 }
 
 /**
- * Returns or prints the permalink of the post linked to the current book.
+ * Returns or prints the permalink of the post linked to the current bookmark.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_post_url( $echo = true ) {
-    global $book;
+function bookmark_post_url( $echo = true ) {
+    global $bookmark;
 
-    if ( !book_has_post() )
+    if ( !bookmark_has_post() )
         return;
 
-    $permalink = get_permalink($book->post);
+    $permalink = get_permalink($bookmark->post);
 
     if ( $echo )
         echo $permalink;
@@ -528,16 +528,16 @@ function book_post_url( $echo = true ) {
 }
 
 /**
- * Returns or prints the title of the post linked to the current book.
+ * Returns or prints the title of the post linked to the current bookmark.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_post_title( $echo = true ) {
-    global $book;
+function bookmark_post_title( $echo = true ) {
+    global $bookmark;
 
-    if ( !book_has_post() )
+    if ( !bookmark_has_post() )
         return;
 
-    $post = get_post($book->post);
+    $post = get_post($bookmark->post);
 
     if ( $echo )
         echo $post->post_title;
@@ -545,16 +545,16 @@ function book_post_title( $echo = true ) {
 }
 
 /**
- * If the current book is linked to a post, prints an HTML link to said post.
+ * If the current bookmark is linked to a post, prints an HTML link to said post.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_post_link( $echo = true ) {
-    global $book;
+function bookmark_post_link( $echo = true ) {
+    global $bookmark;
 
-    if ( !book_has_post() )
+    if ( !bookmark_has_post() )
         return;
 
-    $link = '<a href="' . book_post_url(0) . '">' . book_post_title(0) . '</a>';
+    $link = '<a href="' . bookmark_post_url(0) . '">' . bookmark_post_title(0) . '</a>';
 
     if ( $echo )
         echo $link;
@@ -562,13 +562,13 @@ function book_post_link( $echo = true ) {
 }
 
 // Added Begin
-function book_review_link( $echo = true ) {
-    global $book;
+function bookmark_review_link( $echo = true ) {
+    global $bookmark;
 
-    if ( !book_has_post() )
-      $review_link = apply_filters('book_review_link', __('(No Review)', HERISSONTD));
+    if ( !bookmark_has_post() )
+      $review_link = apply_filters('bookmark_review_link', __('(No Review)', HERISSONTD));
 	else
-      $review_link = '(<a href="' . book_post_url(0) . '">' . __('Review', HERISSONTD) . '</a>)';
+      $review_link = '(<a href="' . bookmark_post_url(0) . '">' . __('Review', HERISSONTD) . '</a>)';
 
     if ( $echo )
         echo $review_link;
@@ -583,25 +583,25 @@ function book_review_link( $echo = true ) {
 function manage_library_url( $echo = true ) {
     global $herisson_url;
     if ( can_herisson_admin() )
-        echo apply_filters('book_manage_url', $herisson_url->urls['manage']);
+        echo apply_filters('bookmark_manage_url', $herisson_url->urls['manage']);
 }
 
 /**
- * If the user has the correct permissions, prints a URL to the review-writing screen for the current book.
+ * If the user has the correct permissions, prints a URL to the review-writing screen for the current bookmark.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_edit_url( $echo = true ) {
-    global $book, $herisson_url;
+function bookmark_edit_url( $echo = true ) {
+    global $bookmark, $herisson_url;
     if ( can_herisson_admin() )
-        echo apply_filters('book_edit_url', $herisson_url->urls['manage'] . '&amp;action=editsingle&amp;id=' . $book->id);
+        echo apply_filters('bookmark_edit_url', $herisson_url->urls['manage'] . '&amp;action=editsingle&amp;id=' . $bookmark->id);
 }
 
 /**
- * Returns true if the book is a custom one or false if it is one from Amazon.
+ * Returns true if the bookmark is a custom one or false if it is one from Amazon.
  */
-function is_custom_book() {
-    global $book;
-    return empty($book->asin);
+function is_custom_bookmark() {
+    global $bookmark;
+    return empty($bookmark->asin);
 }
 
 /**
@@ -617,18 +617,18 @@ function can_herisson_admin() {
 }
 
 /**
- * Returns true if the current book is owned by the current user
+ * Returns true if the current bookmark is owned by the current user
  * Meaningful only when a user is logged in.
  * Works for both multi-user and single-user modes.
  */
-function is_my_book()
+function is_my_bookmark()
 {
-    global $book, $userdata;
+    global $bookmark, $userdata;
 
 	if (is_user_logged_in())
 	{
         get_currentuserinfo();
-        return $book->reader == $userdata->ID;
+        return $bookmark->reader == $userdata->ID;
 	}
 	else
 	{
@@ -648,7 +648,7 @@ function library_url( $echo = true ) {
     else
         $url = get_option('home') . '/index.php?herisson_library=true';
 
-    $url = apply_filters('book_library_url', $url);
+    $url = apply_filters('bookmark_library_url', $url);
 
     if ( $echo )
         echo $url;
@@ -661,13 +661,13 @@ function library_url( $echo = true ) {
  * @param bool $echo Whether or not to echo the results.
  */
 function pages_read( $echo = true ) {
-    global $book;
-	if ( $book->cpages == 0 )
+    global $bookmark;
+	if ( $bookmark->cpages == 0 )
 	  $pages_completed = apply_filters('pages_read', __('Planned Book', HERISSONTD));
-	elseif ( $book->cpages == $book->tpages )
+	elseif ( $bookmark->cpages == $bookmark->tpages )
 	  $pages_completed = apply_filters('pages_read', __('Completed Book', HERISSONTD));
     else
-      $pages_completed = apply_filters('pages_read', $book->cpages . __(' of ', HERISSONTD) . $book->tpages . __(' Pages Read', HERISSONTD));
+      $pages_completed = apply_filters('pages_read', $bookmark->cpages . __(' of ', HERISSONTD) . $bookmark->tpages . __(' Pages Read', HERISSONTD));
 
     if ( $echo )
         echo $pages_completed;
@@ -676,15 +676,15 @@ function pages_read( $echo = true ) {
 // Added Ends
 
 /**
- * Prints the book's rating or "Unrated" if the book is unrated.
+ * Prints the bookmark's rating or "Unrated" if the bookmark is unrated.
  * @param bool $echo Whether or not to echo the results.
  */
-function book_rating( $echo = true ) {
-    global $book;
-    if ( $book->rating )
-        $rate = apply_filters('book_rating', $book->rating . ' of 10');
+function bookmark_rating( $echo = true ) {
+    global $bookmark;
+    if ( $bookmark->rating )
+        $rate = apply_filters('bookmark_rating', $bookmark->rating . ' of 10');
     else
-        $rate = apply_filters('book_rating', __('Unrated', HERISSONTD));
+        $rate = apply_filters('bookmark_rating', __('Unrated', HERISSONTD));
 
     if ( $echo )
         echo $rate;
@@ -715,44 +715,44 @@ function library_page_url( $page, $echo = true ) {
  * Returns or prints the currently viewed author.
  * @param bool $echo Whether or not to echo the results.
  */
-function the_book_author( $echo = true ) {
+function the_bookmark_author( $echo = true ) {
     $author = htmlentities(stripslashes($GLOBALS['herisson_author']));
-    $author = apply_filters('the_book_author', $author);
+    $author = apply_filters('the_bookmark_author', $author);
     if ( $echo )
         echo $author;
     return $author;
 }
 
 /**
- * Use in the main template loop; if un-fetched, fetches books for given $query and returns true whilst there are still books to loop through.
- * @param string $query The query string to pass to get_books()
- * @return boolean True if there are still books to loop through, false at end of loop.
+ * Use in the main template loop; if un-fetched, fetches bookmarks for given $query and returns true whilst there are still bookmarks to loop through.
+ * @param string $query The query string to pass to get_bookmarks()
+ * @return boolean True if there are still bookmarks to loop through, false at end of loop.
  */
-function have_books( $query ) {
-    global $books, $current_book;
-    if ( !$books ) {
+function have_bookmarks( $query ) {
+    global $bookmarks, $current_bookmark;
+    if ( !$bookmarks ) {
         if ( is_numeric($query) )
-            $GLOBALS['books'] = get_book($query);
+            $GLOBALS['bookmarks'] = get_bookmark($query);
         else
-            $GLOBALS['books'] = get_books($query);
+            $GLOBALS['bookmarks'] = get_bookmarks($query);
     }
-    if (is_a($books, 'stdClass'))
-        $books = array($books);
-    $have_books = ( !empty($books[$current_book]) );
-    if ( !$have_books ) {
-        $GLOBALS['books']			= null;
-        $GLOBALS['current_book']	= 0;
+    if (is_a($bookmarks, 'stdClass'))
+        $bookmarks = array($bookmarks);
+    $have_bookmarks = ( !empty($bookmarks[$current_bookmark]) );
+    if ( !$have_bookmarks ) {
+        $GLOBALS['bookmarks']			= null;
+        $GLOBALS['current_bookmark']	= 0;
     }
-    return $have_books;
+    return $have_bookmarks;
 }
 
 /**
- * Advances counter used by have_books(), and sets the global variable $book used by the template functions. Be sure to call it each template loop to avoid infinite loops.
+ * Advances counter used by have_bookmarks(), and sets the global variable $bookmark used by the template functions. Be sure to call it each template loop to avoid infinite loops.
  */
-function the_book() {
-    global $books, $current_book;
-    $GLOBALS['book'] = $books[$current_book];
-    $GLOBALS['current_book']++;
+function the_bookmark() {
+    global $bookmarks, $current_bookmark;
+    $GLOBALS['bookmark'] = $bookmarks[$current_bookmark];
+    $GLOBALS['current_bookmark']++;
 }
 
 ?>
