@@ -113,7 +113,7 @@ function get_herisson_bookmarks($query, $show_private = false) {
 		b_nice_author AS nice_author, b_added AS added, b_started AS started, b_finished AS finished, b_asin AS asin, b_tpages AS tpages, b_cpages AS cpages,
 		b_rating AS rating, b_post AS post, b_reader as reader
 	FROM
-        {$wpdb->prefix}herisson
+        {$wpdb->prefix}herisson_bookmarks
 	WHERE
 		1=1
         $status
@@ -159,7 +159,7 @@ function get_herisson_bookmark($id) {
 		b_id AS id, b_title AS title, b_author AS author, b_image AS image, b_limage AS limage, b_status AS status, b_nice_title AS nice_title,
 		b_nice_author AS nice_author, b_added AS added, b_started AS started, b_finished AS finished, b_asin AS asin, b_tpages AS tpages, b_cpages AS cpages,
 		b_rating AS rating, b_post AS post, b_reader as reader, b_visibility AS visibility
-	FROM {$wpdb->prefix}herisson
+	FROM {$wpdb->prefix}herisson_bookmarks
 	WHERE b_id = $id
 	GROUP BY b_id
         "));
@@ -268,7 +268,7 @@ function update_bookmark( $query ) {
         $values = preg_replace('#^, #', '', $values);
 
         $wpdb->query("
-		INSERT INTO {$wpdb->prefix}herisson
+		INSERT INTO {$wpdb->prefix}herisson_bookmarks
 		($columns)
 		VALUES($values)
             ");
@@ -297,7 +297,7 @@ function update_bookmark( $query ) {
         $set = preg_replace('#^, #', '', $set);
 
         $wpdb->query("
-		UPDATE {$wpdb->prefix}herisson
+		UPDATE {$wpdb->prefix}herisson_bookmarks
 		SET $set
 		WHERE id = $id
             ");

@@ -63,7 +63,7 @@ class herisson_url {
  */
 $herisson_url	= new herisson_url();
 $options	= get_option('HerissonOptions');
-$herisson_url->load_scheme($options['menuLayout']);
+#$herisson_url->load_scheme($options['menuLayout']);
 
 /**
  * Registers our query vars so we can redirect to the library and book permalinks.

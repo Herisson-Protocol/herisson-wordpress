@@ -1,6 +1,6 @@
 <?php
 /**
- * The admin interface for managing and editing books.
+ * The admin interface for managing and editing bookmarks.
  * @package herisson
  */
 
@@ -8,7 +8,7 @@
  * Creates the manage admin page.
  */
 
-function herisson_manage_books() {
+function herisson_manage_bookmarks() {
 
     global $wpdb, $userdata;
 
@@ -332,12 +332,12 @@ function herisson_manage_books() {
 			//depends on multiusermode
 			if ($options['multiuserMode']) {
 			    if ( current_user_can('administrator') ) {
-					$count = total_books(0, 0); //counting all books
+					$count = total_bookmarks(0, 0); //counting all bookmarks
 				} else {
-					$count = total_books(0, 0, $userdata->ID); //counting only current users books
+					$count = total_bookmarks(0, 0, $userdata->ID); //counting only current users bookmarks
 				}
 			} else {
-				$count = total_books(0, 0); //counting all books
+				$count = total_bookmarks(0, 0); //counting all bookmarks
 			}
 
 
@@ -374,7 +374,7 @@ function herisson_manage_books() {
 				else
 					$status = "&status=" . urlencode($_GET['status']);
 
-				$perpage = $options['booksPerPage'];
+				$perpage = $options['bookmarksPerPage'];
 				$offset = ($page * $perpage) - $perpage;
 				$num = $perpage;
 				$pageq = "&num=$num&offset=$offset";
@@ -399,10 +399,10 @@ function herisson_manage_books() {
 				}
 // Added End
 
-				$books = get_books("num=-1&status=all&orderby={$orderby}&order={$order}{$search}{$pageq}{$reader}{$author}{$status}");
-				$count = count($books);
+				$bookmarks = get_bookmarks("num=-1&status=all&orderby={$orderby}&order={$order}{$search}{$pageq}{$reader}{$author}{$status}");
+				$count = count($bookmarks);
 
-				$numpages = ceil(total_books(0, 0, $userdata->ID) / $perpage);
+				$numpages = ceil(total_bookmarks(0, 0, $userdata->ID) / $perpage);
 
 				$pages = '<span class="displaying-num">' . __("Pages", HERISSONTD) . '</span>';
 
@@ -487,27 +487,27 @@ function herisson_manage_books() {
 						<thead>
 							<tr>
 								<th></th>
-								<th class="manage-column column-title"><a class="manage_books" href="'. $title_sort_link .'">' . __("Book", HERISSONTD) . '</a></th>
-								<th class="manage-column column-author"><a class="manage_books" href="'. $author_sort_link .'">' . __("Author", HERISSONTD) . '</a></th>
-								<th><a class="manage_books" href="'. $status_sort_link .'">' . __("Status", HERISSONTD) . '</a></th>';
+								<th class="manage-column column-title"><a class="manage_bookmarks" href="'. $title_sort_link .'">' . __("Book", HERISSONTD) . '</a></th>
+								<th class="manage-column column-author"><a class="manage_bookmarks" href="'. $author_sort_link .'">' . __("Author", HERISSONTD) . '</a></th>
+								<th><a class="manage_bookmarks" href="'. $status_sort_link .'">' . __("Status", HERISSONTD) . '</a></th>';
 
 // Added Begin
 							if ($options['multiuserMode']) {
 								if ( current_user_can('administrator') ) {
 							echo '
-								<th><a class="manage_books" href="'. $reader_sort_link .'">' . __("Reader", HERISSONTD) . '</a></th>';
+								<th><a class="manage_bookmarks" href="'. $reader_sort_link .'">' . __("Reader", HERISSONTD) . '</a></th>';
 								}
 							}
 // Added End
 
 							echo '
-								<th><a class="manage_books" href="'. $started_sort_link .'">' . __("Started", HERISSONTD) . '</a></th>
-								<th><a class="manage_books" href="'. $finished_sort_link .'">' . __("Finished", HERISSONTD) . '</a></th>';
+								<th><a class="manage_bookmarks" href="'. $started_sort_link .'">' . __("Started", HERISSONTD) . '</a></th>
+								<th><a class="manage_bookmarks" href="'. $finished_sort_link .'">' . __("Finished", HERISSONTD) . '</a></th>';
 
 				if (!$options['hideAddedDate'])
 				{
 					echo '
-								<th><a class="manage_books" href="'. $added_sort_link .'">' . __("Added", HERISSONTD) . '</a></th>';
+								<th><a class="manage_bookmarks" href="'. $added_sort_link .'">' . __("Added", HERISSONTD) . '</a></th>';
 				}
 
 				echo '
@@ -516,7 +516,7 @@ function herisson_manage_books() {
 						<tbody>
 				';
 
-				foreach ((array)$books as $book)
+				foreach ((array)$bookmarks as $book)
 				{
 
 					$alt = ( $i % 2 == 0 ) ? ' alternate' : '';
@@ -597,7 +597,7 @@ function herisson_manage_books() {
 				echo '
 				<div class="wrap">
 					<h2>' . __("Manage Books", HERISSONTD) . '</h2>
-					<p>' . sprintf(__("No books to display. To add some books, head over <a href='%s'>here</a>.", HERISSONTD), $herisson_url->urls['add']) . '</p>
+					<p>' . sprintf(__("No bookmarks to display. To add some bookmarks, head over <a href='%s'>here</a>.", HERISSONTD), $herisson_url->urls['add']) . '</p>
 				</div>
 				';
 			}

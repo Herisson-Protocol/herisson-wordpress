@@ -16,7 +16,7 @@ if ( !function_exists('herisson_add_bookark') ) {
 
         $options = get_option('HerissonOptions');
 
-        if( !$herisson_url ) {
+        if( isset($herisson_url) && !$herisson_url ) {
             $herisson_url = new herisson_url();
             $herisson_url->load_scheme($options['menuLayout']);
         }

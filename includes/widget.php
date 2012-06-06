@@ -46,8 +46,8 @@ function herisson_widget_init() {
     if ( !function_exists('register_sidebar_widget') )
         return;
 
-    register_sidebar_widget(__('Herisson', HERISSONTD), 'herisson_widget', null, 'herisson');
-    register_widget_control(__('Herisson', HERISSONTD), 'herisson_widget_control', 300, 100, 'herisson');
+#    register_sidebar_widget(__('Herisson', HERISSONTD), 'herisson_widget', null, 'herisson');
+#    register_widget_control(__('Herisson', HERISSONTD), 'herisson_widget_control', 300, 100, 'herisson');
 }
 
 add_action('plugins_loaded', 'herisson_widget_init');
