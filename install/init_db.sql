@@ -10,6 +10,7 @@ CREATE TABLE `#PREFIX#herisson_bookmarks`
 	`hash` VARCHAR(255),
 	`title` VARCHAR(255),
 	`description` TEXT,
+	`content` TEXT,
 	`is_public` TINYINT default 1,
 	`is_activated` TINYINT default 0,
 	`expires_at` DATETIME default '2038-12-31',

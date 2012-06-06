@@ -16,6 +16,8 @@ function herisson_bookmark_actions() {
 		break;
 		case 'list': herisson_bookmark_list();
 		break;
+		case 'delete': herisson_bookmark_delete();
+		break;
   default: herisson_bookmark_list();
 	}
 
@@ -38,6 +40,7 @@ function herisson_bookmark_list() {
 
 	$bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
  echo '
+	<div class="wrap">
 				<h2>' . __("All bookmarks", HERISSONTD).'</h2>
 
  <a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0">'.__('Add new bookmark',HERISSONTD).'</a></td>
@@ -56,7 +59,10 @@ function herisson_bookmark_list() {
  <tr>
   <td><? echo $bookmark->title; ?></td>
   <td><? echo $bookmark->url; ?></td>
-  <td><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><?=__('Edit',HERISSONTD)?></a></td>
+  <td>
+		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><?=__('Edit',HERISSONTD)?></a>
+		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSONTD)?>')) { return true; } return false;"><?=__('Delete',HERISSONTD)?></a>
+		</td>
 		<!--
   <td><a href="<?=get_option('siteurl')?>/wp-content/plugins/herisson/admin/bookmark-edit.php"><?=__('Edit',HERISSONTD)?></a></td>
 		-->
@@ -66,6 +72,7 @@ function herisson_bookmark_list() {
  	}
 		?>
 		</table>
+		</div>
 		<?
  } else {
 	 echo __("No bookmark",HERISSONTD);
@@ -241,6 +248,16 @@ function herisson_bookmark_submitedit() {
 
 }
 
+function herisson_bookmark_delete() {
+
+ 		$id = intval(param('id'));
+			if ($id>0) {
+    $bookmark = herisson_bookmark_get($id);
+ 			$bookmark->delete();
+			}
+		
+			herisson_bookmark_list();
+}
 
 
 function herisson_bookmark_import() {
