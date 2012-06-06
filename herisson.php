@@ -40,7 +40,7 @@ define('HERISSON_LANG_DIR', HERISSON_BASE_DIR.'languages/');
 define('HERISSON_MENU_SINGLE', 4);
 define('HERISSON_MENU_MULTIPLE', 2);
 
-echo "<br><br>";
+#echo "<br><br>";
 require_once HERISSON_BASE_DIR."../../../wp-includes/plugin.php";
 require_once HERISSON_BASE_DIR."../../../wp-includes/pluggable.php";
 require_once HERISSON_BASE_DIR."../../../wp-includes/functions.php";
@@ -48,6 +48,7 @@ require_once HERISSON_BASE_DIR."../../../wp-includes/cache.php";
 wp_cache_init();
 require_once HERISSON_BASE_DIR."../../../wp-includes/wp-db.php";
 require_once HERISSON_BASE_DIR."../../../wp-admin/includes/plugin.php";
+require_once HERISSON_BASE_DIR."/orm.php";
 
 /**
  * Load our I18n domain.

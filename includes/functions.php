@@ -755,4 +755,37 @@ function the_bookmark() {
     $GLOBALS['current_bookmark']++;
 }
 
+/**
+ * Récupération et escaping d'une variable en POST
+ * @param var le nom de la variable
+ * @return la variable POST escapée
+ */
+function post($var) { return (! isset($_POST[$var]) ? '' : escape($_POST[$var])); }
+
+/**
+ * Récupération et escaping d'une variable en GET
+ * @param var le nom de la variable
+ * @return la variable GET escapée
+ */
+function get($var) { return (! isset($_GET[$var]) ? '' : escape($_GET[$var])); }
+
+/**
+ * Récupération et escaping d'une variable en POST (ou GET si pas de POST)
+ * @param var le nom de la variable
+ * @return la variable escapée
+ */
+function param($var) { $p = post($var); return $p ? $p : get($var); }
+
+/**
+ * Escaping en fonction du type de la variable, et de l'environnement.
+ * @param str la variable string a escapée
+ * @return la variable str escapée correctement
+ */
+function escape($str) {
+ global $wpdb;
+# if (! is_array($str) && !get_magic_quotes_gpc()) { return addslashes($str); }
+        return $wpdb->escape($str);
+}
+
+
 ?>
