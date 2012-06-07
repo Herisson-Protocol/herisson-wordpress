@@ -10,8 +10,11 @@ function herisson_delete_plugin() {
 	delete_option( 'HerissonVersions' );
 	delete_option( 'HerissonWidget' );
 
-	$table_name = $wpdb->prefix . "herisson";
-	$wpdb->query( "DROP TABLE IF EXISTS $table_name" );
+ $tables = array('bookmarks', 'bookmarks_tags', 'friends', 'tags', 'types');
+ $table_name = $wpdb->prefix . "herisson";
+ foreach ($tables as $table) {
+	 $wpdb->query( "DROP TABLE IF EXISTS ${table_name}_$table" );
+	};
 }
 
 herisson_delete_plugin();

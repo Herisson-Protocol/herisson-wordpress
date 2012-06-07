@@ -30,36 +30,6 @@ function herisson_manage_options() {
 		';
     }
 
-    if ( !empty($_GET['imagesize']) ) {
-        echo '
-			<div id="message" class="error fade">
-				<p><strong>' . __("Oops!", HERISSONTD) . '</strong></p>
-				<p>' . __("Naughty naughty! That wasn\'t a valid value for the image size setting!", HERISSONTD) . '</p>
-				<p>' . __("Don\'t worry, I\'ve set it to Small for you.", HERISSONTD) . '</p>
-			</div>
-		';
-    }
-
-// Added Begin
-    if ( !empty($_GET['limagesize']) ) {
-        echo '
-			<div id="message" class="error fade">
-				<p><strong>' . __("Oops!", HERISSONTD) . '</strong></p>
-				<p>' . __("Naughty naughty! That wasn\'t a valid value for the image size setting!", HERISSONTD) . '</p>
-				<p>' . __("Don\'t worry, I\'ve set it to Medium for you.", HERISSONTD) . '</p>
-			</div>
-		';
-    }
-// Added End
-
-    if( !strstr($_SERVER['REQUEST_URI'], 'wp-admin/options') && $_GET['updated'] ) {
-        echo '
-			<div id="message" class="updated fade">
-				<p><strong>' . __("Options Saved", HERISSONTD) . '</strong></p>
-			</div>
-		';
-    }
-
     echo '
 	<div class="wrap">
 

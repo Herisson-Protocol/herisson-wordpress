@@ -37,13 +37,15 @@ function herisson_bookmark_get($id) {
 }
 
 function herisson_bookmark_list() {
+ global $wpdb;
 
 	$bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
  echo '
 	<div class="wrap">
-				<h2>' . __("All bookmarks", HERISSONTD).'</h2>
-
+				<h2>' . __("All bookmarks", HERISSONTD).'<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0" class="add-new-h2">'.__('Add',HERISSONTD).'</a></h2>
+<!--
  <a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0">'.__('Add new bookmark',HERISSONTD).'</a></td>
+	-->
 				';
  if (sizeof($bookmarks)) {
   ?>

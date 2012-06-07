@@ -135,7 +135,8 @@ function herisson_install() {
 		'bookmarksPerPage'	=> 50,
 		'hideViewLibrary'	=> false,
 		'templateBase'		=> 'default_templates/',
-		'permalinkBase'		=> 'bookmarks/'
+		'permalinkBase'		=> 'bookmarks/',
+		'basePath'		=> 'bookmarks',
     );
     add_option('HerissonOptions', $defaultOptions);
 
@@ -279,6 +280,23 @@ function herisson_header_stats() {
 	';
 }
 add_action('wp_head', 'herisson_header_stats');
+
+function herisson_router() {
+ # Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
+ global $route,$wp_query,$window_title;
+ $options = get_option('HerissonOptions');
+print_r($options);
+ $bits =explode("/",$_SERVER['REQUEST_URI']);
+	if (sizeof($bits) && $bits[1] == $options['basePath']) {
+
+ require_once HERISSON_BASE_DIR."/orm.php";
+	 herisson_bookmark_list();
+		die();
+	
+	}
+}
+
+add_action( 'send_headers', 'herisson_router');
 
 if ( !function_exists('robm_dump') ) {
 /**
