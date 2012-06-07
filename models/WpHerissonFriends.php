@@ -20,20 +20,40 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
 	public function reloadPublicKey() {
 	 $url = $this->_get('url');
-		$url = $url."//publickey";
-		$url = preg_replace("#//+#","/",$url);
+		if (substr($url, -1) != "/") {	$url .= "/"; }
+		$url .= "publickey";
   if (function_exists('curl_init')) {
 
-#   $url ="http://japon.taillandier.name/bookmarks";
-#			echo "---$url---<br>\n";
    $curl = curl_init();
    curl_setopt($curl, CURLOPT_URL, $url);
-   curl_setopt($curl, CURLOPT_HEADER, 1);
-   curl_setopt($curl, CURLOPT_VERBOSE, true);
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 
    $content = curl_exec($curl);
    $this->_set('public_key',$content);
+  }
+	}
+
+
+	public function retrieveBookmarks() {
+	 
+	 $options = get_option('HerissonOptions');
+		$my_public_key = $options['publicKey'];
+  if (function_exists('curl_init')) {
+ 		$data = array('key' => $my_public_key);
+
+   $curl = curl_init();
+   curl_setopt($curl, CURLOPT_URL, $this->url."/retrieve");
+   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+	  curl_setopt($curl, CURLOPT_POST,TRUE);
+	  curl_setopt($curl, CURLOPT_POSTFIELDS,$data);
+
+
+   $content = curl_exec($curl);
+			$json_data = herisson_decrypt($content,$this->public_key);
+			$bookmarks = json_decode($json_data,1);
+   return $bookmarks;
   }
 	}
 

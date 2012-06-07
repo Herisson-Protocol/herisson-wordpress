@@ -181,7 +181,6 @@ function herisson_friend_submitedit() {
   $id = intval(post('id'));
   $url			= post('url');
   $name			= post('name');
-  $public_key			= post('public_key');
 
   if ( $id == 0 )  {
 		 $friend = new WpHerissonFriends();
@@ -190,7 +189,6 @@ function herisson_friend_submitedit() {
 		}
 		$friend->name = $name;
 		$friend->url = $url;
-		$friend->public_key = $public_key;
 		$friend->save();
 
 	 herisson_friend_edit($friend->id);

@@ -18,7 +18,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		$this->reloadContent();
  }
 
- public function setTitle($url) {
+ public function setTitle($title) {
   parent::_set('title',$title);
   $this->_set('hash',md5($title));
  }
@@ -36,5 +36,13 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
   }
 	}
 
+	public function toArray() {
+	 return array(
+		 "title" => $this->title,
+		 "url" => $this->url,
+		 "description" => $this->description,
+		);
+
+	}
 
 }
