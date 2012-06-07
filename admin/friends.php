@@ -74,6 +74,7 @@ function herisson_friend_list() {
  	}
 		?>
 		</table>
+	 <? echo __(sizeof($friends)." friends.",HERISSONTD); ?>
 		</div>
 		<?
  } else {

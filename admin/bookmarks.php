@@ -74,6 +74,7 @@ function herisson_bookmark_list() {
  	}
 		?>
 		</table>
+	 <? echo __(sizeof($bookmarks)." bookmarks.",HERISSONTD); ?>
 		</div>
 		<?
  } else {

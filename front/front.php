@@ -71,10 +71,7 @@ function herisson_front_list() {
 	$bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
  echo '
 	<div class="wrap">
-				<h2>' . __("All bookmarks", HERISSONTD).'<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0" class="add-new-h2">'.__('Add',HERISSONTD).'</a></h2>
-<!--
- <a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0">'.__('Add new bookmark',HERISSONTD).'</a></td>
-	-->
+				<h2>' . __("All bookmarks", HERISSONTD).'</h2>
 				';
  if (sizeof($bookmarks)) {
   ?>
@@ -82,7 +79,6 @@ function herisson_front_list() {
  <tr>
   <th><?=__('Title',HERISSONTD)?></th>
   <th><?=__('URL',HERISSONTD)?></th>
-  <th><?=__('Action',HERISSONTD)?></th>
  </tr>
  <?
   foreach ($bookmarks as $bookmark) {
@@ -90,13 +86,6 @@ function herisson_front_list() {
  <tr>
   <td><? echo $bookmark->title; ?></td>
   <td><? echo $bookmark->url; ?></td>
-  <td>
-		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><?=__('Edit',HERISSONTD)?></a>
-		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSONTD)?>')) { return true; } return false;"><?=__('Delete',HERISSONTD)?></a>
-		</td>
-		<!--
-  <td><a href="<?=get_option('siteurl')?>/wp-content/plugins/herisson/admin/bookmark-edit.php"><?=__('Edit',HERISSONTD)?></a></td>
-		-->
  </tr>
  <?
  
