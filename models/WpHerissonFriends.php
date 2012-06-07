@@ -57,5 +57,19 @@ class WpHerissonFriends extends BaseWpHerissonFriends
   }
 	}
 
+ public function generateBookmarksdata() {
+  $data_bookmarks = array();
+  $bookmarks = Doctrine_Query::create()
+   ->from('WpHerissonBookmarks')
+   ->where('is_public=1')
+   ->execute();
+  foreach ($bookmarks as $bookmark) {
+   $data_bookmarks[] = $bookmark->toArray();
+  }
+  $json_data = json_encode($data_bookmarks);
+#  print_r($json_data);
+  $json_display = herisson_encrypt($json_data,$this->public_key);
+  return json_encode($json_display);
+ }
 
 }

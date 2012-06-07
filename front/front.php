@@ -18,8 +18,6 @@ function herisson_front_actions() {
 		break;
 	 case 'retrieve': herisson_front_retrieve();
 		break;
-	 case 'cipher': herisson_front_cipher();
-		break;
   default: herisson_front_list();
 	}
 }
@@ -45,7 +43,6 @@ function herisson_front_publickey() {
 
 function herisson_front_friends() {
  $options = get_option('HerissonOptions');
-# herisson_encrypt('hello world');
 	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->execute();
 	foreach ($friends as $friend) {
   $bookmarks = $friend->retrieveBookmarks();
@@ -53,42 +50,19 @@ function herisson_front_friends() {
 		foreach ($bookmarks as $bookmark) {
    echo '<a href="'.$bookmark['url'].'">'.$bookmark['title'].'</a><br>';
 		}
-
-
-
 	}
-
 }
 
 function herisson_front_retrieve() {
  if (!sizeof($_POST)) { exit; }
 	$key = post('key');
-# $options = get_option('HerissonOptions');
-#	$key = $options['publicKey'];
 	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->execute();
 	foreach ($friends as $friend) {
   if ($friend->public_key == $key) {
-		 $data_bookmarks = array();
-	  $bookmarks = Doctrine_Query::create()
-			 ->from('WpHerissonBookmarks')
-			 ->where('is_public=1')
-				->execute();
-			foreach ($bookmarks as $bookmark) {
-			 $data_bookmarks[] = $bookmark->toArray();
-			}
-			$json_data = json_encode($data_bookmarks);
-#			print_r($json_data);
-			$json_display = herisson_encrypt($json_data,$key);
-			echo json_encode($json_display);
-
-		 
-		
+		 echo $friend->generateBookmarksData();
+			break; 
 		}
-
-
-
 	}
-
 }
 
 function herisson_front_list() {
