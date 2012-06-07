@@ -9,6 +9,7 @@
  */
 
 require_once HERISSON_ADMIN_DIR . 'bookmarks.php';
+require_once HERISSON_ADMIN_DIR . 'friends.php';
 require_once HERISSON_ADMIN_DIR . 'options.php';
 
 /**
@@ -22,6 +23,7 @@ function herisson_add_pages() {
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_add_bookmark', 'herisson_add_bookmark');
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_add_bookmark', 'herisson_add_bookmark');
 			add_submenu_page('herisson_menu', __('Bookmarks', HERISSONTD), __('Bookmarks', HERISSONTD), 'manage_options', 'herisson_bookmarks', 'herisson_bookmark_actions');
+			add_submenu_page('herisson_menu', __('Friends', HERISSONTD), __('Friends', HERISSONTD), 'manage_options', 'herisson_friends', 'herisson_friend_actions');
 			add_submenu_page('herisson_menu', __('Options', HERISSONTD), __('Options', HERISSONTD), 'manage_options', 'herisson_options', 'herisson_manage_options');
 		
 }

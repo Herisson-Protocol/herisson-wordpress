@@ -68,6 +68,7 @@ require_once HERISSON_INCLUDES_DIR . 'admin.php';
 require_once HERISSON_INCLUDES_DIR . 'filters.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
 require_once HERISSON_INCLUDES_DIR . 'widget.php';
+require_once HERISSON_INCLUDES_DIR . 'encryption.php';
 
 /**
  * Checks if the install needs to be run by checking the `HerissonVersions` option, which stores the current installed database, options and rewrite versions.
@@ -124,6 +125,9 @@ function herisson_install() {
         }
     }
 
+  # Generate a couple of public/private key to handle encryption between this site and friends
+  list($publicKey,$privateKey) = herisson_generate_keys_pair();
+
     $defaultOptions = array(
 		'formatDate'	=> 'd/m/Y',
 		'sitename'	=> false,
@@ -137,6 +141,8 @@ function herisson_install() {
 		'templateBase'		=> 'default_templates/',
 		'permalinkBase'		=> 'bookmarks/',
 		'basePath'		=> 'bookmarks',
+		'publicKey'		=> $publicKey,
+		'privateKey'		=> $privateKey,
     );
     add_option('HerissonOptions', $defaultOptions);
 
@@ -285,12 +291,12 @@ function herisson_router() {
  # Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
  global $route,$wp_query,$window_title;
  $options = get_option('HerissonOptions');
-print_r($options);
- $bits =explode("/",$_SERVER['REQUEST_URI']);
-	if (sizeof($bits) && $bits[1] == $options['basePath']) {
+#print_r($options);
+ $path =explode("/",$_SERVER['REQUEST_URI']);
+	if (sizeof($path) && $path[1] == $options['basePath']) {
 
- require_once HERISSON_BASE_DIR."/orm.php";
-	 herisson_bookmark_list();
+  require_once HERISSON_BASE_DIR."/front/front.php";
+	 herisson_front_actions();
 		die();
 	
 	}

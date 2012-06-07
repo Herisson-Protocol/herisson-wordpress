@@ -15,7 +15,7 @@ if (!file_exists(HERISSON_BASE_DIR."../doctrine/")) {
 	return new WP_Error('error', 'Plugin Doctrine ORM is required to use Herisson : <a href="http://wordpress.org/support/plugin/doctrine">http://wordpress.org/support/plugin/doctrine</a>');
 }
 
-$plugin = "WpHerisson";
+$_DoctrinePrefix = "WpHerisson";
 $tables = array("Bookmarks", "Tags", "BookmarksTags", "Friends", "Types");
 
 
@@ -23,6 +23,7 @@ $tables = array("Bookmarks", "Tags", "BookmarksTags", "Friends", "Types");
 require_once HERISSON_BASE_DIR."../doctrine/lib/Doctrine.php";
 spl_autoload_register(array('Doctrine', 'autoload'));
 
+require_once HERISSON_BASE_DIR."../../../wp-config.php";
 	$dsn = 'mysql://' . DB_USER .
 		':' . DB_PASSWORD .
 		'@' . DB_HOST .
@@ -40,9 +41,9 @@ spl_autoload_register(array('Doctrine', 'autoload'));
 foreach ($tables as $table) {
 
 # echo "Load : $table <br>\n";
- herisson_load_doctrine(HERISSON_BASE_DIR."../doctrine/models/generated/Base${plugin}$table.php");
- herisson_load_doctrine(HERISSON_BASE_DIR."../doctrine/models/${plugin}${table}Table.php");
- herisson_load_doctrine(HERISSON_BASE_DIR."../doctrine/models/${plugin}${table}.php");
+ herisson_load_doctrine(HERISSON_BASE_DIR."../doctrine/models/generated/Base${_DoctrinePrefix}$table.php");
+ herisson_load_doctrine(HERISSON_BASE_DIR."../doctrine/models/${_DoctrinePrefix}${table}Table.php");
+ herisson_load_doctrine(HERISSON_BASE_DIR."../doctrine/models/${_DoctrinePrefix}${table}.php");
 
 }
 	// this will allow us to use "mutators"
