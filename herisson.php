@@ -26,6 +26,7 @@ License: GPL2
 ?>
 <?php
 
+
 define('HERISSON_VERSION', '1.0');
 define('HERISSON_DB', 54);
 define('HERISSON_OPTIONS', 22);
@@ -36,6 +37,7 @@ define('HERISSON_INCLUDES_DIR', HERISSON_BASE_DIR.'includes/');
 define('HERISSON_TEMPLATES_DIR', HERISSON_BASE_DIR.'templates/');
 define('HERISSON_ADMIN_DIR', HERISSON_BASE_DIR.'admin/');
 define('HERISSON_LANG_DIR', HERISSON_BASE_DIR.'languages/');
+define('HERISSON_SCREENSHOTS_DIR', HERISSON_BASE_DIR.'screenshots/');
 #define('HERISSON_XML_DIR', HERISSON_BASE_DIR.'bookmarkxml/');
 define('HERISSON_MENU_SINGLE', 4);
 define('HERISSON_MENU_MULTIPLE', 2);
@@ -60,14 +62,14 @@ function herisson_init() {
 
 
 // Include other functionality
-require_once HERISSON_INCLUDES_DIR . 'compat.php';
-require_once HERISSON_INCLUDES_DIR . 'rewrite.php';
-require_once HERISSON_INCLUDES_DIR . 'bookmarks.php';
+#require_once HERISSON_INCLUDES_DIR . 'compat.php';
+#require_once HERISSON_INCLUDES_DIR . 'rewrite.php';
+#require_once HERISSON_INCLUDES_DIR . 'bookmarks.php';
 #require_once HERISSON_INCLUDES_DIR . 'amazon.php';
 require_once HERISSON_INCLUDES_DIR . 'admin.php';
-require_once HERISSON_INCLUDES_DIR . 'filters.php';
+#require_once HERISSON_INCLUDES_DIR . 'filters.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
-require_once HERISSON_INCLUDES_DIR . 'widget.php';
+#require_once HERISSON_INCLUDES_DIR . 'widget.php';
 require_once HERISSON_INCLUDES_DIR . 'encryption.php';
 
 /**
@@ -131,13 +133,10 @@ function herisson_install() {
     $defaultOptions = array(
 		'formatDate'	=> 'd/m/Y',
 		'sitename'	=> false,
-		'hideAddedDate'	=> false,
-		'imageSize'	=> 'Small',
 		'httpLib'	=> 'snoopy',
 		'useModRewrite'	=> true,
 		'debugMode'	=> false,
 		'bookmarksPerPage'	=> 50,
-		'hideViewLibrary'	=> false,
 		'templateBase'		=> 'default_templates/',
 		'permalinkBase'		=> 'bookmarks/',
 		'basePath'		=> 'bookmarks',
@@ -164,70 +163,70 @@ function herisson_install() {
 }
 register_activation_hook('herisson/herisson.php', 'herisson_install');
 
-/**
- * Checks to see if the library/bookmark permalink query vars are set and, if so, loads the appropriate templates.
- */
-function herisson_library_init() {
-    global $wp, $wpdb, $q, $query, $wp_query;
-
-    $wp->parse_request();
-
-    if ( is_herisson_page() )
-        add_filter('wp_title', 'herisson_page_title');
-    else
-        return;
-
-    if ( get_query_var('herisson_library') ) {
-        // Library page:
-        herisson_load_template('library.php');
-        die;
-    }
-
-    if ( get_query_var('herisson_id') ) {
-    // Book permalink:
-        $GLOBALS['herisson_id'] = intval(get_query_var('herisson_id'));
-
-        $load = herisson_load_template('single.php');
-        if ( is_wp_error($load) )
-            echo $load->get_error_message();
-
-        die;
-    }
-
-    if ( get_query_var('herisson_page') ) {
-    // get page name from query string:
-        $herissonr_page = get_query_var('herisson_page');
-
-        $load = herisson_load_template($herissonr_page);
-        if ( is_wp_error($load) )
-            echo $load->get_error_message();
-
-        die;
-    }
-
-    if ( get_query_var('herisson_author') && get_query_var('herisson_title') ) {
-    // Book permalink with title and author.
-        $author				= $wpdb->escape(urldecode(get_query_var('herisson_author')));
-        $title				= $wpdb->escape(urldecode(get_query_var('herisson_title')));
-        $GLOBALS['herisson_id']	= $wpdb->get_var("
-		SELECT
-			b_id
-		FROM
-            {$wpdb->prefix}herisson
-		WHERE
-			b_nice_title = '$title'
-			AND
-			b_nice_author = '$author'
-            ");
-
-        $load = herisson_load_template('single.php');
-        if ( is_wp_error($load) )
-            echo $load->get_error_message();
-
-        die;
-    }
-}
-add_action('template_redirect', 'herisson_library_init');
+#/**
+# * Checks to see if the library/bookmark permalink query vars are set and, if so, loads the appropriate templates.
+# */
+#function herisson_library_init() {
+#    global $wp, $wpdb, $q, $query, $wp_query;
+#
+#    $wp->parse_request();
+#
+##    if ( is_herisson_page() )
+##        add_filter('wp_title', 'herisson_page_title');
+##    else
+##        return;
+#
+#    if ( get_query_var('herisson_library') ) {
+#        // Library page:
+#        herisson_load_template('library.php');
+#        die;
+#    }
+#
+#    if ( get_query_var('herisson_id') ) {
+#    // Book permalink:
+#        $GLOBALS['herisson_id'] = intval(get_query_var('herisson_id'));
+#
+#        $load = herisson_load_template('single.php');
+#        if ( is_wp_error($load) )
+#            echo $load->get_error_message();
+#
+#        die;
+#    }
+#
+#    if ( get_query_var('herisson_page') ) {
+#    // get page name from query string:
+#        $herissonr_page = get_query_var('herisson_page');
+#
+#        $load = herisson_load_template($herissonr_page);
+#        if ( is_wp_error($load) )
+#            echo $load->get_error_message();
+#
+#        die;
+#    }
+#
+#    if ( get_query_var('herisson_author') && get_query_var('herisson_title') ) {
+#    // Book permalink with title and author.
+#        $author				= $wpdb->escape(urldecode(get_query_var('herisson_author')));
+#        $title				= $wpdb->escape(urldecode(get_query_var('herisson_title')));
+#        $GLOBALS['herisson_id']	= $wpdb->get_var("
+#		SELECT
+#			b_id
+#		FROM
+#            {$wpdb->prefix}herisson
+#		WHERE
+#			b_nice_title = '$title'
+#			AND
+#			b_nice_author = '$author'
+#            ");
+#
+#        $load = herisson_load_template('single.php');
+#        if ( is_wp_error($load) )
+#            echo $load->get_error_message();
+#
+#        die;
+#    }
+#}
+#add_action('template_redirect', 'herisson_library_init');
 
 /**
  * Loads the given filename from The Herisson templates directory.
@@ -245,47 +244,47 @@ function herisson_load_template( $filename ) {
     load_template($template);
 }
 
-/**
- * Provides a simple API for themes to load the sidebar template.
- */
-function herisson_display() {
-    herisson_load_template('sidebar.php');
-}
+#/**
+# * Provides a simple API for themes to load the sidebar template.
+# */
+#function herisson_display() {
+#    herisson_load_template('sidebar.php');
+#}
 
-/**
- * Adds our details to the title of the page - bookmark title/author, "Library" etc.
- */
-function herisson_page_title( $title ) {
-    global $wp, $wp_query;
-    $wp->parse_request();
+#/**
+# * Adds our details to the title of the page - bookmark title/author, "Library" etc.
+# */
+#function herisson_page_title( $title ) {
+#    global $wp, $wp_query;
+#    $wp->parse_request();
+#
+#    $title = '';
+#
+#    if ( get_query_var('herisson_library') )
+#        $title = 'Herisson';
+#
+#    if ( get_query_var('herisson_id') ) {
+#        $bookmark = get_herisson_bookmark(intval(get_query_var('herisson_id')));
+#        $title = $bookmark->title . ' by ' . $bookmark->author;
+#    }
+#
+#    if ( !empty($title) ) {
+#        $title = apply_filters('herisson_page_title', $title);
+#        $separator = apply_filters('herisson_page_title_separator', ' | ');
+#        return $title.$separator;
+#    }
+#    return '';
+#}
 
-    $title = '';
-
-    if ( get_query_var('herisson_library') )
-        $title = 'Herisson';
-
-    if ( get_query_var('herisson_id') ) {
-        $bookmark = get_herisson_bookmark(intval(get_query_var('herisson_id')));
-        $title = $bookmark->title . ' by ' . $bookmark->author;
-    }
-
-    if ( !empty($title) ) {
-        $title = apply_filters('herisson_page_title', $title);
-        $separator = apply_filters('herisson_page_title_separator', ' | ');
-        return $title.$separator;
-    }
-    return '';
-}
-
-/**
- * Adds information to the header for future statistics purposes.
- */
-function herisson_header_stats() {
-    echo '
-	<meta name="herisson-version" content="' . HERISSON_VERSION . '" />
-	';
-}
-add_action('wp_head', 'herisson_header_stats');
+#/**
+# * Adds information to the header for future statistics purposes.
+# */
+#function herisson_header_stats() {
+#    echo '
+#	<meta name="herisson-version" content="' . HERISSON_VERSION . '" />
+#	';
+#}
+#add_action('wp_head', 'herisson_header_stats');
 
 function herisson_router() {
  # Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
@@ -304,21 +303,30 @@ function herisson_router() {
 
 add_action( 'send_headers', 'herisson_router');
 
-if ( !function_exists('robm_dump') ) {
-/**
- * Dumps a variable in a pretty way.
- */
-    function robm_dump() {
-        echo '<pre style="border:1px solid #000; padding:5px; margin:5px; max-height:150px; overflow:auto;" id="' . md5(serialize($object)) . '">';
-        $i = 0; $args = func_get_args();
-        foreach ( (array) $args as $object ) {
-            if ( $i == 0 && count($args) > 1 && is_string($object) )
-                echo "<h3>$object</h3>";
-            var_dump($object);
-            $i++;
-        }
-        echo '</pre>';
-    }
-}
+#if ( !function_exists('robm_dump') ) {
+#/**
+# * Dumps a variable in a pretty way.
+# */
+#    function robm_dump() {
+#        echo '<pre style="border:1px solid #000; padding:5px; margin:5px; max-height:150px; overflow:auto;" id="' . md5(serialize($object)) . '">';
+#        $i = 0; $args = func_get_args();
+#        foreach ( (array) $args as $object ) {
+#            if ( $i == 0 && count($args) > 1 && is_string($object) )
+#                echo "<h3>$object</h3>";
+#            var_dump($object);
+#            $i++;
+#        }
+#        echo '</pre>';
+#    }
+#}
 
+#add_filter('show_admin_bar', '__return_false');
+#add_action('admin_menu', 'remove_menus');
+
+if (param('nomenu')) {
+ herisson_bookmark_actions();
+	exit;
+
+}
+	
 ?>

@@ -94,7 +94,7 @@ function herisson_decrypt($json_string,$friend_public_key) {
 # echo "$hash_crypted -> $hash<br>\n";
 
  if (sha256($data) != $hash) {
-  echo __('Error : mismatch between hash and data, maybe a man in the middle attack ?!');
+  echo __('Error : mismatch between hash and data, maybe the publickey stored for this site is not correct, or maybe it is a man in the middle attack !<br>');
 	}
 	return $data;
 }

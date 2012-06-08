@@ -60,7 +60,7 @@ function herisson_friend_list() {
  ?> 
  <tr>
   <td><? echo $friend->name; ?></td>
-  <td><? echo $friend->url; ?></td>
+  <td><a href="<? echo $friend->url; ?>"><? echo $friend->url; ?></a></td>
   <td>
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=edit&id=<?=$friend->id?>"><?=__('Edit',HERISSONTD)?></a>
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=delete&id=<?=$friend->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSONTD)?>')) { return true; } return false;"><?=__('Delete',HERISSONTD)?></a>

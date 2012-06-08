@@ -15,7 +15,8 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
  public function setUrl($url) {
   parent::_set('url',$url);
-		$this->reloadContent();
+ 	$this->reloadContent();
+ 	$this->capture();
  }
 
  public function setTitle($title) {
@@ -25,7 +26,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
 	public function reloadContent() {
 	 $url = $this->_get('url');
-  if (function_exists('curl_init')) {
+  if (!$this->content && function_exists('curl_init')) {
 
    $curl = curl_init();
    curl_setopt($curl, CURLOPT_URL, $url);
@@ -42,6 +43,50 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		 "url" => $this->url,
 		 "description" => $this->description,
 		);
+	}
+ 
+	public function getThumbUrl() {
+	 return get_option('siteurl')."/wp-content/plugins/herisson/screenshots/".$this->id."_small.png";
+	}
+
+	public function getImageUrl() {
+	 return get_option('siteurl')."/wp-content/plugins/herisson/screenshots/".$this->id.".png";
+	}
+
+	public function getThumb() {
+	 return HERISSON_SCREENSHOTS_DIR.$this->id."_small.png";
+	}
+
+	public function getImage() {
+	 return HERISSON_SCREENSHOTS_DIR.$this->id.".png";
+	}
+
+	public function capture() {
+	 if (!$this->id) { return false; }
+	 # ./wkhtmltoimage-amd64 --disable-javascript --quality 50 http://www.wilkins.fr/ /home/web/www.wilkins.fr/google.png
+		$url = $this->url;
+		$image = HERISSON_SCREENSHOTS_DIR.$this->id.".png";
+		$thumb = HERISSON_SCREENSHOTS_DIR.$this->id."_small.png";
+		$wkhtmltoimage = HERISSON_BASE_DIR."wkhtmltoimage-amd64";
+		$convert = "/usr/bin/convert";
+		$options_nojs = " --disable-javascript ";
+		$options_quality50 = " --quality 50 ";
+		if (!file_exists($image) || filesize($image) == 0) {
+# 		echo "$wkhtmltoimage $options_quality50 \"$url\" $image";
+ 		exec("$wkhtmltoimage $options_quality50 \"$url\" $image",$output);
+		 echo implode("\n",$output);
+		}
+
+		if (!file_exists($image) || filesize($image) == 0) {
+# 		echo "$wkhtmltoimage $options_nojs $options_quality50 \"$url\" $image";
+ 		exec("$wkhtmltoimage $options_nojs $options_quality50 \"$url\" $image",$output);
+		 echo implode("\n",$output);
+		}
+
+		if (!file_exists($thumb) || filesize($thumb) == 0) {
+ 		exec("$convert -resize 200x \"$image\" \"$thumb\"",$output);
+		 echo implode("\n",$output);
+		}
 
 	}
 

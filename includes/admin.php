@@ -18,7 +18,7 @@ require_once HERISSON_ADMIN_DIR . 'options.php';
 function herisson_add_pages() {
 #    $options = get_option('HerissonOptions');
 
-			add_menu_page(__('Herisson', HERISSONTD), __('Herisson', HERISSONTD), 'manage_options', 'herisson_menu');
+			add_menu_page(__('Herisson', HERISSONTD), __('Herisson', HERISSONTD), 'manage_options', 'herisson_menu','herisson_bookmark_actions');
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_menu', 'herisson_');
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_add_bookmark', 'herisson_add_bookmark');
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_add_bookmark', 'herisson_add_bookmark');
@@ -29,5 +29,5 @@ function herisson_add_pages() {
 }
 
 add_action('admin_menu', 'herisson_add_pages');
-	
+
 ?>

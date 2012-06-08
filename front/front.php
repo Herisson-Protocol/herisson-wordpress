@@ -14,8 +14,6 @@ function herisson_front_actions() {
  switch ($action) {
 	 case 'publickey': herisson_front_publickey();
 		break;
-	 case 'friends': herisson_front_friends();
-		break;
 	 case 'retrieve': herisson_front_retrieve();
 		break;
   default: herisson_front_list();
@@ -41,27 +39,12 @@ function herisson_front_publickey() {
 	echo $options['publicKey'];
 }
 
-function herisson_front_friends() {
- $options = get_option('HerissonOptions');
-	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->execute();
-	foreach ($friends as $friend) {
-  $bookmarks = $friend->retrieveBookmarks();
-		echo $friend->name."'s Bookmarks<br>";
-		foreach ($bookmarks as $bookmark) {
-   echo '<a href="'.$bookmark['url'].'">'.$bookmark['title'].'</a><br>';
-		}
-	}
-}
-
 function herisson_front_retrieve() {
  if (!sizeof($_POST)) { exit; }
 	$key = post('key');
-	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->execute();
+	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->where("public_key='$key'")->execute();
 	foreach ($friends as $friend) {
-  if ($friend->public_key == $key) {
-		 echo $friend->generateBookmarksData();
-			break; 
-		}
+	 echo $friend->generateBookmarksData();
 	}
 }
 
@@ -69,9 +52,10 @@ function herisson_front_list() {
  global $wpdb;
 
 	$bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
+	$options = get_option('HerissonOptions');
  echo '
 	<div class="wrap">
-				<h2>' . __("All bookmarks", HERISSONTD).'</h2>
+				<h1>' . sprintf(__("%s bookmarks", HERISSONTD),$options['sitename']).'</h1>
 				';
  if (sizeof($bookmarks)) {
   ?>
@@ -96,6 +80,19 @@ function herisson_front_list() {
 		<?
  } else {
 	 echo __("No bookmark",HERISSONTD);
+ }
+
+ echo "<h2>".__("Friend's bookmarks",HERISSONTD)."</h2>";
+ $options = get_option('HerissonOptions');
+	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->execute();
+	foreach ($friends as $friend) {
+		echo $friend->name."'s bookmarks<br>";
+		$bookmarks = $friend->retrieveBookmarks();
+		if (sizeof($bookmarks)) {
+ 		foreach ($bookmarks as $bookmark) {
+    echo '<a href="'.$bookmark['url'].'">'.$bookmark['title'].'</a> : '.$bookmark['description'].'<br>';
+ 		}
+		} else { echo "No bookmark"; }
  }
 
 }

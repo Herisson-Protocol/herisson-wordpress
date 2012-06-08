@@ -12,11 +12,15 @@ function herisson_bookmark_actions() {
 		break;
 	 case 'edit': herisson_bookmark_edit();
 		break;
+	 case 'view': herisson_bookmark_view();
+		break;
 	 case 'submitedit': herisson_bookmark_submitedit();
 		break;
 		case 'list': herisson_bookmark_list();
 		break;
 		case 'delete': herisson_bookmark_delete();
+		break;
+		case 'tagcloud': herisson_bookmark_tagcloud();
 		break;
   default: herisson_bookmark_list();
 	}
@@ -59,10 +63,12 @@ function herisson_bookmark_list() {
   foreach ($bookmarks as $bookmark) {
  ?> 
  <tr>
-  <td><? echo $bookmark->title; ?></td>
-  <td><? echo $bookmark->url; ?></td>
+  <td><b><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><? echo $bookmark->title; ?></a></b></td>
+  <td><a href="<? echo $bookmark->url; ?>"><? echo $bookmark->url; ?></a></td>
   <td>
+		<!--
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><?=__('Edit',HERISSONTD)?></a>
+			-->
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSONTD)?>')) { return true; } return false;"><?=__('Delete',HERISSONTD)?></a>
 		</td>
 		<!--
@@ -107,9 +113,7 @@ function herisson_bookmark_edit($id=0) {
 			<div class="wrap">
 				<h2>' . __("Edit Bookmark", HERISSONTD) . '</h2>
 
-				<!--<form method="post" action="' . get_option('siteurl') . '/wp-content/plugins/herisson/admin/action-bookmark-edit.php">-->
 				<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_bookmarks">
-				<!-- ?page=herisson_bookmarks&action=submitedit&id='.$id.'"> -->
 			';
 
 
@@ -118,12 +122,6 @@ function herisson_bookmark_edit($id=0) {
 
 
             echo '
-				<div class="book-image">
-				<!--
-					<img style="float:left; margin-right: 10px;" id="book-image-0" alt="Book Cover" src="' . /*$existing->image*/'' . '" />
-					-->
-				</div>
-
 				<h3>' . __("Bookmark", HERISSONTD) . ' ' . $existing->id . ':<cite> &laquo;&nbsp;' . $existing->title . '&nbsp;&raquo;</cite></h3>
 
 				<table class="form-table" cellspacing="2" cellpadding="5">
@@ -145,7 +143,14 @@ function herisson_bookmark_edit($id=0) {
 					<td>
 						<input type="text" class="main" id="title-0" name="title" value="' . $existing->title . '" />
 					</td>
-				</tr>
+					'.($existing->id && file_exists($existing->getImage()) && filesize($existing->getImage()) ? '
+					<td rowspan="5" style="text-align: center; vertical-align: top">
+					 <br/>
+						<b><a href="/wp-admin/admin.php?page=herisson_bookmarks&action=view&id='.$existing->id.'&nomenu=1" target="_blank">'.__('View archive',HERISSONTD).'</a></b><br/><br/>
+						<b>'.__('Capture',HERISSONTD).'</b><br/>
+					 <a href="'.$existing->getImageUrl().'"><img alt="Capture" src="'.$existing->getThumbUrl().'" style="border:0.5px solid black"/></a>
+					</td>
+				</tr>' : '').'
 				';
 
 			// URL
@@ -197,9 +202,8 @@ function herisson_bookmark_edit($id=0) {
 							';
 
 						echo '
-									<option value="0"'.($existing->is_public ? ' selected="selected"' : '').'>' . __("Private", HERISSONTD) . '</option>
-									<option value="0"'.($existing->is_public ? ' selected="selected"' : '').'>' . __("Public", HERISSONTD) . '</option>
-									<option value="1" selected="selected">' . __("Public", HERISSONTD) . '</option>
+									<option value="0"'.(!$existing->is_public ? ' selected="selected"' : '').'>' . __("Private", HERISSONTD) . '</option>
+									<option value="1"'.($existing->is_public ? ' selected="selected"' : '').'>' . __("Public", HERISSONTD) . '</option>
 								';
 
 				echo '
@@ -209,9 +213,54 @@ function herisson_bookmark_edit($id=0) {
 					</td>
 				</tr>';
 
-   echo '
+            echo '
+				<tr class="form-field">
+					<th valign="top" scope="row">
+						<label for="visibility-0">' . __("Tags", HERISSONTD) . ':</label>
+					</th>
+					<td>
+					';
+				echo "
+<script src=\"/wp-content/plugins/herisson/js/herisson.dev.js\" type=\"text/javascript\"></script>
+<script>
+ jQuery(document).ready(function($) {
+  $('#tagsdiv-post_tag, #categorydiv').children('h3, .handlediv').click(function(){
+   $(this).siblings('.inside').toggle();
+  });
+ });
+</script>";
+
+ ?>
+   <div id="tagsdiv-post_tag" class="postbox">
+    <div class="handlediv" title="<?php esc_attr_e( 'Click to toggle' ); ?>"><br /></div>
+    <h3><span><?php _e('Tags'); ?></span></h3>
+    <div class="inside">
+     <div class="tagsdiv" id="post_tag">
+      <div class="jaxtag">
+       <label class="screen-reader-text" for="newtag"><?php _e('Tags'); ?></label>
+       <input type="hidden" name="tax_input[post_tag]" class="the-tags" id="tax-input[post_tag]" value="" />
+       <div class="ajaxtag">
+        <input type="text" name="newtag[post_tag]" class="newtag form-input-tip" size="16" autocomplete="off" value="" />
+        <input type="button" class="button tagadd" value="<?php esc_attr_e('Add'); ?>" tabindex="3" />
+       </div>
+      </div>
+      <div class="tagchecklist"></div>
+     </div>
+     <p class="tagcloud-link"><a href="#titlediv" class="tagcloud-link" id="link-post_tag"><?php _e('Choose from the most used tags'); ?></a></p>
+    </div>
+   </div>
+			 </td>
+				</tr>
+
+				<?
+
+   echo "
     </tbody>
-    </table>
+    </table>";
+
+
+echo '
+
 
     <p class="submit">
      <input class="button" type="submit" value="' . __("Save", HERISSONTD) . '" />
@@ -244,11 +293,31 @@ function herisson_bookmark_submitedit() {
 		$bookmark->description = $description;
 		$bookmark->is_public = $is_public;
 		$bookmark->save();
+		if ($id == 0) {
+ 		$bookmark->capture();
+		}
 
 	 herisson_bookmark_edit($bookmark->id);
 #header('Location: /' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_bookmarks?action=edit&id='.$id);
 #exit;
 
+}
+
+function herisson_bookmark_view() {
+# add_action('admin_menu', 'remove_menus');
+ $id = intval(get('id'));
+ if (!$id) {
+  echo __("Error : Missing id\n",HERISSONTD);
+		exit;
+	}
+
+ $bookmark = herisson_bookmark_get($id);
+	if ($bookmark && $bookmark->content) {
+ 	echo $bookmark->content;
+	} else {
+  echo sprintf(__("Error : Missing content for bookmark %s\n",HERISSONTD),$bookmark->id);
+	}
+	exit;
 }
 
 function herisson_bookmark_delete() {
@@ -270,4 +339,42 @@ if ( !empty($_POST['login']) && !empty($_POST['password'])) {
 
 
 }
+
+function herisson_bookmark_tagcloud() {
+
+ echo "toto";
+ if ( post('tax') ) {
+  $taxonomy = sanitize_key( post('tax'));
+  $tax = get_taxonomy( $taxonomy );
+  if ( ! $tax )
+   die( '0' );
+  if ( ! current_user_can( $tax->cap->assign_terms ) )
+   die( '-1' );
+ } else {
+  die('0');
+ }
+
+ $tags = get_terms( $taxonomy, array( 'number' => 45, 'orderby' => 'count', 'order' => 'DESC' ) );
+
+ if ( empty( $tags ) )
+  die( isset( $tax->no_tagcloud ) ? $tax->no_tagcloud : __('No tags found!') );
+
+ if ( is_wp_error( $tags ) )
+  die( $tags->get_error_message() );
+
+ foreach ( $tags as $key => $tag ) {
+  $tags[ $key ]->link = '#';
+  $tags[ $key ]->id = $tag->term_id;
+ }
+
+ // We need raw tag names here, so don't filter the output
+ $return = wp_generate_tag_cloud( $tags, array('filter' => 0) );
+
+ if ( empty($return) )
+  die('0');
+
+ echo $return;
+
+}
+
 
