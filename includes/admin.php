@@ -18,12 +18,16 @@ require_once HERISSON_ADMIN_DIR . 'options.php';
 function herisson_add_pages() {
 #    $options = get_option('HerissonOptions');
 
+ $update = '<span class="update-plugins count-%s" title="title"><span class="update-count">%s</span></span>';
+	$nb = 2;
+ $friends_waiting = sprintf($update,$nb,$nb);
+
 			add_menu_page(__('Herisson', HERISSONTD), __('Herisson', HERISSONTD), 'manage_options', 'herisson_menu','herisson_bookmark_actions');
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_menu', 'herisson_');
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_add_bookmark', 'herisson_add_bookmark');
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_add_bookmark', 'herisson_add_bookmark');
 			add_submenu_page('herisson_menu', __('Bookmarks', HERISSONTD), __('Bookmarks', HERISSONTD), 'manage_options', 'herisson_bookmarks', 'herisson_bookmark_actions');
-			add_submenu_page('herisson_menu', __('Friends', HERISSONTD), __('Friends', HERISSONTD), 'manage_options', 'herisson_friends', 'herisson_friend_actions');
+			add_submenu_page('herisson_menu', __('Friends', HERISSONTD), __('Friends', HERISSONTD).$friends_waiting, 'manage_options', 'herisson_friends', 'herisson_friend_actions');
 			add_submenu_page('herisson_menu', __('Options', HERISSONTD), __('Options', HERISSONTD), 'manage_options', 'herisson_options', 'herisson_manage_options');
 		
 }

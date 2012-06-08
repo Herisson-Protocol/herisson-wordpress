@@ -21,7 +21,7 @@ function herisson_manage_options() {
 				if (post('action') == 'submitedit') {
      $options = get_option('HerissonOptions');
 				 $new_options = array();
-				 $allowedoptions = array('basePath','bookmarksPerPage','sitename','debugMode');
+				 $allowedoptions = array('basePath','bookmarksPerPage','sitename','debugMode','adminEmail');
 					foreach ($allowedoptions as $option) {
 					 $new_options[$option] = post($option);
 					}
@@ -59,6 +59,12 @@ function herisson_manage_options() {
 				</td>
 			</tr>
 			<tr valign="top">
+				<th scope="row">' . __('Admin email', HERISSONTD) . ':</th>
+				<td>
+					<input type="text" name="adminEmail" style="width:30em" value="' .$options['adminEmail']. '" />
+				</td>
+			</tr>
+			<tr valign="top">
 				<th scope="row"><label for="bookmarks_per_page">' . __("Bookmarks per page", HERISSONTD) . '</label>:</th>
 				<td>
 					<input type="text" name="bookmarks_per_page" id="books_per_page" style="width:4em;" value="' . ( intval($options['bookmarksPerPage']) ) . '" />
@@ -72,7 +78,8 @@ function herisson_manage_options() {
 				<td>
 					<input type="text" name="basePath" id="basePath" style="width:30em;" value="' .$options['basePath'] . '" />
 					<p>
-					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog : Visit <a href=\"%s/%s\">%s/%s</a>", HERISSONTD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'
+					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSONTD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'<br/>
+					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSONTD).'
 					</p>
 				</td>
 			</tr>';

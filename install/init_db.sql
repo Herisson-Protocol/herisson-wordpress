@@ -56,15 +56,20 @@ CREATE TABLE `#PREFIX#herisson_friends`
 (
 	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
 	`url` VARCHAR(255),
+	`alias` VARCHAR(255),
 	`name` VARCHAR(255),
 	`email` VARCHAR(255),
 	`public_key` TEXT,
-	`token` VARCHAR(255),
 	`is_active` TINYINT default 0,
+	`b_youwant` TINYINT default 0,
+	`b_wantsyou` TINYINT default 0,
 	PRIMARY KEY (`id`),
 	KEY `name`(`name`),
 	KEY `url`(`url`),
-	KEY `email`(`email`)
+	KEY `email`(`email`),
+	KEY `is_active`(`is_active`),
+	KEY `b_youwant`(`b_youwant`),
+	KEY `b_wantsyou`(`b_wantsyou`)
 );
 
 --  ---------------------------------------------------------------------------

@@ -36,7 +36,7 @@ function herisson_encrypt($data,$friend_public_key) {
  $data_crypted = null;
 # echo "data : $data<br><br>\n";
 #	echo "friend public key : $friend_public_key<br><br>\n";
-	openssl_get_publickey($friend_public_key);
+#	openssl_get_publickey($friend_public_key);
 #	echo "friend public key : $friend_public_key<br><br>\n";
 #	echo "friend public key : ".openssl_get_publickey($friend_public_key)."<br><br>\n";
  if (!openssl_seal($data,$data_crypted,$seal_key,array($friend_public_key))) {
@@ -98,5 +98,29 @@ function herisson_decrypt($json_string,$friend_public_key) {
 	}
 	return $data;
 }
+
+
+
+function herisson_encrypt_short($data) {
+ $options = get_option('HerissonOptions');
+	$my_public_key  = $options['publicKey'];
+	$my_private_key = $options['privateKey'];
+
+ $hash = sha256($data);
+	if (!openssl_private_encrypt($hash,$hash_crypted,$my_private_key)) {
+	 echo __('Error while encrypting hash with my private key',HERISSONTD);
+	}
+	return base64_encode($hash_crypted);
+}
+
+
+function herisson_decrypt_short($data,$friend_public_key) {
+	$hash_crypted = base64_decode($data);
+	if (!openssl_public_decrypt($hash_crypted,$hash,$friend_public_key)) {
+	 echo __('Error while decrypting hash with friend public key',HERISSONTD);
+	}
+ return $hash;
+}
+
 
 

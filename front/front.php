@@ -14,6 +14,10 @@ function herisson_front_actions() {
  switch ($action) {
 	 case 'publickey': herisson_front_publickey();
 		break;
+	 case 'info': herisson_front_info();
+		break;
+	 case 'ask': herisson_front_ask();
+		break;
 	 case 'retrieve': herisson_front_retrieve();
 		break;
   default: herisson_front_list();
@@ -33,6 +37,37 @@ function herisson_front_get($id) {
 	return new Object();
 }
 
+
+function herisson_front_ask() {
+# print_r($_POST);
+ $url = post('url');
+ $signature = post('signature');
+ $f = new WpHerissonFriends();
+ $f->url = $url;
+ $f->reloadPublicKey();
+ $pub = $f->public_key;
+# echo $pub;
+# echo herisson_decrypt_short($signature,$pub);
+#echo sha256($url);
+ if (herisson_decrypt_short($signature,$pub) == sha256($url)) {
+#  echo "Check !\n";
+  $f->getInfo();
+  $f->b_wantsyou=1;
+		$f->is_active=0;
+  $f->save();
+		echo "1";
+ }
+ else { echo "no check !\n"; }
+}
+
+function herisson_front_info() {
+ $options = get_option('HerissonOptions');
+ echo json_encode(array(
+ 'sitename'   => $options['sitename'],
+ 'adminEmail' => $options['adminEmail'],
+ 'version' => HERISSON_VERSION,
+ ));
+}
 
 function herisson_front_publickey() {
  $options = get_option('HerissonOptions');

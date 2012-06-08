@@ -25,15 +25,13 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
  }
 
 	public function reloadContent() {
-	 $url = $this->_get('url');
-  if (!$this->content && function_exists('curl_init')) {
-
-   $curl = curl_init();
-   curl_setopt($curl, CURLOPT_URL, $url);
-   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-   $content = curl_exec($curl);
-   $this->_set('content',$content);
+		if (!$this->content) {
+		 $content = herisson_download($this->url);
+ 		if (!is_wp_error($content)) {
+    $this->_set('content',$content);
+ 		} else { 
+ 			echo $data->get_error_message("herisson");
+ 		}
   }
 	}
 

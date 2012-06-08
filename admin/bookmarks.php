@@ -143,14 +143,15 @@ function herisson_bookmark_edit($id=0) {
 					<td>
 						<input type="text" class="main" id="title-0" name="title" value="' . $existing->title . '" />
 					</td>
-					'.($existing->id && file_exists($existing->getImage()) && filesize($existing->getImage()) ? '
 					<td rowspan="5" style="text-align: center; vertical-align: top">
 					 <br/>
 						<b><a href="/wp-admin/admin.php?page=herisson_bookmarks&action=view&id='.$existing->id.'&nomenu=1" target="_blank">'.__('View archive',HERISSONTD).'</a></b><br/><br/>
+					'.($existing->id && file_exists($existing->getImage()) && filesize($existing->getImage()) ? '
 						<b>'.__('Capture',HERISSONTD).'</b><br/>
 					 <a href="'.$existing->getImageUrl().'"><img alt="Capture" src="'.$existing->getThumbUrl().'" style="border:0.5px solid black"/></a>
+     ' : '').'
 					</td>
-				</tr>' : '').'
+				</tr>
 				';
 
 			// URL

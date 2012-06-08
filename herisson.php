@@ -132,16 +132,17 @@ function herisson_install() {
 
     $defaultOptions = array(
 		'formatDate'	=> 'd/m/Y',
-		'sitename'	=> false,
-		'httpLib'	=> 'snoopy',
+		'sitename'	=> 'Herisson new instance',
+#		'httpLib'	=> 'snoopy',
 		'useModRewrite'	=> true,
 		'debugMode'	=> false,
 		'bookmarksPerPage'	=> 50,
 		'templateBase'		=> 'default_templates/',
-		'permalinkBase'		=> 'bookmarks/',
+		#'permalinkBase'		=> 'bookmarks/',
 		'basePath'		=> 'bookmarks',
 		'publicKey'		=> $publicKey,
 		'privateKey'		=> $privateKey,
+		'adminEmail'		=> '',
     );
     add_option('HerissonOptions', $defaultOptions);
 
@@ -324,9 +325,14 @@ add_action( 'send_headers', 'herisson_router');
 #add_action('admin_menu', 'remove_menus');
 
 if (param('nomenu')) {
- herisson_bookmark_actions();
+ if (param('page') == "herisson_bookmarks") {
+  herisson_bookmark_actions();
+ } else if (param('page') == "herisson_friends") {
+  herisson_friend_actions();
+	} else if (param('page') == 'front') {
+  herisson_front_actions();
+	}
 	exit;
-
 }
 	
 ?>

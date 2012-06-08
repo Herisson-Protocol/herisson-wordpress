@@ -18,6 +18,8 @@ function herisson_friend_actions() {
 		break;
 		case 'delete': herisson_friend_delete();
 		break;
+		case 'approve': herisson_friend_approve();
+		break;
   default: herisson_friend_list();
 	}
 
@@ -36,22 +38,51 @@ function herisson_friend_get($id) {
 	return new Object();
 }
 
-function herisson_friend_list() {
- global $wpdb;
+function herisson_friend_list_active() {
+	$friends = Doctrine_Query::create()->from('WpHerissonFriends')
+	->where('is_active=1')->execute();
+	herisson_friend_list_custom( __("Active friends", HERISSONTD),$friends);
+}
 
-	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->execute();
+function herisson_friend_list_youwant() {
+	$friends = Doctrine_Query::create()->from('WpHerissonFriends')
+	->where('b_youwant=1')->execute();
+	herisson_friend_list_custom( __("Waiting for friend approval", HERISSONTD),$friends);
+}
+
+function herisson_friend_list_wantsyou() {
+	$friends = Doctrine_Query::create()->from('WpHerissonFriends')
+	->where('b_wantsyou=1')->execute();
+	herisson_friend_list_custom( __("Asking your permission", HERISSONTD),$friends);
+}
+
+
+function herisson_friend_list() {
  echo '
 	<div class="wrap">
-				<h2>' . __("All friends", HERISSONTD).'<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_friends&action=add&id=0" class="add-new-h2">'.__('Add',HERISSONTD).'</a></h2>
-<!--
- <a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_friends&action=add&id=0">'.__('Add new friend',HERISSONTD).'</a></td>
-	-->
+				<h1>' . __("All friends", HERISSONTD).'<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_friends&action=add&id=0" class="add-new-h2">'.__('Add',HERISSONTD).'</a></h1>
+				';
+
+		herisson_friend_list_active();
+		herisson_friend_list_youwant();
+		herisson_friend_list_wantsyou();
+		echo'
+		</div>';
+
+}
+
+
+function herisson_friend_list_custom($title,$friends) {
+
+ echo '
+				<h2>'.$title.'</h2>
 				';
  if (sizeof($friends)) {
   ?>
  <table class="widefat post " cellspacing="0">
  <tr>
-  <th><?=__('Name',HERISSONTD)?></th>
+  <th><?=__('Alias',HERISSONTD)?></th>
+  <th><?=__('Official name',HERISSONTD)?></th>
   <th><?=__('URL',HERISSONTD)?></th>
   <th><?=__('Action',HERISSONTD)?></th>
  </tr>
@@ -59,15 +90,15 @@ function herisson_friend_list() {
   foreach ($friends as $friend) {
  ?> 
  <tr>
+  <td><b><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=edit&id=<?=$friend->id?>"><? echo $friend->alias ? $friend->alias : 'Unnamed-'.$friend->id; ?></a></b></td>
   <td><? echo $friend->name; ?></td>
   <td><a href="<? echo $friend->url; ?>"><? echo $friend->url; ?></a></td>
   <td>
-		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=edit&id=<?=$friend->id?>"><?=__('Edit',HERISSONTD)?></a>
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=delete&id=<?=$friend->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSONTD)?>')) { return true; } return false;"><?=__('Delete',HERISSONTD)?></a>
+			<? if ($friend->b_wantsyou) { ?>
+		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=approve&id=<?=$friend->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSONTD)?>')) { return true; } return false;"><?=__('Approve',HERISSONTD)?></a>
+			<? } ?>
 		</td>
-		<!--
-  <td><a href="<?=get_option('siteurl')?>/wp-content/plugins/herisson/admin/friend-edit.php"><?=__('Edit',HERISSONTD)?></a></td>
-		-->
  </tr>
  <?
  
@@ -75,11 +106,11 @@ function herisson_friend_list() {
 		?>
 		</table>
 	 <? echo __(sizeof($friends)." friends.",HERISSONTD); ?>
-		</div>
 		<?
  } else {
 	 echo __("No friend",HERISSONTD);
  }
+	echo "<br>";
 
 }
 
@@ -136,14 +167,26 @@ function herisson_friend_edit($id=0) {
 				';
 				
 
-			// Title.
+			// Alias.
             echo '
 				<tr class="form-field">
 					<th valign="top" scope="row">
-						<label for="name-0">' . __("Title", HERISSONTD) . ':</label>
+						<label for="name-0">' . __("Alias", HERISSONTD) . ':</label>
 					</th>
 					<td>
-						<input type="text" class="main" id="name-0" name="name" value="' . $existing->name . '" />
+						<input type="text" class="main" id="alias-0" name="alias" value="' . $existing->alias . '" />
+					</td>
+				</tr>
+				';
+
+			// Sitename.
+            echo '
+				<tr class="form-field">
+					<th valign="top" scope="row">
+						<label for="name-0">' . __("Official name", HERISSONTD) . ':</label>
+					</th>
+					<td>
+						<i>'.$existing->name.'</i>
 					</td>
 				</tr>
 				';
@@ -157,6 +200,25 @@ function herisson_friend_edit($id=0) {
 					<td>
 						<input type="text" size="80" class="main" id="url-0" name="url" value="' . $existing->url . '" />
 						<br/><small><a href="'.$existing->url.'" style="text-decoration:none">Visit '.$existing->url.'</a></small>
+					</td>
+				</tr>
+				';
+
+			// Active
+            echo '
+				<tr class="form-field">
+					<th valign="top" scope="row">
+						<label for="url-0">' . __("Active", HERISSONTD) . ':</label>
+					</th>
+					<td>
+      '.($existing->is_active ?
+        '<span style="color:green">'.
+        __("This friend is active and considered as a Herisson site",HERISSONTD)
+        .'</span>'  :
+        '<span style="color:red">'.
+        __("This friend is inactive. Maybe it is not a Herisson site",HERISSONTD) 
+        .'</span>'
+      ).'
 					</td>
 				</tr>
 				';
@@ -181,15 +243,17 @@ function herisson_friend_submitedit() {
 
   $id = intval(post('id'));
   $url			= post('url');
-  $name			= post('name');
+  $alias			= post('alias');
 
   if ( $id == 0 )  {
 		 $friend = new WpHerissonFriends();
   } else {
 		 $friend = herisson_friend_get($id);
 		}
-		$friend->name = $name;
+		$friend->alias = $alias;
 		$friend->url = $url;
+  $friend->getInfo();
+  $friend->askForFriend();
 		$friend->save();
 
 	 herisson_friend_edit($friend->id);
@@ -199,13 +263,21 @@ function herisson_friend_submitedit() {
 }
 
 function herisson_friend_delete() {
-
  		$id = intval(param('id'));
 			if ($id>0) {
     $friend = herisson_friend_get($id);
  			$friend->delete();
 			}
-		
+			herisson_friend_list();
+}
+
+
+function herisson_friend_approve() {
+ 		$id = intval(param('id'));
+			if ($id>0) {
+    $friend = herisson_friend_get($id);
+				$friend->approve();
+			}
 			herisson_friend_list();
 }
 
