@@ -1,63 +1,60 @@
 <?php
 /**
- * Admin interface for managing options.
+ * The admin interface for managing and editing backups.
  * @package herisson
  */
 
-if( !isset($_SERVER['REQUEST_URI']) ) {
-    $arr = explode("/", $_SERVER['PHP_SELF']);
-    $_SERVER['REQUEST_URI'] = "/" . $arr[count($arr) - 1];
-    if ( !empty($_SERVER['argv'][0]) )
-        $_SERVER['REQUEST_URI'] .= "?{$_SERVER['argv'][0]}";
+function herisson_backup_actions() {
+
+ $action = param('action');
+ switch ($action) {
+	 case 'backup': herisson_backup_backup();
+		break;
+	 case 'export': herisson_backup_export();
+		break;
+	 case 'import': herisson_backup_import();
+		break;
+  default: herisson_manage_backup();
+	}
+
 }
 
-/**
- * Creates the options admin page and manages the updating of options.
- */
-function herisson_manage_options() {
+function herisson_manage_backup() {
 
     global $wpdb;
-
-				if (post('action') == 'submitedit') {
-     $options = get_option('HerissonOptions');
-				 $new_options = array();
-				 $allowedoptions = array('basePath','bookmarksPerPage','sitename','debugMode','adminEmail','search');
-					foreach ($allowedoptions as $option) {
-					 $new_options[$option] = post($option);
-					}
-					$complete_options=array_merge($options,$new_options);
-					if (!array_key_exists('privateKey',$complete_options)) {
-      list($publicKey,$privateKey) = herisson_generate_keys_pair();
- 					$complete_options['publicKey'] = $publicKey;
- 					$complete_options['privateKey'] = $privateKey;
-						echo "<b>Warning</b> : public/private keys have been regenerated<br>";
-					}
-	    update_option('HerissonOptions', $complete_options);
-				}
-
-    $options = get_option('HerissonOptions');
 
     echo '
 	<div class="wrap">
 
-		<h2>' . __("Herisson options", HERISSONTD) . '</h2>
+		<h2>' . __("Import, export and backup", HERISSONTD) . '</h2>
 	';
 
     echo '
-		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_options">
+		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
 	';
 
     if ( function_exists('wp_nonce_field') )
-        wp_nonce_field('herisson-update-options');
+        wp_nonce_field('herisson-update-backup');
 
     echo '
 		<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
 			<tr valign="top">
-				<th scope="row">' . __('Site name', HERISSONTD) . ':</th>
+				<th scope="row">' . __('Import Firefox bookmarks', HERISSONTD) . ':</th>
 				<td>
-					<input type="text" name="sitename" style="width:30em" value="' .$options['sitename']. '" />
+					<input type="file" name="firefox" />
 				</td>
 			</tr>
+		</table>
+
+		<input type="hidden" name="action" value="import" />
+
+		<p class="submit">
+			<input type="submit" value="' . __("Import bookmarks", HERISSONTD) . '" />
+		</p>
+
+		</form>
+		</table>
+		<table>
 			<tr valign="top">
 				<th scope="row">' . __('Admin email', HERISSONTD) . ':</th>
 				<td>
@@ -122,4 +119,74 @@ function herisson_manage_options() {
 
 }
 
+
+
+
+
+function herisson_backup_import() {
+ if (isset($_FILES['firefox'])) { 
+	 herisson_backup_import_firefox();
+	}
+
+}
+
+
+function herisson_backup_import_firefox() {
+	require HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
+	print_r($_FILES['firefox']);
+	$filename = $_FILES['firefox']['tmp_name'];
+	# Creating new bookmarks
+	$bookmarks = new Bookmarks();
+	$bookmarks->parse($filename);
+	$bookmarks->bookmarksFileMd5 = md5_file($filename);
+
+
+# herisson_bookmark_create("http://www.linuxfr.org");
+#	exit;
+
 ?>
+ <link href="<?=get_option('siteurl')?>/wp-content/plugins/herisson/includes/firefox/styles.css" rel="stylesheet" type="text/css" />
+ <table class="widefat post">
+
+	<?  while($bookmarks->hasMoreItems()) {
+
+	$item = $bookmarks->getNextElement();
+	if (!$item->_isFolder) {
+ herisson_bookmark_create($item->HREF,array('favicon_image'=>$item->ICONDATA,'title'=>$item->name));
+	}
+	continue;
+	?>
+	<tr>
+ 	<td>
+	<?  if(!$item->_isFolder) { ?>
+		<input type="checkbox" name=""/>
+	<? } ?>
+	 </td>
+	
+	 <td>
+	<? 
+	 echo str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$item->depth);
+
+	 if($item->_isFolder) { ?>
+		<b><?=$item->name?></b>
+	<? } else { 
+		if($item->ICON) {
+		 ?>
+			<a href="<?=$item->HREF?>" target="_blank"><img src="icons/<?=$item->ICON?>.ico" alt="" /><span class="txt" title="<?=$item->name?>"><?=shortname($item->name)?></span></a>
+
+		<? } else { ?>
+			<a href="<?=$item->HREF?>" target="_blank"><img src="page.png" alt="" /><span class="txt" title="<?=$item->name?>"><?=shortname($item->name)?></span></a>
+			<?
+		}
+	}
+	?>
+	</td></tr>
+
+<?
+
+}
+		
+		
+
+}
+

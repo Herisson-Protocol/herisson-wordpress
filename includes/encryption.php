@@ -132,3 +132,39 @@ function herisson_check_short($data,$signature,$friend_public_key) {
 	return false;
 }
 
+/***** Backup functions *****/
+
+function herisson_encrypt_backup() {
+ $options = get_option('HerissonOptions');
+
+ $_bookmarks = Doctrine_Query::create()
+  ->from('WpHerissonBookmarks')
+  ->where("id=$id")
+  ->execute();
+ $bookmarks = array();
+ foreach ($_bookmarks as $bookmark) {
+  $bookmarks[] = $bookmark->toArray();
+ }
+ $data = json_encode($bookmarks);
+
+	$my_public_key  = $options['publicKey'];
+	$my_private_key = $options['privateKey'];
+
+ $hash = herisson_hash($data);
+	if (!openssl_private_encrypt($hash,$hash_crypted,$my_public_key)) {
+	 echo __('Error while encrypting bkacup hash with my public key',HERISSONTD);
+	}
+ $data_crypted = null;
+
+ if (!openssl_seal($data,$data_crypted,$seal_key,array($my_public_key))) {
+	 echo __('Error while encrypting backup data with my public key<br>',HERISSONTD);
+	}
+
+	return array(
+			 'data' => base64_encode($data_crypted),
+				'hash' => base64_encode($hash_crypted),
+				'seal' => base64_encode($seal_key[0]),
+			);
+}
+
+

@@ -28,26 +28,52 @@ function herisson_bookmark_actions() {
 }
 
 
-function herisson_bookmark_get($id) {
+function herisson_bookmark_get_where($where) {
  if (!is_numeric($id)) { return new WpHerissonBookmarks(); }
  $bookmarks = Doctrine_Query::create()
 		->from('WpHerissonBookmarks')
-		->where("id=$id")
+		->where($where)
 		->execute();
+	return $bookmarks;
+}
+
+function herisson_bookmark_get($id) {
+ if (!is_numeric($id)) { return new WpHerissonBookmarks(); }
+	$bookmarks = herisson_bookmark_get_where("id=$id");
 	foreach ($bookmarks as $bookmark) {
 	 return $bookmark;
 	}
 	return new WpHerissonBookmarks();
 }
 
-function herisson_bookmark_get_tags($id) {
- $tags = Doctrine_Query::create()
-		->from('WpHerissonTags')
-		->where("bookmark_id=$id")
-		->orderby("name")
-		->execute();
-	return $tags;
+function herisson_bookmark_create($url,$options=array()) {
+
+ $duplicates = herisson_bookmark_get_where("hash='".md5($url)."'");
+	if (sizeof($duplicates)) { 
+	 echo "Ignoring duplicate entry : $url<br>";
+	}
+ $bookmark = new WpHerissonBookmarks();
+	$bookmark->url = $url;
+	if (sizeof($options)) {
+ 	if (array_key_exists('favicon_image',$options) && $options['favicon_image']) {
+  	$bookmark->favicon_image = $options['favicon_image'];
+ 	}
+ 	if (array_key_exists('title',$options) && $options['title']) {
+  	$bookmark->title = $options['title'];
+ 	}
+	}
+	$bookmark->save();
+	$bookmark->captureFromUrl();
 }
+
+#function herisson_bookmark_get_tags($id) {
+# $tags = Doctrine_Query::create()
+#		->from('WpHerissonTags')
+#		->where("bookmark_id=$id")
+#		->orderby("name")
+#		->execute();
+#	return $tags;
+#}
 
 
 function herisson_bookmark_del_tags($id) {
@@ -74,6 +100,7 @@ function herisson_bookmark_list() {
   ?>
  <table class="widefat post " cellspacing="0">
  <tr>
+  <th></th>
   <th><?=__('Title',HERISSONTD)?></th>
   <th><?=__('URL',HERISSONTD)?></th>
   <th><?=__('Tags',HERISSONTD)?></th>
@@ -83,9 +110,10 @@ function herisson_bookmark_list() {
   foreach ($bookmarks as $bookmark) {
  ?> 
  <tr>
+  <td style="width: 30px; vertical-align:baseline"><? if ($bookmark->favicon_image) { ?><img src="data:image/png;base64,<?=$bookmark->favicon_image?>" /><? } ?></td>
   <td><b><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><? echo $bookmark->title; ?></a></b></td>
   <td><a href="<? echo $bookmark->url; ?>"><? echo $bookmark->url; ?></a></td>
-  <td><? $tags = herisson_bookmark_get_tags($bookmark->id); foreach ($tags as $tag) { ?><a href="<? echo $tag->name; ?>"><? echo $tag->name; ?></a>,&nbsp;<? } ?></td>
+  <td><? foreach ($bookmark->getTagsList() as $tag) { ?><a href="<?=$tag?>"><?=$tag?></a>,&nbsp;<? } ?></td>
   <td>
 		<!--
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><?=__('Edit',HERISSONTD)?></a>
@@ -129,15 +157,8 @@ function herisson_bookmark_edit($id=0) {
 				$tags = array();
 			} else {
     $existing = herisson_bookmark_get($id);
-				$tags = herisson_bookmark_get_tags($id);
+				$tags = $existing->getTagsList();
 			}
-			/*
-			foreach ($tags as $tag) { 
-			 echo "aa : $tag<br>";
-			 echo "bb: ".$tag->name."<br>";
-#			print_r($tags);
-  }
-		*/
 
             echo '
 			<div class="wrap">
@@ -275,7 +296,7 @@ function herisson_bookmark_edit($id=0) {
      <div class="tagsdiv" id="post_tag">
       <div class="jaxtag">
        <label class="screen-reader-text" for="newtag"><?php _e('Tags'); ?></label>
-       <input type="hidden" name="tags" class="the-tags" id="tags" value="<? foreach ($tags as $tag) { echo $tag->name; echo ","; } ?>" />
+       <input type="hidden" name="tags" class="the-tags" id="tags" value="<? foreach ($tags as $tag) { echo $tag; echo ","; } ?>" />
        <div class="ajaxtag">
         <input type="text" name="newtags" class="newtag form-input-tip" size="16" autocomplete="off" value="" />
         <input type="button" class="button tagadd" value="<?php esc_attr_e('Add'); ?>" tabindex="3" />
@@ -311,7 +332,7 @@ echo '
 
 function herisson_bookmark_submitedit() {
 
-print_r($_POST);
+#print_r($_POST);
 
   $id = intval(post('id'));
   $url			= post('url');
@@ -320,24 +341,17 @@ print_r($_POST);
 
   $is_public = intval(post('is_public'));
 
-  if ( $id == 0 )  {
-		 $bookmark = new WpHerissonBookmarks();
-  } else {
-		 $bookmark = herisson_bookmark_get($id);
-		}
+		$bookmark = herisson_bookmark_get($id);
 		$bookmark->title = $title;
 		$bookmark->url = $url;
 		$bookmark->description = $description;
 		$bookmark->is_public = $is_public;
 		$bookmark->save();
-		if ($id == 0) {
- 		$bookmark->capture();
-		}
+ 	$bookmark->captureFromUrl();
 
   $tags = explode(',',post('tags'));
 		if (!is_array($tags)) { $tags = array($tags); }
-		print_r($tags);
-		herisson_bookmark_del_tags($id);
+		$bookmark->delTags();
 		foreach ($tags as $tag) {
 		 if (!trim($tag)) { continue; }
 		 $t = new WpHerissonTags();
@@ -404,7 +418,6 @@ function herisson_bookmark_tagcloud() {
 	}
 	echo $string;
 	exit;
-	return false;
 }
 
 

@@ -143,6 +143,7 @@ function herisson_install() {
 		'publicKey'		=> $publicKey,
 		'privateKey'		=> $privateKey,
 		'adminEmail'		=> '',
+		'search'		=> '1',
     );
     add_option('HerissonOptions', $defaultOptions);
 
