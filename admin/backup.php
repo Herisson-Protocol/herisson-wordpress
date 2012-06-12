@@ -152,7 +152,11 @@ function herisson_backup_import_firefox() {
 
 	$item = $bookmarks->getNextElement();
 	if (!$item->_isFolder) {
- herisson_bookmark_create($item->HREF,array('favicon_image'=>$item->ICONDATA,'title'=>$item->name));
+ herisson_bookmark_create($item->HREF,array(
+	 'favicon_url'=>$item->ICON_URI,
+	 'favicon_image'=>$item->ICON_DATA,
+		'title'=>$item->name
+		));
 	}
 	continue;
 	?>

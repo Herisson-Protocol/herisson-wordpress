@@ -29,7 +29,6 @@ function herisson_bookmark_actions() {
 
 
 function herisson_bookmark_get_where($where) {
- if (!is_numeric($id)) { return new WpHerissonBookmarks(); }
  $bookmarks = Doctrine_Query::create()
 		->from('WpHerissonBookmarks')
 		->where($where)

@@ -59,7 +59,15 @@ function herisson_download($url,$post=array()) {
 	  curl_setopt($curl, CURLOPT_POST,TRUE);
 	  curl_setopt($curl, CURLOPT_POSTFIELDS,$post);
 		}
-  return curl_exec($curl);
+	
+ 	$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+  if($httpCode >= 400) {
+ 	 return WP_Error('herisson',sprintf(__("The address %s returns a %s error.",HERISSONTD),$url,$httpCode));
+		}
+  $result =  curl_exec($curl);
+
+		curl_close($curl);
+		return $result;
  } else {
 	 return WP_Error('herisson',__('php-curl library is missing.',HERISSONTD));
 	}

@@ -106,14 +106,14 @@ class Bookmarks {
 
 		foreach ($lines as $val) {
 		
-			if(ereg("<DL>", $val)) {
+			if(preg_match("#<DL>#", $val)) {
 			
 				/* goes trought one directory */
 				array_push($folders, $id_counter);
 				$currentDirectory = $id_counter;
 				++$depth;
 							
-			} elseif(ereg("</DL>", $val)) {
+			} elseif(preg_match("#</DL>#", $val)) {
 			
 				/* leaves directory */
 				array_pop($folders);
@@ -121,7 +121,7 @@ class Bookmarks {
 				$currentDirectory = ($currentDirectory == null ? 1 : $currentDirectory);
 				--$depth;
 				
-			} elseif (ereg("<H3.*>(.*)</H3>", $val, $title)) {
+			} elseif (preg_match("#<H3.*>(.*)</H3>#", $val, $title)) {
 			
 				/* registeres a directory */
 				++$id_counter;
@@ -145,7 +145,7 @@ class Bookmarks {
 				/* Removing from memory */
 				unset($item);
 				
-			} elseif (ereg('<A HREF="(.*)".*>(.*)</A>', $val, $title)) {
+			} elseif (preg_match('#<A HREF="(.*)".*>(.*)</A>#', $val, $title)) {
 				/* adds an item */
 				++$id_counter;				
 				/* Creating new Item */
@@ -159,10 +159,16 @@ class Bookmarks {
 				
 				$LAST_VISIT = substr($title[1], 0, strpos($title[1], '"'));
 				
-				if(ereg('ICON', $title[1])) {		
+#				print_r($title[1]);
+				if(preg_match('#ICON_URI#', $title[1])) {		
+					$title[1] = substr($title[1], strpos($title[1], 'ICON_URI')+10, strlen($title[1]));				
+					$ICON_URI= substr($title[1], 0, strpos($title[1], '"'));
+				} else { $ICON_URI = ''; }
+				
+				if(preg_match('#ICON#', $title[1])) {		
 					$title[1] = substr($title[1], strpos($title[1], 'ICON')+6, strlen($title[1]));				
 					$ICON = substr($title[1], 0, strpos($title[1], '"'));
-				} else $ICON = '';
+				} else { $ICON = ''; }
 				
 				$title[1] = substr($title[1], strpos($title[1], 'LAST_CHARSET')+14, strlen($title[1]));
 				
@@ -178,9 +184,10 @@ class Bookmarks {
 				$bookmarkm->ADD_DATE = $ADD_DATE;
 				$bookmark->LAST_VISIT = $LAST_VISIT;
 				
+				$bookmark->ICON_URI = $ICON_URI;
 				$bookmark->ICON = false;
 				if(strlen($ICON)>5) {
-				 $bookmark->ICONDATA = $ICON;
+				 $bookmark->ICON_DATA = $ICON;
 				
 					$iconhash = md5($ICON);
 					$this->iconset->add($iconhash, $ICON);				
