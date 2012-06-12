@@ -28,7 +28,7 @@ function herisson_encrypt($data,$friend_public_key) {
 # $sealed = null;
 
 # $data = "Only I know the purple fox. Trala la !";
- $hash = sha256($data);
+ $hash = herisson_hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_private_key)) {
 	 echo __('Error while encrypting hash with my private key',HERISSONTD);
 	}
@@ -81,7 +81,7 @@ function herisson_decrypt($json_string,$friend_public_key) {
  $hash_crypted = base64_decode($json_data['hash']);
 	$seal         = base64_decode($json_data['seal']);
 
-# $hash = sha256($data);
+# $hash = herisson_hash($data);
 	if (!openssl_open($data_crypted,$data,$seal,$my_private_key)) {
 	 echo __('Error while decrypt with my private key<br>',HERISSONTD);
 	}
@@ -93,20 +93,22 @@ function herisson_decrypt($json_string,$friend_public_key) {
 	}
 # echo "$hash_crypted -> $hash<br>\n";
 
- if (sha256($data) != $hash) {
+ if (herisson_hash($data) != $hash) {
   echo __('Error : mismatch between hash and data, maybe the publickey stored for this site is not correct, or maybe it is a man in the middle attack !<br>');
 	}
 	return $data;
 }
 
-
+function herisson_hash($data) {
+ return sha256($data);
+}
 
 function herisson_encrypt_short($data) {
  $options = get_option('HerissonOptions');
 	$my_public_key  = $options['publicKey'];
 	$my_private_key = $options['privateKey'];
 
- $hash = sha256($data);
+ $hash = herisson_hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_private_key)) {
 	 echo __('Error while encrypting hash with my private key',HERISSONTD);
 	}
@@ -123,4 +125,10 @@ function herisson_decrypt_short($data,$friend_public_key) {
 }
 
 
+function herisson_check_short($data,$signature,$friend_public_key) {
+ if (herisson_decrypt_short($signature,$friend_public_key) == herisson_hash($data)) {
+	 return true;
+	}
+	return false;
+}
 

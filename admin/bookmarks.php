@@ -29,7 +29,7 @@ function herisson_bookmark_actions() {
 
 
 function herisson_bookmark_get($id) {
- if (!is_numeric($id)) { return new Object(); }
+ if (!is_numeric($id)) { return new WpHerissonBookmarks(); }
  $bookmarks = Doctrine_Query::create()
 		->from('WpHerissonBookmarks')
 		->where("id=$id")
@@ -37,8 +37,27 @@ function herisson_bookmark_get($id) {
 	foreach ($bookmarks as $bookmark) {
 	 return $bookmark;
 	}
-	return new Object();
+	return new WpHerissonBookmarks();
 }
+
+function herisson_bookmark_get_tags($id) {
+ $tags = Doctrine_Query::create()
+		->from('WpHerissonTags')
+		->where("bookmark_id=$id")
+		->orderby("name")
+		->execute();
+	return $tags;
+}
+
+
+function herisson_bookmark_del_tags($id) {
+ Doctrine_Query::create()
+	 ->delete()
+		->from('WpHerissonTags')
+		->where("bookmark_id=$id")
+		->execute();
+}
+
 
 function herisson_bookmark_list() {
  global $wpdb;
@@ -57,6 +76,7 @@ function herisson_bookmark_list() {
  <tr>
   <th><?=__('Title',HERISSONTD)?></th>
   <th><?=__('URL',HERISSONTD)?></th>
+  <th><?=__('Tags',HERISSONTD)?></th>
   <th><?=__('Action',HERISSONTD)?></th>
  </tr>
  <?
@@ -65,6 +85,7 @@ function herisson_bookmark_list() {
  <tr>
   <td><b><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><? echo $bookmark->title; ?></a></b></td>
   <td><a href="<? echo $bookmark->url; ?>"><? echo $bookmark->url; ?></a></td>
+  <td><? $tags = herisson_bookmark_get_tags($bookmark->id); foreach ($tags as $tag) { ?><a href="<? echo $tag->name; ?>"><? echo $tag->name; ?></a>,&nbsp;<? } ?></td>
   <td>
 		<!--
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><?=__('Edit',HERISSONTD)?></a>
@@ -105,9 +126,18 @@ function herisson_bookmark_edit($id=0) {
 			}
 			if ($id == 0) {
 			 $existing = new WpHerissonBookmarks();
+				$tags = array();
 			} else {
     $existing = herisson_bookmark_get($id);
+				$tags = herisson_bookmark_get_tags($id);
 			}
+			/*
+			foreach ($tags as $tag) { 
+			 echo "aa : $tag<br>";
+			 echo "bb: ".$tag->name."<br>";
+#			print_r($tags);
+  }
+		*/
 
             echo '
 			<div class="wrap">
@@ -119,6 +149,8 @@ function herisson_bookmark_edit($id=0) {
 
  if ( function_exists('wp_nonce_field') ) wp_nonce_field('bookmark-edit');
  if ( function_exists('wp_referer_field') ) wp_referer_field();
+
+#require_once(HERISSON_BASE_DIR.'../../../wp-admin/includes/meta-boxes.php');
 
 
             echo '
@@ -232,6 +264,10 @@ function herisson_bookmark_edit($id=0) {
 </script>";
 
  ?>
+			 </td>
+				</tr>
+    </tbody>
+    </table>
    <div id="tagsdiv-post_tag" class="postbox">
     <div class="handlediv" title="<?php esc_attr_e( 'Click to toggle' ); ?>"><br /></div>
     <h3><span><?php _e('Tags'); ?></span></h3>
@@ -239,19 +275,18 @@ function herisson_bookmark_edit($id=0) {
      <div class="tagsdiv" id="post_tag">
       <div class="jaxtag">
        <label class="screen-reader-text" for="newtag"><?php _e('Tags'); ?></label>
-       <input type="hidden" name="tax_input[post_tag]" class="the-tags" id="tax-input[post_tag]" value="" />
+       <input type="hidden" name="tags" class="the-tags" id="tags" value="<? foreach ($tags as $tag) { echo $tag->name; echo ","; } ?>" />
        <div class="ajaxtag">
-        <input type="text" name="newtag[post_tag]" class="newtag form-input-tip" size="16" autocomplete="off" value="" />
+        <input type="text" name="newtags" class="newtag form-input-tip" size="16" autocomplete="off" value="" />
         <input type="button" class="button tagadd" value="<?php esc_attr_e('Add'); ?>" tabindex="3" />
        </div>
       </div>
-      <div class="tagchecklist"></div>
+      <div class="tagchecklist" id="tagchecklist">
+						</div>
      </div>
      <p class="tagcloud-link"><a href="#titlediv" class="tagcloud-link" id="link-post_tag"><?php _e('Choose from the most used tags'); ?></a></p>
     </div>
    </div>
-			 </td>
-				</tr>
 
 				<?
 
@@ -276,6 +311,7 @@ echo '
 
 function herisson_bookmark_submitedit() {
 
+print_r($_POST);
 
   $id = intval(post('id'));
   $url			= post('url');
@@ -296,6 +332,18 @@ function herisson_bookmark_submitedit() {
 		$bookmark->save();
 		if ($id == 0) {
  		$bookmark->capture();
+		}
+
+  $tags = explode(',',post('tags'));
+		if (!is_array($tags)) { $tags = array($tags); }
+		print_r($tags);
+		herisson_bookmark_del_tags($id);
+		foreach ($tags as $tag) {
+		 if (!trim($tag)) { continue; }
+		 $t = new WpHerissonTags();
+			$t->name = $tag;
+			$t->bookmark_id=$id;
+			$t->save();
 		}
 
 	 herisson_bookmark_edit($bookmark->id);
@@ -343,39 +391,20 @@ if ( !empty($_POST['login']) && !empty($_POST['password'])) {
 
 function herisson_bookmark_tagcloud() {
 
- echo "toto";
- if ( post('tax') ) {
-  $taxonomy = sanitize_key( post('tax'));
-  $tax = get_taxonomy( $taxonomy );
-  if ( ! $tax )
-   die( '0' );
-  if ( ! current_user_can( $tax->cap->assign_terms ) )
-   die( '-1' );
- } else {
-  die('0');
- }
-
- $tags = get_terms( $taxonomy, array( 'number' => 45, 'orderby' => 'count', 'order' => 'DESC' ) );
-
- if ( empty( $tags ) )
-  die( isset( $tax->no_tagcloud ) ? $tax->no_tagcloud : __('No tags found!') );
-
- if ( is_wp_error( $tags ) )
-  die( $tags->get_error_message() );
-
- foreach ( $tags as $key => $tag ) {
-  $tags[ $key ]->link = '#';
-  $tags[ $key ]->id = $tag->term_id;
- }
-
- // We need raw tag names here, so don't filter the output
- $return = wp_generate_tag_cloud( $tags, array('filter' => 0) );
-
- if ( empty($return) )
-  die('0');
-
- echo $return;
-
+# select count(*) as c ,name from wp_herisson_tags group by name order by name;
+ $tags = Doctrine_Query::create()
+	 ->select('count(*) as c, name')
+		->from('WpHerissonTags')
+		->groupby('name')
+		->orderby('name')
+		->execute();
+	$string="";
+	foreach ($tags as $tag) {
+	 $string.='<a href="#" class="tag-link-'.$tag->id.'" title="3 sujets" style="font-size: '.( 10+$tag->c*2).'pt">'.$tag->name.'</a>&nbsp;';
+	}
+	echo $string;
+	exit;
+	return false;
 }
 
 

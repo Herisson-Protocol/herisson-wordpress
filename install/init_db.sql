@@ -30,8 +30,10 @@ CREATE TABLE `#PREFIX#herisson_tags`
 (
 	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255),
+	`bookmark_id` VARCHAR(255),
 	PRIMARY KEY (`id`),
-	KEY `name`(`name`)
+	KEY `name`(`name`),
+	KEY `bookmark_id`(`bookmark_id`)
 );
 
 --  ---------------------------------------------------------------------------

@@ -22,7 +22,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 			if (sizeof($data)) {
  			$this->name  = $data['sitename'];
  			$this->email = $data['adminEmail'];
-				$this->is_active=1;
+#				$this->is_active=1;
    } else { $this->is_active=0; }
 
   } else {
@@ -102,11 +102,33 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		}
  }
 
+ public function validateFriend() {
+	 $options = get_option('HerissonOptions');
+	 $url = $this->url."/validate";
+		$mysite = get_option('siteurl')."/".$options['basePath'];
+  $signature = herisson_encrypt_short($mysite);
+		$data = array(
+		 'url'=> $mysite,
+			'signature' => $signature
+		);
+		$content = herisson_download($url,$data);
+		echo $content."<br>\n";
+		if (!is_wp_error($content)) {
+		 if ($content == "1") {
+			 echo __('ok');
+			} else {
+			 echo sprintf(__("Error while adding friend : %s",HERISSONTD),$url);
+			}
+		} else {
+			echo $content->get_error_message("herisson");
+		}
+ }
+
 	public function approve() {
 	 $this->b_wantsyou=0;
 	 $this->is_active=1;
 		$this->save();
-
+		$this->validateFriend();
 	}
 
 }

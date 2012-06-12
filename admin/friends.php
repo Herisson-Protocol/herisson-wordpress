@@ -247,6 +247,7 @@ function herisson_friend_submitedit() {
 
   if ( $id == 0 )  {
 		 $friend = new WpHerissonFriends();
+		 $friend->is_active = 0;
   } else {
 		 $friend = herisson_friend_get($id);
 		}

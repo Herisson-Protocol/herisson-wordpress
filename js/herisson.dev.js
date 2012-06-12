@@ -95,12 +95,9 @@ tagBox = {
 
 	get : function(id) {
 		var tax = id.substr(id.indexOf('-')+1);
-/*
-		$.post(ajaxurl, {'action':'herisson_tag-tagcloud','tax':tax}, function(r, stat) {
-		*/
-		$.post('/wp-admin/admin.php',{'page':'herisson_bookmarks','action':'tagcloud'}, function(r, stat) {
+		$.post('/wp-admin/admin.php?page=herisson_bookmarks',{'action':'tagcloud','nomenu':'1'}, function(r, stat) {
 			if ( 0 == r || 'success' != stat )
-				r = wpAjax.broken;
+				r = null; //wpAjax.broken;
 
 			r = $('<p id="tagcloud-'+tax+'" class="the-tagcloud">'+r+'</p>');
 			$('a', r).click(function(){
@@ -142,10 +139,13 @@ tagBox = {
 				e.preventDefault();
 				return false;
 			}
-		}).each(function(){
+		});
+		/*
+			.each(function(){
 			var tax = $(this).closest('div.tagsdiv').attr('id');
 			$(this).suggest( ajaxurl + '?action=ajax-tag-search&tax=' + tax, { delay: 500, minchars: 2, multiple: true, multipleSep: "," } );
 		});
+			*/
 
 	    // save tags on post save/publish
 	    $('#post').submit(function(){

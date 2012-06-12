@@ -18,6 +18,8 @@ function herisson_front_actions() {
 		break;
 	 case 'ask': herisson_front_ask();
 		break;
+	 case 'validate': herisson_front_validate();
+		break;
 	 case 'retrieve': herisson_front_retrieve();
 		break;
   default: herisson_front_list();
@@ -26,7 +28,7 @@ function herisson_front_actions() {
 
 
 function herisson_front_get($id) {
- if (!is_numeric($id)) { return new Object(); }
+ if (!is_numeric($id)) { return new WpHerissonBookmarks(); }
  $bookmarks = Doctrine_Query::create()
 		->from('WpHerissonBookmarks')
 		->where("id=$id")
@@ -34,22 +36,41 @@ function herisson_front_get($id) {
 	foreach ($bookmarks as $bookmark) {
 	 return $bookmark;
 	}
-	return new Object();
+	return new WpHerissonBookmarks();
+}
+
+function herisson_front_get_where($where) {
+ $bookmarks = Doctrine_Query::create()
+		->from('WpHerissonFriends')
+		->where("$where")
+		->execute();
+	foreach ($bookmarks as $bookmark) {
+	 return $bookmark;
+	}
+	return new WpHerissonFriends();
 }
 
 
-function herisson_front_ask() {
-# print_r($_POST);
+function herisson_front_validate() {
+ $signature = post('signature');
  $url = post('url');
+	$f = herisson_front_get_where("url='$url' AND b_youwant=1");
+ if (herisson_check_short($url,$signature,$f->public_key)) {
+#  echo "Check !\n";
+  $f->b_youwant=0;
+		$f->is_active=1;
+  $f->save();
+		echo "1";
+ }
+ else { echo "no check !\n"; }
+}
+
+function herisson_front_ask() {
  $signature = post('signature');
  $f = new WpHerissonFriends();
- $f->url = $url;
+ $f->url = post('url');
  $f->reloadPublicKey();
- $pub = $f->public_key;
-# echo $pub;
-# echo herisson_decrypt_short($signature,$pub);
-#echo sha256($url);
- if (herisson_decrypt_short($signature,$pub) == sha256($url)) {
+ if (herisson_check_short($f->url,$signature,$f->public_key)) {
 #  echo "Check !\n";
   $f->getInfo();
   $f->b_wantsyou=1;
