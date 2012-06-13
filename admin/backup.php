@@ -54,65 +54,6 @@ function herisson_manage_backup() {
 
 		</form>
 		</table>
-		<table>
-			<tr valign="top">
-				<th scope="row">' . __('Admin email', HERISSONTD) . ':</th>
-				<td>
-					<input type="text" name="adminEmail" style="width:30em" value="' .$options['adminEmail']. '" />
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row"><label for="search">' . __("Search depth", HERISSONTD) . '</label>:</th>
-				<td>
-				 <select name="search">
-					 <option value="0" '.($options['search'] == "0" ? ' selected="selected"' : '').'>'.__("No public search",HERISSONTD).'</option>
-					 <option value="1" '.($options['search'] == "1" ? ' selected="selected"' : '').'>'.__("Public search",HERISSONTD).'</option>
-					 <option value="2" '.($options['search'] == "2" ? ' selected="selected"' : '').'>'.__("Recursive search",HERISSONTD).'</option>
-					</select>
-					<p>
-					' . __("No public search : Your public and private bookmarks are not available for you friends (for search and view).", HERISSONTD) . '
-					' . __("Public search : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private.", HERISSONTD) . '
-					' . __("Recursive search : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, friends search for bookmarks, you forward their search to all your friends.", HERISSONTD) . '
-					</p>
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row"><label for="bookmarks_per_page">' . __("Bookmarks per page", HERISSONTD) . '</label>:</th>
-				<td>
-					<input type="text" name="bookmarks_per_page" id="books_per_page" style="width:4em;" value="' . ( intval($options['bookmarksPerPage']) ) . '" />
-					<p>
-					' . __("Limits the total number of bookmarks displayed <code>per page</code> within the administrative 'Bookmarks' menu.", HERISSONTD) . '
-					</p>
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row"><label for="basePath">' . __("Base Path", HERISSONTD) . '</label>:</th>
-				<td>
-					<input type="text" name="basePath" id="basePath" style="width:30em;" value="' .$options['basePath'] . '" />
-					<p>
-					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSONTD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'<br/>
-					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSONTD).'
-					</p>
-				</td>
-			</tr>';
-
-
-	echo '
-			<tr valign="top">
-				<th scope="row">' . __("Debug Mode", HERISSONTD) . ':</th>
-				<td>
-					<input type="checkbox" name="debug_mode" id="debug_mode"' . ( ($options['debugMode']) ? ' checked="checked"' : '' ) . ' />
-				</td>
-			</tr>
-		</table>
-
-		<input type="hidden" name="action" value="submitedit" />
-
-		<p class="submit">
-			<input type="submit" value="' . __("Update Options", HERISSONTD) . '" />
-		</p>
-
-		</form>
 
 	</div>
 	';
@@ -131,9 +72,16 @@ function herisson_backup_import() {
 }
 
 
+function herisson_backup_import_firefox_submit() {
+	require HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
+ $bookmarks = post('bookmarks');
+
+}
+
+
 function herisson_backup_import_firefox() {
 	require HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
-	print_r($_FILES['firefox']);
+#	print_r($_FILES['firefox']);
 	$filename = $_FILES['firefox']['tmp_name'];
 	# Creating new bookmarks
 	$bookmarks = new Bookmarks();
@@ -145,13 +93,42 @@ function herisson_backup_import_firefox() {
 #	exit;
 
 ?>
+<!--
  <link href="<?=get_option('siteurl')?>/wp-content/plugins/herisson/includes/firefox/styles.css" rel="stylesheet" type="text/css" />
+	-->
  <table class="widefat post">
+	 <tr>
+		 <th style="width: 50px"><?=__('Add',HERISSONTD)?></th>
+		 <th style="width: 50px"><?=__('Status',HERISSONTD)?></th>
+		 <th style="width: 80px"><?=__('Private',HERISSONTD)?></th>
+		 <th style="width: 50px"><?=__('Icon',HERISSONTD)?></th>
+		 <th><?=__('Title',HERISSONTD)?></th>
+		</tr>
 
-	<?  while($bookmarks->hasMoreItems()) {
+  <tr>
+	<? 
+	$i=0;
+	while($bookmarks->hasMoreItems()) {
+	 $i++;
 
 	$item = $bookmarks->getNextElement();
-	if (!$item->_isFolder) {
+	 $spacer = "&nbsp;&nbsp;&nbsp;&nbsp;";
+#		if ($i > 20) { break; }
+	 if($item->_isFolder) { 
+ 	 $space = str_repeat($spacer,$item->depth-1);
+		 ?>
+			 <td></td>
+			 <td></td>
+			 <td></td>
+			 <td></td>
+			 <td>
+   		<b><?=$space." ".$item->name?></b>
+				</td>
+		<? 
+		 } else {
+		 $statut = herisson_network_check($item->HREF);
+ 	 $space = str_repeat($spacer,$item->depth-1);
+	/*
  herisson_bookmark_create($item->HREF,array(
 	 'favicon_url'=>$item->ICON_URI,
 	 'favicon_image'=>$item->ICON_DATA,
@@ -159,37 +136,50 @@ function herisson_backup_import_firefox() {
 		));
 	}
 	continue;
+		*/
 	?>
 	<tr>
+
  	<td>
-	<?  if(!$item->_isFolder) { ?>
-		<input type="checkbox" name=""/>
-	<? } ?>
+ 		<input type="checkbox" name="bookmarks[<?=$i?>][import]" <? if (!$statut['error']) { ?> checked="checked" <? } ?>/>
+	 </td>
+
+ 	<td style="background-color:<?=$statut['color']?>">
+		 <span title="<?=$statut['message']?>" style="font-weight:bold; color:black"><?=$statut['code']?></span>
+		</td>
+
+ 	<td>
+			<input type="checkbox" name="bookmarks[<?=$i?>][private]" />&nbsp;<?=__('Private?')?>
+		</td>
+
+ 	<td>
+	<?  # Icon
+		 if ($item->ICON_DATA) { ?>
+			 <input type="hidden" name="bookmarks[<?=$i?>][favicon_image]" value="<?=$item->ICON_DATA?>"/>
+			 <input type="hidden" name="bookmarks[<?=$i?>][favicon_url]" value="<?=$item->ICON_URI?>"/>
+ 		<img src="data:image/png;base64,<?=$item->ICON_DATA?>" alt="" />
+			<? } else if ($item->ICON_URI) { ?>
+			 <input type="hidden" name="bookmarks[<?=$i?>][favicon_url]" value="<?=$item->ICON_URI?>"/>
+  		<img src="<?=$item->ICON_URI?>" alt="" />
+			<? } ?>
 	 </td>
 	
 	 <td>
-	<? 
-	 echo str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$item->depth);
+			<input type="hidden" name="bookmarks[<?=$i?>][url]" value="<?=$item->HREF?>"/>
+			<input type="hidden" name="bookmarks[<?=$i?>][title]" value="<?=$item->name?>"/>
+			<a href="<?=$item->HREF?>" target="_blank"><span class="txt" title="<?=$item->name?>"><?=$space?><?=shortname($item->name)?></span></a>
+		</td>
 
-	 if($item->_isFolder) { ?>
-		<b><?=$item->name?></b>
-	<? } else { 
-		if($item->ICON) {
-		 ?>
-			<a href="<?=$item->HREF?>" target="_blank"><img src="icons/<?=$item->ICON?>.ico" alt="" /><span class="txt" title="<?=$item->name?>"><?=shortname($item->name)?></span></a>
+	<? } ?>
+	</tr>
 
-		<? } else { ?>
-			<a href="<?=$item->HREF?>" target="_blank"><img src="page.png" alt="" /><span class="txt" title="<?=$item->name?>"><?=shortname($item->name)?></span></a>
-			<?
-		}
-	}
-	?>
-	</td></tr>
-
-<?
-
-}
-		
+<? 
+ flush();
+ }
+?>
+	</table>
+	</form>
+<?		
 		
 
 }

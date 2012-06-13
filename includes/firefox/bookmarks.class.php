@@ -186,6 +186,7 @@ class Bookmarks {
 				
 				$bookmark->ICON_URI = $ICON_URI;
 				$bookmark->ICON = false;
+				$bookmark->ICON_DATA = false;
 				if(strlen($ICON)>5) {
 				 $bookmark->ICON_DATA = $ICON;
 				

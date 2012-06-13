@@ -60,14 +60,14 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
 	public function getFaviconImageFromUrl() {
 		if (!$this->content && $this->favicon_image) { return false; }
-		$content = herisson_download($this->favicon_url);
+		$content = herisson_network_download($this->favicon_url);
 		$base64 = base64_encode($content);
 		$this->_set('favicon_image',$base64);
 	}
 
 	public function getContentFromUrl() {
 		if (!$this->content) {
-		 $content = herisson_download($this->url);
+		 $content = herisson_network_download($this->url);
  		if (!is_wp_error($content)) {
     $this->_set('content',$content);
  		} else { 

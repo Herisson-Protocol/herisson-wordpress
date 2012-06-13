@@ -15,7 +15,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
  public function getInfo() {
 	 $url = $this->url."/info";
-		$json_data = herisson_download($url);
+		$json_data = herisson_network_download($url);
 		if (!is_wp_error($json_data)) {
 			$data = json_decode($json_data,1);
 
@@ -40,7 +40,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 	 $url = $this->_get('url');
 		if (substr($url, -1) != "/") {	$url .= "/"; }
 		$url .= "publickey";
-		$content = herisson_download($url);
+		$content = herisson_network_download($url);
 		if (!is_wp_error($content)) {
    $this->_set('public_key',$content);
 		} else { 
@@ -54,7 +54,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 	 $options = get_option('HerissonOptions');
 		$my_public_key = $options['publicKey'];
   if (function_exists('curl_init')) {
- 		$content = herisson_download($this->url."/retrieve",array('key' => $my_public_key));
+ 		$content = herisson_network_download($this->url."/retrieve",array('key' => $my_public_key));
  		if (!is_wp_error($content)) {
  			$json_data = herisson_decrypt($content,$this->public_key);
  			$bookmarks = json_decode($json_data,1);
@@ -89,7 +89,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		 'url'=> $mysite,
 			'signature' => $signature
 		);
-		$content = herisson_download($url,$data);
+		$content = herisson_network_download($url,$data);
 		echo $content."<br>\n";
 		if (!is_wp_error($content)) {
 		 if ($content == "1") {
@@ -111,7 +111,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		 'url'=> $mysite,
 			'signature' => $signature
 		);
-		$content = herisson_download($url,$data);
+		$content = herisson_network_download($url,$data);
 		echo $content."<br>\n";
 		if (!is_wp_error($content)) {
 		 if ($content == "1") {

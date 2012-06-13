@@ -47,31 +47,3 @@ function escape($str) {
 #}
 #add_action('admin_menu', 'remove_menus');
 
-function herisson_download($url,$post=array()) {
-
- if (function_exists('curl_init')) {
-  $curl = curl_init();
-  curl_setopt($curl, CURLOPT_URL, $url);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-  curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-		if (sizeof($post)) {
-	  curl_setopt($curl, CURLOPT_POST,TRUE);
-	  curl_setopt($curl, CURLOPT_POSTFIELDS,$post);
-		}
-	
- 	$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-  if($httpCode >= 400) {
- 	 return WP_Error('herisson',sprintf(__("The address %s returns a %s error.",HERISSONTD),$url,$httpCode));
-		}
-  $result =  curl_exec($curl);
-
-		curl_close($curl);
-		return $result;
- } else {
-	 return WP_Error('herisson',__('php-curl library is missing.',HERISSONTD));
-	}
-
-}
-
-?>

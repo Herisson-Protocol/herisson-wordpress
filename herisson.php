@@ -71,6 +71,7 @@ require_once HERISSON_INCLUDES_DIR . 'admin.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
 #require_once HERISSON_INCLUDES_DIR . 'widget.php';
 require_once HERISSON_INCLUDES_DIR . 'encryption.php';
+require_once HERISSON_INCLUDES_DIR . 'network.php';
 
 /**
  * Checks if the install needs to be run by checking the `HerissonVersions` option, which stores the current installed database, options and rewrite versions.
