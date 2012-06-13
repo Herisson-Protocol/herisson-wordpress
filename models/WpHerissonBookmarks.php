@@ -17,8 +17,16 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
  public function setUrl($url) {
   parent::_set('url',$url);
   $this->setHashFromUrl();
+  $this->checkUrl();
  }
+
+	public function checkUrl() {
+		$status = herisson_network_check($this->url);
+		if ($status['error']) { $this->error = 1; }
+	}
+
 	public function maintenance() {
+ 	$this->checkUrl();
  	$this->getContentFromUrl();
 		$this->getTitleFromContent();
 		$this->getFaviconUrlFromContent();
@@ -71,6 +79,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 	}
 
 	public function getContentFromUrl() {
+		if ($this->error) { return false; }
 		if (!$this->content) {
 		 $content = herisson_network_download($this->url);
  		if (!is_wp_error($content)) {
@@ -140,11 +149,13 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
 	public function captureFromUrl() {
 	 if (!$this->id) { return false; }
+		if ($this->error) { return false; }
+
 	 # ./wkhtmltoimage-amd64 --disable-javascript --quality 50 http://www.wilkins.fr/ /home/web/www.wilkins.fr/google.png
 		$url = $this->url;
-		$image = HERISSON_SCREENSHOTS_DIR.$this->id.".png";
-		$thumb = HERISSON_SCREENSHOTS_DIR.$this->id."_small.png";
-		$wkhtmltoimage = HERISSON_BASE_DIR."wkhtmltoimage-amd64";
+		$image = $this->getImage();
+		$thumb = $this-getThumb();
+		$wkhtmltoimage = HERISSON_BASE_DIR."wkhtmltoimage-amd64 --load-error-handling ignore ";
 		$convert = "/usr/bin/convert";
 		$options_nojs = " --disable-javascript ";
 		$options_quality50 = " --quality 50 ";

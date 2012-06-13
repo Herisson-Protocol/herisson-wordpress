@@ -338,8 +338,6 @@ echo '
 
 function herisson_bookmark_submitedit() {
 
-#print_r($_POST);
-
   $id = intval(post('id'));
   $url			= post('url');
   $title			= post('title');
@@ -353,6 +351,7 @@ function herisson_bookmark_submitedit() {
 		$bookmark->description = $description;
 		$bookmark->is_public = $is_public;
 		$bookmark->save();
+ 	$bookmark->maintenance();
  	$bookmark->captureFromUrl();
 
   $tags = explode(',',post('tags'));
@@ -367,13 +366,11 @@ function herisson_bookmark_submitedit() {
 		}
 
 	 herisson_bookmark_edit($bookmark->id);
-#header('Location: /' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_bookmarks?action=edit&id='.$id);
-#exit;
 
 }
 
 function herisson_bookmark_view() {
-# add_action('admin_menu', 'remove_menus');
+
  $id = intval(get('id'));
  if (!$id) {
   echo __("Error : Missing id\n",HERISSONTD);

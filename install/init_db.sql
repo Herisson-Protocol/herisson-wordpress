@@ -15,6 +15,7 @@ CREATE TABLE `#PREFIX#herisson_bookmarks`
 	`favicon_image` TEXT,
 	`is_public` TINYINT default 1,
 	`content_image` varchar(255),
+	`error` TINYINT default 0,
 	`expires_at` DATETIME default '2038-12-31',
 	`created` DATETIME,
  `updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

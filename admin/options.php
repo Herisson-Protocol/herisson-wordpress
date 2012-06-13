@@ -88,6 +88,7 @@ function herisson_manage_options() {
 					</p>
 				</td>
 			</tr>
+
 			<tr valign="top">
 				<th scope="row"><label for="basePath">' . __("Base Path", HERISSONTD) . '</label>:</th>
 				<td>
@@ -97,10 +98,33 @@ function herisson_manage_options() {
 					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSONTD).'
 					</p>
 				</td>
-			</tr>';
+			</tr>
 
+			<tr valign="top">
+				<th scope="row"><label for="basePath">' . __("Screenshot generator", HERISSONTD) . '</label>:</th>
+				<td>
+				 <select name="search">
+					 <option value="0" '.($options['search'] == "0" ? ' selected="selected"' : '').'>'.__("Wkhtml-to-image (amd64)",HERISSONTD).'</option>
+					 <option value="1" '.($options['search'] == "1" ? ' selected="selected"' : '').'>'.__("Wkhtml-to-image (i386)",HERISSONTD).'</option>
+					</select>
+					<p>
+					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSONTD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'<br/>
+					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSONTD).'
+					</p>
+				</td>
+			</tr>
 
-	echo '
+			<tr valign="top">
+				<th scope="row"><label for="convertPath">' . __("Thumbnail generator", HERISSONTD) . '</label>:</th>
+				<td>
+					<input type="text" name="convertPath" id="convertPath" style="width:30em;" value="/usr/bin/convert" />
+					<p>
+					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSONTD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'<br/>
+					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSONTD).'
+					</p>
+				</td>
+			</tr>
+
 			<tr valign="top">
 				<th scope="row">' . __("Debug Mode", HERISSONTD) . ':</th>
 				<td>
