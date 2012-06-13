@@ -30,7 +30,7 @@ function herisson_add_pages() {
 #			add_submenu_page('herisson_menu', __('Add a Book', HERISSONTD), __('Add a Book', HERISSONTD), 'manage_options', 'herisson_add_bookmark', 'herisson_add_bookmark');
 			add_submenu_page('herisson_menu', __('Bookmarks', HERISSONTD), __('Bookmarks', HERISSONTD), 'manage_options', 'herisson_bookmarks', 'herisson_bookmark_actions');
 			add_submenu_page('herisson_menu', __('Friends', HERISSONTD), __('Friends', HERISSONTD).$friends_waiting, 'manage_options', 'herisson_friends', 'herisson_friend_actions');
-			add_submenu_page('herisson_menu', __('Import/Backup', HERISSONTD), __('Import/Backup', HERISSONTD), 'manage_options', 'herisson_backup', 'herisson_backup_actions');
+			add_submenu_page('herisson_menu', __('Import/Maintenance', HERISSONTD), __('Import/Maintenance', HERISSONTD), 'manage_options', 'herisson_backup', 'herisson_backup_actions');
 			add_submenu_page('herisson_menu', __('Options', HERISSONTD), __('Options', HERISSONTD), 'manage_options', 'herisson_options', 'herisson_manage_options');
 		
 }

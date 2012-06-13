@@ -36,6 +36,12 @@ function herisson_bookmark_get_where($where) {
 	return $bookmarks;
 }
 
+function herisson_bookmark_check_duplicate($url) {
+ $bookmarks = herisson_bookmark_get_where("hash='".md5($url)."'");
+	if (sizeof($bookmarks)) { return true; }
+	return false;
+}
+
 function herisson_bookmark_get($id) {
  if (!is_numeric($id)) { return new WpHerissonBookmarks(); }
 	$bookmarks = herisson_bookmark_get_where("id=$id");
@@ -47,13 +53,15 @@ function herisson_bookmark_get($id) {
 
 function herisson_bookmark_create($url,$options=array()) {
 
- $duplicates = herisson_bookmark_get_where("hash='".md5($url)."'");
-	if (sizeof($duplicates)) { 
+ if (herisson_bookmark_check_duplicate($url)) {
 	 echo "Ignoring duplicate entry : $url<br>";
 	}
  $bookmark = new WpHerissonBookmarks();
 	$bookmark->url = $url;
 	if (sizeof($options)) {
+ 	if (array_key_exists('favicon_url',$options) && $options['favicon_url']) {
+  	$bookmark->favicon_url = $options['favicon_url'];
+ 	}
  	if (array_key_exists('favicon_image',$options) && $options['favicon_image']) {
   	$bookmark->favicon_image = $options['favicon_image'];
  	}
@@ -62,7 +70,6 @@ function herisson_bookmark_create($url,$options=array()) {
  	}
 	}
 	$bookmark->save();
-	$bookmark->captureFromUrl();
 }
 
 #function herisson_bookmark_get_tags($id) {

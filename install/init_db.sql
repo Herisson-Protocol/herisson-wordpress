@@ -14,14 +14,19 @@ CREATE TABLE `#PREFIX#herisson_bookmarks`
 	`favicon_url` varchar(255),
 	`favicon_image` TEXT,
 	`is_public` TINYINT default 1,
-	`is_activated` TINYINT default 0,
+	`content_image` varchar(255),
 	`expires_at` DATETIME default '2038-12-31',
+	`created` DATETIME,
  `updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  type_id INTEGER(10),
 	PRIMARY KEY (`id`),
 	KEY `title`(`title`),
 	KEY `description`(`description`(1000)),
-	KEY `url`(`url`)
+	KEY `url`(`url`),
+	KEY `favicon_url`(`favicon_url`),
+	KEY `content_image`(`content_image`),
+	KEY `created`(`created`),
+	KEY `updated`(`updated`)
 );
 
 --  ---------------------------------------------------------------------------
@@ -42,15 +47,15 @@ CREATE TABLE `#PREFIX#herisson_tags`
 --   bookmarks_tags
 --  ---------------------------------------------------------------------------
 
-CREATE TABLE `#PREFIX#herisson_bookmarks_tags`
-(
-	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
-	`tag_id` INTEGER(10),
-	`bookmark_id` VARCHAR(255),
-	PRIMARY KEY (`id`),
-	KEY `tag_id`(`tag_id`),
-	KEY `bookmark_id`(`bookmark_id`)
-);
+-- CREATE TABLE `#PREFIX#herisson_bookmarks_tags`
+-- (
+-- 	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
+-- 	`tag_id` INTEGER(10),
+-- 	`bookmark_id` VARCHAR(255),
+-- 	PRIMARY KEY (`id`),
+-- 	KEY `tag_id`(`tag_id`),
+-- 	KEY `bookmark_id`(`bookmark_id`)
+-- );
 
 --  ---------------------------------------------------------------------------
 --   friends

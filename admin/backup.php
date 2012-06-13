@@ -12,7 +12,13 @@ function herisson_backup_actions() {
 		break;
 	 case 'export': herisson_backup_export();
 		break;
+	 case 'maintenance': herisson_backup_maintenance();
+		break;
+	 case 'maintenance_submit': herisson_backup_maintenance_submit();
+		break;
 	 case 'import': herisson_backup_import();
+		break;
+	 case 'import_firefox': herisson_backup_import_firefox_submit();
 		break;
   default: herisson_manage_backup();
 	}
@@ -26,11 +32,7 @@ function herisson_manage_backup() {
     echo '
 	<div class="wrap">
 
-		<h2>' . __("Import, export and backup", HERISSONTD) . '</h2>
-	';
-
-    echo '
-		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
+		<h2>' . __("Import, export, maintenance and backup", HERISSONTD) . '</h2>
 	';
 
     if ( function_exists('wp_nonce_field') )
@@ -38,22 +40,35 @@ function herisson_manage_backup() {
 
     echo '
 		<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
+
+		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
+		 <input type="hidden" name="action" value="import" />
 			<tr valign="top">
 				<th scope="row">' . __('Import Firefox bookmarks', HERISSONTD) . ':</th>
-				<td>
+				<td style="width: 200px">
 					<input type="file" name="firefox" />
 				</td>
+				<td>
+  			<input type="submit" value="' . __("Import bookmarks", HERISSONTD) . '" />
+				</td>
 			</tr>
-		</table>
+		</form>
 
-		<input type="hidden" name="action" value="import" />
-
-		<p class="submit">
-			<input type="submit" value="' . __("Import bookmarks", HERISSONTD) . '" />
-		</p>
-
+		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
+		 <input type="hidden" name="action" value="maintenance" />
+			<tr valign="top">
+				<th scope="row">' . __('Check Maintenance', HERISSONTD) . ':</th>
+				<td>
+					
+				</td>
+				<td>
+  			<input type="submit" value="' . __("Start maintenance checks", HERISSONTD) . '" />
+				</td>
+			</tr>
 		</form>
 		</table>
+
+
 
 	</div>
 	';
@@ -62,6 +77,63 @@ function herisson_manage_backup() {
 
 
 
+
+function herisson_backup_maintenance_submit() {
+ $condition = "
+	 LENGTH(favicon_url)=0 or favicon_url is null or
+	 LENGTH(favicon_image)=0 or favicon_image is null or
+		LENGTH(content)=0 or content is null or
+		LENGTH(content_image)=0 or content_image is null";
+
+	$bookmarks_errors   = herisson_bookmark_get_where($condition);
+ foreach ($bookmarks_errors as $b) {
+	 $b->maintenance();
+		$b->captureFromUrl();
+		$b->save();
+	}
+	?>
+
+	<p class="success">
+	 <?=__("Maintenance has been done, here are the results after the maintenance operation. Some of the errors may not be fixable.",HERISSONTD)?>
+	</p>
+	<?
+ herisson_backup_maintenance();
+
+}
+
+
+function herisson_backup_maintenance() {
+ 
+	$bookmarks_no_favicon_url   = herisson_bookmark_get_where("LENGTH(favicon_url)=0 or favicon_url is null");
+	$bookmarks_no_favicon_image = herisson_bookmark_get_where("LENGTH(favicon_image)=0 or favicon_image is null");
+	$bookmarks_no_content       = herisson_bookmark_get_where("LENGTH(content)=0 or content is null");
+	$bookmarks_no_content_image = herisson_bookmark_get_where("LENGTH(content_image)=0 or content_image is null");
+
+ ?>
+	<h1><?=__("Maintenance",HERISSONTD)?></h1>
+	<h2><?=__("Favicon url",HERISSONTD)?></h2>
+	<p><?=__("Bookmarks with no favicon URL",HERISSONTD)?> : <?=sizeof($bookmarks_no_favicon_url)?> </p>
+
+	<h2><?=__("Favicon images",HERISSONTD)?></h2>
+	<p><?=__("Bookmarks with no favicon Image",HERISSONTD)?> : <?=sizeof($bookmarks_no_favicon_image)?> </p>
+
+	<h2><?=__("Contents",HERISSONTD)?></h2>
+	<p><?=__("Bookmarks with no content",HERISSONTD)?> : <?=sizeof($bookmarks_no_content)?> </p>
+
+	<h2><?=__("Screenshots",HERISSONTD)?></h2>
+	<p><?=__("Bookmarks with no screenshots",HERISSONTD)?> : <?=sizeof($bookmarks_no_content_image)?> </p>
+	
+	
+	<p><b style="color:red"><?=__("Warning, this operation can take several minutes. If you stop it during the process it's ok and you can do another maintenance operation to finish the maintenance.",HERISSONTD);?></b></p>
+	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup">
+	<input type="hidden" name="action" value="maintenance_submit" />
+	<input type="submit" value="Correct theses errors" />
+	</form>
+
+		<?
+	
+
+}
 
 
 function herisson_backup_import() {
@@ -75,6 +147,18 @@ function herisson_backup_import() {
 function herisson_backup_import_firefox_submit() {
 	require HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
  $bookmarks = post('bookmarks');
+
+	foreach ($bookmarks as $bookmark) {
+	 if (array_key_exists('import',$bookmark) && $bookmark['import']) { 
+   herisson_bookmark_create($bookmark['url'],array(
+  	 'favicon_url'=> array_key_exists('favicon_url',$bookmark) ? $bookmark['favicon_url'] : "",
+  	 'favicon_image'=>array_key_exists('favicon_image',$bookmark) ? $bookmark['favicon_image'] : "",
+  		'title'=>$bookmark['title'],
+  		'is_public'=>array_key_exists('private',$bookmark) && $bookmark['private'] ? 0 : 1,
+ 		));
+		}
+	}
+	herisson_manage_backup();
 
 }
 
@@ -96,6 +180,10 @@ function herisson_backup_import_firefox() {
 <!--
  <link href="<?=get_option('siteurl')?>/wp-content/plugins/herisson/includes/firefox/styles.css" rel="stylesheet" type="text/css" />
 	-->
+	<div class="wrap">
+		<h2><?= __("Importation results from Firefox bookmarks", HERISSONTD); ?></h2>
+	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup">
+	 <input type="hidden" name="action" value="import_firefox" />
  <table class="widefat post">
 	 <tr>
 		 <th style="width: 50px"><?=__('Add',HERISSONTD)?></th>
@@ -126,26 +214,22 @@ function herisson_backup_import_firefox() {
 				</td>
 		<? 
 		 } else {
-		 $statut = herisson_network_check($item->HREF);
+		  if (herisson_bookmark_check_duplicate($item->HREF)) { 
+					$status = array("code" => __("Duplicate",HERISSONTD), "message" => __('This bookmark already exist'), "color" => "red", "error"=>1);
+				} else {
+  		 $status = herisson_network_check($item->HREF);
+				}
  	 $space = str_repeat($spacer,$item->depth-1);
-	/*
- herisson_bookmark_create($item->HREF,array(
-	 'favicon_url'=>$item->ICON_URI,
-	 'favicon_image'=>$item->ICON_DATA,
-		'title'=>$item->name
-		));
-	}
-	continue;
-		*/
 	?>
 	<tr>
 
  	<td>
- 		<input type="checkbox" name="bookmarks[<?=$i?>][import]" <? if (!$statut['error']) { ?> checked="checked" <? } ?>/>
+  		<input type="checkbox" name="bookmarks[<?=$i?>][import]" <? if (!$status['error']) { ?> checked="checked" <? } ?>/>
 	 </td>
 
- 	<td style="background-color:<?=$statut['color']?>">
-		 <span title="<?=$statut['message']?>" style="font-weight:bold; color:black"><?=$statut['code']?></span>
+  
+ 	<td style="background-color:<?=$status['color']?>">
+		 <span title="<?=sprintf(__('HTTP Error %s : %s',HERISSONTD),$status['code'],$status['message'])?>" style="font-weight:bold; color:black"><?=$status['code']?></span>
 		</td>
 
  	<td>
@@ -178,7 +262,9 @@ function herisson_backup_import_firefox() {
  }
 ?>
 	</table>
+	 <input type="submit" value="<?=__('Import theses bookmarks',HERISSONTD);?>" />
 	</form>
+	</div>
 <?		
 		
 

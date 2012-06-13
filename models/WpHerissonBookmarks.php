@@ -15,21 +15,19 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
  /** Properties **/
  public function setUrl($url) {
-	 echo "Set Url<br>";
   parent::_set('url',$url);
-	 echo "Set content<br>";
- 	$this->getContentFromUrl();
-	 echo "Set capture<br>";
- 	$this->captureFromUrl();
-	 echo "Set title<br>";
-		$this->getTitleFromContent();
-	 echo "Set favicon url<br>";
-		$this->getFaviconUrlFromContent();
-	 echo "Set favicon image<br>";
-		$this->getFaviconImageFromUrl();
-	 echo "Set hash<br>";
-  $this->_set('hash',md5($url));
+  $this->setHashFromUrl();
  }
+	public function maintenance() {
+ 	$this->getContentFromUrl();
+		$this->getTitleFromContent();
+		$this->getFaviconUrlFromContent();
+		$this->getFaviconImageFromUrl();
+  $this->setHashFromUrl();
+	}
+	public function setHashFromUrl() {
+  $this->_set('hash',md5($this->url));
+	}
 
 	public function getTitleFromContent() {
 		if (!$this->content || $this->title) { return false; }
@@ -39,6 +37,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
 	public function getFaviconUrlFromContent() {
 		if (!$this->content && $this->favicon_url) { return false; }
+#		preg_match_all('#(<link[^>]*href="([^"]*)"|<meta itemprop="image" content="([^"]*)"))#',$this->content,$match);
 		preg_match_all('#<link[^>]*href="([^"]*)"#',$this->content,$match);
 		foreach ($match[0] as $i=>$m) {
 		 if (preg_match("#(favicon|shortcut)#",$m)) {
@@ -55,6 +54,12 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 				}
 				$this->_set('favicon_url',$favicon_url);
 			}
+		}
+		if (!$this->favicon_url) {
+		 # We try to get /favicon.ico
+ 		$parsed_url = parse_url($this->url);
+			$favicon_url = $parsed_url['scheme'].'://'.$parsed_url['host']."/favicon.ico";
+			$this->_set('favicon_url',$favicon_url);
 		}
 	}
 
@@ -144,21 +149,29 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		$options_nojs = " --disable-javascript ";
 		$options_quality50 = " --quality 50 ";
 		if (!file_exists($image) || filesize($image) == 0) {
-# 		echo "$wkhtmltoimage $options_quality50 \"$url\" $image";
+# 		echo "$wkhtmltoimage $options_quality50 \"$url\" $image<br>";
  		exec("$wkhtmltoimage $options_quality50 \"$url\" $image",$output);
-		 echo implode("\n",$output);
+#		 echo implode("\n",$output);
 		}
 
 		if (!file_exists($image) || filesize($image) == 0) {
 # 		echo "$wkhtmltoimage $options_nojs $options_quality50 \"$url\" $image";
  		exec("$wkhtmltoimage $options_nojs $options_quality50 \"$url\" $image",$output);
-		 echo implode("\n",$output);
+#		 echo implode("\n",$output);
+		}
+		if (!file_exists($image) || filesize($image) == 0) {
+		 $this->content_image = $image;
+			$this->save();
+		} else {
+		 $this->content_image = null;
+			$this->save();
 		}
 
 		if (!file_exists($thumb) || filesize($thumb) == 0) {
  		exec("$convert -resize 200x \"$image\" \"$thumb\"",$output);
-		 echo implode("\n",$output);
+#		 echo implode("\n",$output);
 		}
+
 
 	}
 
