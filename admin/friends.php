@@ -26,37 +26,6 @@ function herisson_friend_actions() {
 }
 
 
-function herisson_friend_get($id) {
- if (!is_numeric($id)) { return new Object(); }
- $friends = Doctrine_Query::create()
-		->from('WpHerissonFriends')
-		->where("id=$id")
-		->execute();
-	foreach ($friends as $friend) {
-	 return $friend;
-	}
-	return new Object();
-}
-
-function herisson_friend_list_active() {
-	$friends = Doctrine_Query::create()->from('WpHerissonFriends')
-	->where('is_active=1')->execute();
-	herisson_friend_list_custom( __("Active friends", HERISSONTD),$friends);
-}
-
-function herisson_friend_list_youwant() {
-	$friends = Doctrine_Query::create()->from('WpHerissonFriends')
-	->where('b_youwant=1')->execute();
-	herisson_friend_list_custom( __("Waiting for friend approval", HERISSONTD),$friends);
-}
-
-function herisson_friend_list_wantsyou() {
-	$friends = Doctrine_Query::create()->from('WpHerissonFriends')
-	->where('b_wantsyou=1')->execute();
-	herisson_friend_list_custom( __("Asking your permission", HERISSONTD),$friends);
-}
-
-
 function herisson_friend_list() {
  echo '
 	<div class="wrap">

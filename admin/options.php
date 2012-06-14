@@ -21,7 +21,7 @@ function herisson_manage_options() {
 				if (post('action') == 'submitedit') {
      $options = get_option('HerissonOptions');
 				 $new_options = array();
-				 $allowedoptions = array('basePath','bookmarksPerPage','sitename','debugMode','adminEmail','search');
+				 $allowedoptions = array('basePath','bookmarksPerPage','sitename','debugMode','adminEmail','search','screenshotTool','convertPath');
 					foreach ($allowedoptions as $option) {
 					 $new_options[$option] = post($option);
 					}
@@ -34,6 +34,7 @@ function herisson_manage_options() {
 					}
 	    update_option('HerissonOptions', $complete_options);
 				}
+			 $screenshots = herisson_screenshots_all();
 
     $options = get_option('HerissonOptions');
 
@@ -73,9 +74,9 @@ function herisson_manage_options() {
 					 <option value="2" '.($options['search'] == "2" ? ' selected="selected"' : '').'>'.__("Recursive search",HERISSONTD).'</option>
 					</select>
 					<p>
-					' . __("No public search : Your public and private bookmarks are not available for you friends (for search and view).", HERISSONTD) . '
-					' . __("Public search : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private.", HERISSONTD) . '
-					' . __("Recursive search : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, friends search for bookmarks, you forward their search to all your friends.", HERISSONTD) . '
+					' . __("<code>No public search</code> : Your public and private bookmarks are not available for you friends (for search and view).", HERISSONTD) . '<br/>
+					' . __("<code>Public search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private.", HERISSONTD) . '<br/>
+					' . __("<code>Recursive search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, friends search for bookmarks, you forward their search to all your friends.", HERISSONTD) . '<br/>
 					</p>
 				</td>
 			</tr>
@@ -103,13 +104,19 @@ function herisson_manage_options() {
 			<tr valign="top">
 				<th scope="row"><label for="basePath">' . __("Screenshot generator", HERISSONTD) . '</label>:</th>
 				<td>
-				 <select name="search">
-					 <option value="0" '.($options['search'] == "0" ? ' selected="selected"' : '').'>'.__("Wkhtml-to-image (amd64)",HERISSONTD).'</option>
-					 <option value="1" '.($options['search'] == "1" ? ' selected="selected"' : '').'>'.__("Wkhtml-to-image (i386)",HERISSONTD).'</option>
+				 <select name="screenshotTool">
+					 ';
+						foreach ($screenshots as $tool) {
+						 echo '<option value="'.$tool->id.'" '.($options['screenshotTool'] == $tool->id ? ' selected="selected"' : '').">".__($tool->name,HERISSONTD)."</option>";
+						}
+						echo '	
 					</select>
 					<p>
-					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSONTD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'<br/>
-					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSONTD).'
+					 ';
+						foreach ($screenshots as $tool) {
+					  echo __(sprintf("%s description",$tool->name), HERISSONTD).'<br>';
+						}
+						echo '	
 					</p>
 				</td>
 			</tr>
@@ -117,10 +124,17 @@ function herisson_manage_options() {
 			<tr valign="top">
 				<th scope="row"><label for="convertPath">' . __("Thumbnail generator", HERISSONTD) . '</label>:</th>
 				<td>
-					<input type="text" name="convertPath" id="convertPath" style="width:30em;" value="/usr/bin/convert" />
-					<p>
-					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSONTD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'<br/>
-					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSONTD).'
+					<input type="text" name="convertPath" id="convertPath" style="width:30em;" value="'.$options['convertPath'].'" />
+					'.(file_exists($options['convertPath']) ?  
+					 '<p class="success">'
+					 . sprintf(__("Path <code>%s</code> exists",HERISSONTD),$options['convertPath'])
+						.'</p>'
+						:
+					 '<p class="error">'
+					 . sprintf(__("Path <code>%s</code> doesn't exist",HERISSONTD),$options['convertPath'])
+						.'</p>'
+						).'
+
 					</p>
 				</td>
 			</tr>

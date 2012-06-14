@@ -93,3 +93,16 @@ CREATE TABLE `#PREFIX#herisson_types`
 	PRIMARY KEY (`id`),
 	KEY `name`(`name`)
 );
+
+--  ---------------------------------------------------------------------------
+--   screenshots
+--  ---------------------------------------------------------------------------
+
+CREATE TABLE `#PREFIX#herisson_screenshots`
+(
+	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255),
+	`fonction` VARCHAR(255),
+	PRIMARY KEY (`id`),
+	KEY `name`(`name`)
+);

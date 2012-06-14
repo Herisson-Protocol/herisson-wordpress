@@ -62,16 +62,12 @@ function herisson_init() {
 
 
 // Include other functionality
-#require_once HERISSON_INCLUDES_DIR . 'compat.php';
-#require_once HERISSON_INCLUDES_DIR . 'rewrite.php';
-#require_once HERISSON_INCLUDES_DIR . 'bookmarks.php';
-#require_once HERISSON_INCLUDES_DIR . 'amazon.php';
 require_once HERISSON_INCLUDES_DIR . 'admin.php';
-#require_once HERISSON_INCLUDES_DIR . 'filters.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
-#require_once HERISSON_INCLUDES_DIR . 'widget.php';
 require_once HERISSON_INCLUDES_DIR . 'encryption.php';
 require_once HERISSON_INCLUDES_DIR . 'network.php';
+require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
+require_once HERISSON_INCLUDES_DIR . 'db.php';
 
 /**
  * Checks if the install needs to be run by checking the `HerissonVersions` option, which stores the current installed database, options and rewrite versions.
@@ -144,6 +140,8 @@ function herisson_install() {
 		'publicKey'		=> $publicKey,
 		'privateKey'		=> $privateKey,
 		'adminEmail'		=> '',
+		'screenshotTool'		=> 'wkhtmltoimage-amd64',
+		'convertPath'		=> '/usr/bin/convert',
 		'search'		=> '1',
     );
     add_option('HerissonOptions', $defaultOptions);
@@ -289,13 +287,14 @@ function herisson_load_template( $filename ) {
 #}
 #add_action('wp_head', 'herisson_header_stats');
 
+
 function herisson_router() {
  # Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
  global $route,$wp_query,$window_title;
  $options = get_option('HerissonOptions');
 #print_r($options);
  $path =explode("/",$_SERVER['REQUEST_URI']);
-	if (sizeof($path) && $path[1] == $options['basePath']) {
+	if (sizeof($path) && $path[1] == $options['basePath'] && array_key_exists(2,$path) && $path[2]) {
 
   require_once HERISSON_BASE_DIR."/front/front.php";
 	 herisson_front_actions();
@@ -305,6 +304,7 @@ function herisson_router() {
 }
 
 add_action( 'send_headers', 'herisson_router');
+
 
 #if ( !function_exists('robm_dump') ) {
 #/**
@@ -336,5 +336,24 @@ if (param('nomenu')) {
 	}
 	exit;
 }
+
+/**
+ * Hook to display the [herisson] content
+	*/
+require_once HERISSON_BASE_DIR."/front/front.php";
+function herisson_front_test($content) {
+ if (preg_match("#(.*)\[herisson\](.*)#mis",$content,$match)) {
+  ob_start();
+	 echo $match[1];
+		herisson_front_list();
+	 echo $match[2];
+  $text = ob_get_contents();
+  ob_end_clean();
+		return $text;
+	} else {
+	 return $content;
+	}
+}
+add_action('the_content','herisson_front_test');
 	
 ?>

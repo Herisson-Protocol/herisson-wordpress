@@ -13,6 +13,15 @@
 class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 {
 
+ public function setUp()
+ {
+  parent::setUp();
+  $this->hasMany('WpHerissonTags', array(
+   'local' => 'id',
+   'foreign' => 'bookmark_id'));
+ }
+
+
  /** Properties **/
  public function setUrl($url) {
   parent::_set('url',$url);
@@ -47,12 +56,12 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		if (!$this->content && $this->favicon_url) { return false; }
 #		preg_match_all('#(<link[^>]*href="([^"]*)"|<meta itemprop="image" content="([^"]*)"))#',$this->content,$match);
 		preg_match_all('#<link[^>]*href="([^"]*)"#',$this->content,$match);
+		$parsed_url = parse_url($this->url);
 		foreach ($match[0] as $i=>$m) {
 		 if (preg_match("#(favicon|shortcut)#",$m)) {
 			 $favicon_url = $match[1][$i];
 				# Absolute path
 				if (preg_match("#^/#",$favicon_url)) {
-	 			$parsed_url = parse_url($this->url);
 				 $favicon_url = $parsed_url['scheme'].'://'.$parsed_url['host'].$favicon_url;
 				} else if (preg_match("#https?://#",$favicon_url)) {
 				 # Full path
@@ -65,8 +74,12 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		}
 		if (!$this->favicon_url) {
 		 # We try to get /favicon.ico
- 		$parsed_url = parse_url($this->url);
 			$favicon_url = $parsed_url['scheme'].'://'.$parsed_url['host']."/favicon.ico";
+			$this->_set('favicon_url',$favicon_url);
+		}
+		if (!$this->favicon_url) {
+		 # We try to use google caching system.
+   $favicon_url = "http://www.google.com/s2/favicons?domain=".$parsed_url['host'];
 			$this->_set('favicon_url',$favicon_url);
 		}
 	}
@@ -96,7 +109,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		 "title" => $this->title,
 		 "url" => $this->url,
 		 "description" => $this->description,
-			"tags" => $this->getTagsList(),
+			"tags" => $this->getTagsArray(),
 		);
 	}
 
@@ -105,13 +118,32 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 	}
  
  /** Tags **/
-	public function getTagsList() {
+	public function getTagsArray() {
 	 $tags = $this->getTags();
 		$list = array();
 		foreach ($tags as $tag) {
-		 $list[] = $tag;
+		 $list[] = $tag->name;
 		}
 		return $list;
+	}
+
+	public function addTags($new) {
+	 if (!is_array($new)) { $new = explode(',',$new); }
+		$current = $this->getTagsArray();
+  $all = array_unique(array_merge($current,$new));
+  $this->setTags($all);
+	}
+
+	public function setTags($tags) {
+  if (!is_array($tags)) { throw new Exception("Herisson - setTags argument should be an array"); }
+  $this->delTags();
+  foreach ($tags as $tag) {
+   if (!trim($tag)) { continue; }
+   $t = new WpHerissonTags();
+   $t->name = $tag;
+   $t->bookmark_id=$this->id;
+   $t->save();
+  }
 	}
 
 	public function getTags() {
@@ -152,24 +184,14 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		if ($this->error) { return false; }
 
 	 # ./wkhtmltoimage-amd64 --disable-javascript --quality 50 http://www.wilkins.fr/ /home/web/www.wilkins.fr/google.png
-		$url = $this->url;
+  $options = get_option('HerissonOptions');
 		$image = $this->getImage();
-		$thumb = $this-getThumb();
-		$wkhtmltoimage = HERISSON_BASE_DIR."wkhtmltoimage-amd64 --load-error-handling ignore ";
-		$convert = "/usr/bin/convert";
-		$options_nojs = " --disable-javascript ";
-		$options_quality50 = " --quality 50 ";
-		if (!file_exists($image) || filesize($image) == 0) {
-# 		echo "$wkhtmltoimage $options_quality50 \"$url\" $image<br>";
- 		exec("$wkhtmltoimage $options_quality50 \"$url\" $image",$output);
-#		 echo implode("\n",$output);
-		}
+		$thumb = $this->getThumb();
+		$convert = $options['convertPath'];
 
-		if (!file_exists($image) || filesize($image) == 0) {
-# 		echo "$wkhtmltoimage $options_nojs $options_quality50 \"$url\" $image";
- 		exec("$wkhtmltoimage $options_nojs $options_quality50 \"$url\" $image",$output);
-#		 echo implode("\n",$output);
-		}
+		$screenshotTool = herisson_screenshots_get($options['screenshotTool']);
+		call_user_func($screenshotTool->fonction,$this->url,$image);
+
 		if (!file_exists($image) || filesize($image) == 0) {
 		 $this->content_image = $image;
 			$this->save();

@@ -16,9 +16,13 @@ function herisson_backup_actions() {
 		break;
 	 case 'maintenance_submit': herisson_backup_maintenance_submit();
 		break;
-	 case 'import': herisson_backup_import();
+	 case 'import_firefox': herisson_backup_import_firefox();
 		break;
-	 case 'import_firefox': herisson_backup_import_firefox_submit();
+	 case 'import_firefox_submit': herisson_backup_import_firefox_submit();
+		break;
+	 case 'import_delicious': herisson_backup_import_delicious();
+		break;
+	 case 'import_delicious_submit': herisson_backup_import_delicious_submit();
 		break;
   default: herisson_manage_backup();
 	}
@@ -42,11 +46,26 @@ function herisson_manage_backup() {
 		<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
 
 		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
-		 <input type="hidden" name="action" value="import" />
+		 <input type="hidden" name="action" value="import_firefox" />
 			<tr valign="top">
 				<th scope="row">' . __('Import Firefox bookmarks', HERISSONTD) . ':</th>
 				<td style="width: 200px">
 					<input type="file" name="firefox" />
+				</td>
+				<td>
+  			<input type="submit" value="' . __("Import bookmarks", HERISSONTD) . '" />
+				</td>
+			</tr>
+		</form>
+
+		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
+		 <input type="hidden" name="action" value="import_delicious" />
+			<tr valign="top">
+				<th scope="row">' . __('Import Delicious bookmarks', HERISSONTD) . ':</th>
+				<td style="width: 200px">
+					<input type="text" name="username_delicious" />
+					<input type="password" name="password_delicious" />
+					'.__("Theses informations are not stored by this plugins.",HERISSONTD).'
 				</td>
 				<td>
   			<input type="submit" value="' . __("Import bookmarks", HERISSONTD) . '" />
@@ -77,6 +96,7 @@ function herisson_manage_backup() {
 
 
 
+/** MAINTENANCE OPERATIONS **/
 
 function herisson_backup_maintenance_submit() {
  $condition = "
@@ -135,19 +155,118 @@ function herisson_backup_maintenance() {
 
 }
 
+/** DELICIOUS IMPORTATION **/
 
-function herisson_backup_import() {
- if (isset($_FILES['firefox'])) { 
-	 herisson_backup_import_firefox();
+function herisson_backup_import_delicious_submit() {
+ $bookmarks = post('bookmarks');
+
+ $nb = 0;
+	foreach ($bookmarks as $bookmark) {
+	 if (array_key_exists('import',$bookmark) && $bookmark['import']) { 
+		 $tags = array_key_exists('tags',$bookmark) ? explode(" ",$bookmark['tags']) : array();
+   herisson_bookmark_create($bookmark['url'],array(
+  	 'favicon_url'=> array_key_exists('favicon_url',$bookmark) ? $bookmark['favicon_url'] : "",
+  	 'favicon_image'=>array_key_exists('favicon_image',$bookmark) ? $bookmark['favicon_image'] : "",
+  		'title'=>$bookmark['title'],
+  		'is_public'=>array_key_exists('private',$bookmark) && $bookmark['private'] ? 0 : 1,
+				'tags'=> $tags,
+ 		));
+		}
 	}
+	herisson_manage_backup();
 
 }
 
 
+function herisson_backup_import_delicious() {
+ $username = post('username_delicious');
+ $password = post('password_delicious');
+ if (!$username || !$password) {
+	 echo __("Delicious login and password not complete.",HERISSONTD);
+		herisson_manage_backup();
+		exit;
+	}
+	require HERISSON_INCLUDES_DIR."delicious/delicious.php";
+	$bookmarks = herisson_delicious_posts_all($username,$password);
+#	print_r($bookmarks);
+
+
+
+?>
+<!--
+ <link href="<?=get_option('siteurl')?>/wp-content/plugins/herisson/includes/firefox/styles.css" rel="stylesheet" type="text/css" />
+	-->
+	<div class="wrap">
+		<h2><?= __("Importation results from Delicious bookmarks", HERISSONTD); ?></h2>
+	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup">
+	 <input type="hidden" name="action" value="import_delicious_submit" />
+ <table class="widefat post">
+	 <tr>
+		 <th style="width: 50px"><?=__('Add',HERISSONTD)?></th>
+		 <th style="width: 50px"><?=__('Status',HERISSONTD)?></th>
+		 <th style="width: 80px"><?=__('Private',HERISSONTD)?></th>
+		 <th style="width: 50px"><?=__('Icon',HERISSONTD)?></th>
+		 <th><?=__('Title',HERISSONTD)?></th>
+		</tr>
+
+  <tr>
+	<? 
+	$i=0;
+	foreach ($bookmarks as $bookmark) {
+	 $i++;
+
+		  if (herisson_bookmark_check_duplicate($bookmark['href'])) { 
+					$status = array("code" => __("Duplicate",HERISSONTD), "message" => __('This bookmark already exist'), "color" => "red", "error"=>1);
+				} else {
+  		 $status = herisson_network_check($bookmark['href']);
+				}
+	?>
+	<tr>
+
+ 	<td>
+  		<input type="checkbox" name="bookmarks[<?=$i?>][import]" <? if (!$status['error']) { ?> checked="checked" <? } ?>/>
+	 </td>
+
+ 	<td style="background-color:<?=$status['color']?>">
+		 <span title="<?=sprintf(__('HTTP Error %s : %s',HERISSONTD),$status['code'],$status['message'])?>" style="font-weight:bold; color:black"><?=$status['code']?></span>
+		</td>
+
+ 	<td>
+			<input type="checkbox" name="bookmarks[<?=$i?>][private]" <? if ($bookmark['private'] == "yes") { ?> checked="checked" <? } ?>/>&nbsp;<?=__('Private?')?>
+		</td>
+
+ 	<td>
+	 </td>
+	
+	 <td>
+			<input type="hidden" name="bookmarks[<?=$i?>][url]" value="<?=$bookmark['href']?>"/>
+			<input type="hidden" name="bookmarks[<?=$i?>][title]" value="<?=$bookmark['description']?>"/>
+			<input type="hidden" name="bookmarks[<?=$i?>][description]" value="<?=$bookmark['extended']?>"/>
+			<input type="hidden" name="bookmarks[<?=$i?>][tags]" value="<?=$bookmark['tag']?>"/>
+			<a href="<?=$bookmark['href']?>" target="_blank"><span class="txt" title="<?=$bookmark['description']?>"><?=$bookmark['description']?></span></a>
+		</td>
+
+	</tr>
+
+<? 
+ flush();
+ }
+?>
+	</table>
+	 <input type="submit" value="<?=__('Import theses bookmarks',HERISSONTD);?>" />
+	</form>
+	</div>
+<?		
+		
+
+}
+
+/** FIREFOX IMPORTATION **/
+
 function herisson_backup_import_firefox_submit() {
-	require HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
  $bookmarks = post('bookmarks');
 
+ $nb = 0;
 	foreach ($bookmarks as $bookmark) {
 	 if (array_key_exists('import',$bookmark) && $bookmark['import']) { 
    herisson_bookmark_create($bookmark['url'],array(
@@ -164,6 +283,11 @@ function herisson_backup_import_firefox_submit() {
 
 
 function herisson_backup_import_firefox() {
+ if (!isset($_FILES['firefox'])) { 
+	 echo __("Firefox bookmarks file not found.",HERISSONTD);
+		herisson_manage_backup();
+		exit;
+	}
 	require HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
 #	print_r($_FILES['firefox']);
 	$filename = $_FILES['firefox']['tmp_name'];
@@ -183,7 +307,7 @@ function herisson_backup_import_firefox() {
 	<div class="wrap">
 		<h2><?= __("Importation results from Firefox bookmarks", HERISSONTD); ?></h2>
 	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup">
-	 <input type="hidden" name="action" value="import_firefox" />
+	 <input type="hidden" name="action" value="import_firefox_submit" />
  <table class="widefat post">
 	 <tr>
 		 <th style="width: 50px"><?=__('Add',HERISSONTD)?></th>

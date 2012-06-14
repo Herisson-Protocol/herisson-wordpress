@@ -10,7 +10,7 @@
 
 require_once HERISSON_ADMIN_DIR . 'bookmarks.php';
 require_once HERISSON_ADMIN_DIR . 'friends.php';
-require_once HERISSON_ADMIN_DIR . 'backup.php';
+require_once HERISSON_ADMIN_DIR . 'maintenance.php';
 require_once HERISSON_ADMIN_DIR . 'options.php';
 
 /**

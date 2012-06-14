@@ -56,7 +56,6 @@ function herisson_front_validate() {
  $url = post('url');
 	$f = herisson_front_get_where("url='$url' AND b_youwant=1");
  if (herisson_check_short($url,$signature,$f->public_key)) {
-#  echo "Check !\n";
   $f->b_youwant=0;
 		$f->is_active=1;
   $f->save();
@@ -71,7 +70,6 @@ function herisson_front_ask() {
  $f->url = post('url');
  $f->reloadPublicKey();
  if (herisson_check_short($f->url,$signature,$f->public_key)) {
-#  echo "Check !\n";
   $f->getInfo();
   $f->b_wantsyou=1;
 		$f->is_active=0;
@@ -115,32 +113,28 @@ function herisson_front_list() {
 				';
  if (sizeof($bookmarks)) {
   ?>
- <table class="widefat post " cellspacing="0">
- <tr>
-  <th><?=__('Title',HERISSONTD)?></th>
-  <th><?=__('URL',HERISSONTD)?></th>
- </tr>
  <?
   foreach ($bookmarks as $bookmark) {
  ?> 
- <tr>
-  <td><? echo $bookmark->title; ?></td>
-  <td><? echo $bookmark->url; ?></td>
- </tr>
+	<div>
+	 <a href="<?=$bookmark->url; ?>"><?=$bookmark->title?></a><br/>
+		<? foreach ($bookmark->getTags() as $tag) { ?><a href="/tag/<?=$tag?>"><?=$tag?></a> &nbsp; <? } ?>
+
+	</div>
  <?
  
  	}
 		?>
-		</table>
 		</div>
 		<?
  } else {
 	 echo __("No bookmark",HERISSONTD);
  }
 
- echo "<h2>".__("Friend's bookmarks",HERISSONTD)."</h2>";
- $options = get_option('HerissonOptions');
+ 
 	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->execute();
+	if (sizeof($friends)) { 
+ echo "<h2>".__("Friend's bookmarks",HERISSONTD)."</h2>";
 	foreach ($friends as $friend) {
 		echo $friend->name."'s bookmarks<br>";
 		$bookmarks = $friend->retrieveBookmarks();
@@ -148,8 +142,9 @@ function herisson_front_list() {
  		foreach ($bookmarks as $bookmark) {
     echo '<a href="'.$bookmark['url'].'">'.$bookmark['title'].'</a> : '.$bookmark['description'].'<br>';
  		}
-		} else { echo "No bookmark"; }
+		} else { echo __("No bookmark",HERISSONTD); }
  }
+	} else { echo __("No friend",HERISSONTD); }
 
 }
 

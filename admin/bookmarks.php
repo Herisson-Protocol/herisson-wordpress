@@ -28,73 +28,14 @@ function herisson_bookmark_actions() {
 }
 
 
-function herisson_bookmark_get_where($where) {
- $bookmarks = Doctrine_Query::create()
-		->from('WpHerissonBookmarks')
-		->where($where)
-		->execute();
-	return $bookmarks;
-}
-
-function herisson_bookmark_check_duplicate($url) {
- $bookmarks = herisson_bookmark_get_where("hash='".md5($url)."'");
-	if (sizeof($bookmarks)) { return true; }
-	return false;
-}
-
-function herisson_bookmark_get($id) {
- if (!is_numeric($id)) { return new WpHerissonBookmarks(); }
-	$bookmarks = herisson_bookmark_get_where("id=$id");
-	foreach ($bookmarks as $bookmark) {
-	 return $bookmark;
-	}
-	return new WpHerissonBookmarks();
-}
-
-function herisson_bookmark_create($url,$options=array()) {
-
- if (herisson_bookmark_check_duplicate($url)) {
-	 echo "Ignoring duplicate entry : $url<br>";
-	}
- $bookmark = new WpHerissonBookmarks();
-	$bookmark->url = $url;
-	if (sizeof($options)) {
- 	if (array_key_exists('favicon_url',$options) && $options['favicon_url']) {
-  	$bookmark->favicon_url = $options['favicon_url'];
- 	}
- 	if (array_key_exists('favicon_image',$options) && $options['favicon_image']) {
-  	$bookmark->favicon_image = $options['favicon_image'];
- 	}
- 	if (array_key_exists('title',$options) && $options['title']) {
-  	$bookmark->title = $options['title'];
- 	}
-	}
-	$bookmark->save();
-}
-
-#function herisson_bookmark_get_tags($id) {
-# $tags = Doctrine_Query::create()
-#		->from('WpHerissonTags')
-#		->where("bookmark_id=$id")
-#		->orderby("name")
-#		->execute();
-#	return $tags;
-#}
-
-
-function herisson_bookmark_del_tags($id) {
- Doctrine_Query::create()
-	 ->delete()
-		->from('WpHerissonTags')
-		->where("bookmark_id=$id")
-		->execute();
-}
-
-
 function herisson_bookmark_list() {
  global $wpdb;
-
-	$bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
+ 
+ if (get('tag')) {
+ 	$bookmarks = herisson_bookmark_get_tag(get('tag'));
+	} else {
+ 	$bookmarks = herisson_bookmark_all();
+	}
  echo '
 	<div class="wrap">
 				<h2>' . __("All bookmarks", HERISSONTD).'<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0" class="add-new-h2">'.__('Add',HERISSONTD).'</a></h2>
@@ -117,9 +58,9 @@ function herisson_bookmark_list() {
  ?> 
  <tr>
   <td style="width: 30px; vertical-align:baseline"><? if ($bookmark->favicon_image) { ?><img src="data:image/png;base64,<?=$bookmark->favicon_image?>" /><? } ?></td>
-  <td><b><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><? echo $bookmark->title; ?></a></b></td>
+  <td><b><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><? echo $bookmark->title ? $bookmark->title : "Unamed-".$bookmark->$id; ?></a></b></td>
   <td><a href="<? echo $bookmark->url; ?>"><? echo $bookmark->url; ?></a></td>
-  <td><? foreach ($bookmark->getTagsList() as $tag) { ?><a href="<?=$tag?>"><?=$tag?></a>,&nbsp;<? } ?></td>
+  <td><? foreach ($bookmark->getTagsArray() as $tag) { ?><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&tag=<?=$tag?>"><?=$tag?></a>,&nbsp;<? } ?></td>
   <td>
 		<!--
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><?=__('Edit',HERISSONTD)?></a>
@@ -163,7 +104,7 @@ function herisson_bookmark_edit($id=0) {
 				$tags = array();
 			} else {
     $existing = herisson_bookmark_get($id);
-				$tags = $existing->getTagsList();
+				$tags = $existing->getTagsArray();
 			}
 
             echo '
@@ -355,28 +296,18 @@ function herisson_bookmark_submitedit() {
  	$bookmark->captureFromUrl();
 
   $tags = explode(',',post('tags'));
-		if (!is_array($tags)) { $tags = array($tags); }
-		$bookmark->delTags();
-		foreach ($tags as $tag) {
-		 if (!trim($tag)) { continue; }
-		 $t = new WpHerissonTags();
-			$t->name = $tag;
-			$t->bookmark_id=$id;
-			$t->save();
-		}
+		$bookmark->setTags($tags);
 
 	 herisson_bookmark_edit($bookmark->id);
 
 }
 
 function herisson_bookmark_view() {
-
  $id = intval(get('id'));
  if (!$id) {
   echo __("Error : Missing id\n",HERISSONTD);
 		exit;
 	}
-
  $bookmark = herisson_bookmark_get($id);
 	if ($bookmark && $bookmark->content) {
  	echo $bookmark->content;
@@ -387,24 +318,14 @@ function herisson_bookmark_view() {
 }
 
 function herisson_bookmark_delete() {
-
  		$id = intval(param('id'));
 			if ($id>0) {
     $bookmark = herisson_bookmark_get($id);
  			$bookmark->delete();
 			}
-		
 			herisson_bookmark_list();
 }
 
-
-function herisson_bookmark_import() {
-if ( !empty($_POST['login']) && !empty($_POST['password'])) {
-
-}
-
-
-}
 
 function herisson_bookmark_tagcloud() {
 
