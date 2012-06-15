@@ -37,17 +37,17 @@ function herisson_bookmark_list() {
 	}
  echo '
 	<div class="wrap">
-				<h2>' . __("All bookmarks", HERISSONTD).'<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0" class="add-new-h2">'.__('Add',HERISSONTD).'</a></h2>
+				<h2>' . __("All bookmarks", HERISSON_TD).'<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0" class="add-new-h2">'.__('Add',HERISSON_TD).'</a></h2>
 				';
  if (sizeof($bookmarks)) {
   ?>
  <table class="widefat post " cellspacing="0">
  <tr>
   <th></th>
-  <th><?=__('Title',HERISSONTD)?></th>
-  <th><?=__('URL',HERISSONTD)?></th>
-  <th><?=__('Tags',HERISSONTD)?></th>
-  <th><?=__('Action',HERISSONTD)?></th>
+  <th><?=__('Title',HERISSON_TD)?></th>
+  <th><?=__('URL',HERISSON_TD)?></th>
+  <th><?=__('Tags',HERISSON_TD)?></th>
+  <th><?=__('Action',HERISSON_TD)?></th>
  </tr>
  <?
   foreach ($bookmarks as $bookmark) {
@@ -58,7 +58,7 @@ function herisson_bookmark_list() {
   <td><a href="<? echo $bookmark->url; ?>"><? echo $bookmark->url; ?></a></td>
   <td><? foreach ($bookmark->getTagsArray() as $tag) { ?><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&tag=<?=$tag?>"><?=$tag?></a>,&nbsp;<? } ?></td>
   <td>
-		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSONTD)?>')) { return true; } return false;"><?=__('Delete',HERISSONTD)?></a>
+		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSON_TD)?>')) { return true; } return false;"><?=__('Delete',HERISSON_TD)?></a>
 		</td>
  </tr>
  <?
@@ -66,11 +66,11 @@ function herisson_bookmark_list() {
  	}
 		?>
 		</table>
-	 <? echo __(sizeof($bookmarks)." bookmarks.",HERISSONTD); ?>
+	 <? echo __(sizeof($bookmarks)." bookmarks.",HERISSON_TD); ?>
 		</div>
 		<?
  } else {
-	 echo __("No bookmark",HERISSONTD);
+	 echo __("No bookmark",HERISSON_TD);
  }
 
 }
@@ -99,7 +99,7 @@ function herisson_bookmark_edit($id=0) {
 
             echo '
 			<div class="wrap">
-				<h2>' . __("Edit Bookmark", HERISSONTD) . '</h2>
+				<h2>' . __("Edit Bookmark", HERISSON_TD) . '</h2>
 
 				<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_bookmarks">
 			';
@@ -111,7 +111,7 @@ function herisson_bookmark_edit($id=0) {
 
 
             echo '
-				<h3>' . __("Bookmark", HERISSONTD) . ' ' . $existing->id . ':<cite> &laquo;&nbsp;' . $existing->title . '&nbsp;&raquo;</cite></h3>
+				<h3>' . __("Bookmark", HERISSON_TD) . ' ' . $existing->id . ':<cite> &laquo;&nbsp;' . $existing->title . '&nbsp;&raquo;</cite></h3>
 
 				<table class="form-table" cellspacing="2" cellpadding="5">
 
@@ -127,16 +127,16 @@ function herisson_bookmark_edit($id=0) {
             echo '
 				<tr class="form-field">
 					<th valign="top" scope="row">
-						<label for="title-0">' . __("Title", HERISSONTD) . ':</label>
+						<label for="title-0">' . __("Title", HERISSON_TD) . ':</label>
 					</th>
 					<td>
 						<input type="text" class="main" id="title-0" name="title" value="' . $existing->title . '" />
 					</td>
 					<td rowspan="5" style="text-align: center; vertical-align: top">
 					 <br/>
-						<b><a href="/wp-admin/admin.php?page=herisson_bookmarks&action=view&id='.$existing->id.'&nomenu=1" target="_blank">'.__('View archive',HERISSONTD).'</a></b><br/><br/>
+						<b><a href="/wp-admin/admin.php?page=herisson_bookmarks&action=view&id='.$existing->id.'&nomenu=1" target="_blank">'.__('View archive',HERISSON_TD).'</a></b><br/><br/>
 					'.($existing->id && file_exists($existing->getImage()) && filesize($existing->getImage()) ? '
-						<b>'.__('Capture',HERISSONTD).'</b><br/>
+						<b>'.__('Capture',HERISSON_TD).'</b><br/>
 					 <a href="'.$existing->getImageUrl().'"><img alt="Capture" src="'.$existing->getThumbUrl().'" style="border:0.5px solid black"/></a>
      ' : '').'
 					</td>
@@ -147,7 +147,7 @@ function herisson_bookmark_edit($id=0) {
             echo '
 				<tr class="form-field">
 					<th valign="top" scope="row">
-						<label for="url-0">' . __("URL", HERISSONTD) . ':</label>
+						<label for="url-0">' . __("URL", HERISSON_TD) . ':</label>
 					</th>
 					<td>
 						<input type="text" size="80" class="main" id="url-0" name="url" value="' . $existing->url . '" />
@@ -160,7 +160,7 @@ function herisson_bookmark_edit($id=0) {
             echo '
 				<tr class="form-field">
 					<th valign="top" scope="row">
-					<label for="description-0">' . __("Description", HERISSONTD) . ':</label>
+					<label for="description-0">' . __("Description", HERISSON_TD) . ':</label>
 					</th>
 					<td>
 					<textarea class="main" id="description-0" name="description">'. $existing->description.'</textarea>
@@ -172,7 +172,7 @@ function herisson_bookmark_edit($id=0) {
             echo '
 				<tr class="form-field">
 					<th valign="top" scope="row">
-						<label for="image-0">' . __("Book Image URL", HERISSONTD) . ':</label>
+						<label for="image-0">' . __("Book Image URL", HERISSON_TD) . ':</label>
 					</th>
 					<td>
 						<input type="text" class="main" id="image-0" name="image" value="' . htmlentities($existing->image) . '" />
@@ -185,28 +185,28 @@ function herisson_bookmark_edit($id=0) {
             echo '
 				<tr class="form-field">
 					<th valign="top" scope="row">
-						<label for="visibility-0">' . __("Visibility", HERISSONTD) . ':</label>
+						<label for="visibility-0">' . __("Visibility", HERISSON_TD) . ':</label>
 					</th>
 					<td>
 						<select name="is_public" id="visibility-0">
 							';
 
 						echo '
-									<option value="0"'.(!$existing->is_public ? ' selected="selected"' : '').'>' . __("Private", HERISSONTD) . '</option>
-									<option value="1"'.($existing->is_public ? ' selected="selected"' : '').'>' . __("Public", HERISSONTD) . '</option>
+									<option value="0"'.(!$existing->is_public ? ' selected="selected"' : '').'>' . __("Private", HERISSON_TD) . '</option>
+									<option value="1"'.($existing->is_public ? ' selected="selected"' : '').'>' . __("Public", HERISSON_TD) . '</option>
 								';
 
 				echo '
 						</select>
-						<br><small>' . __("<code>Public Visibility</code> enables a bookmark to appear publicly within the herisson page.", HERISSONTD) . '</small>
-						<br><small>' . __("<code>Private Visibility</code> restricts the visibility of a book to within the administrative interface.", HERISSONTD) . '</small>
+						<br><small>' . __("<code>Public Visibility</code> enables a bookmark to appear publicly within the herisson page.", HERISSON_TD) . '</small>
+						<br><small>' . __("<code>Private Visibility</code> restricts the visibility of a book to within the administrative interface.", HERISSON_TD) . '</small>
 					</td>
 				</tr>';
 
             echo '
 				<tr class="form-field">
 					<th valign="top" scope="row">
-						<label for="visibility-0">' . __("Tags", HERISSONTD) . ':</label>
+						<label for="visibility-0">' . __("Tags", HERISSON_TD) . ':</label>
 					</th>
 					<td>
 					';
@@ -256,7 +256,7 @@ echo '
 
 
     <p class="submit">
-     <input class="button" type="submit" value="' . __("Save", HERISSONTD) . '" />
+     <input class="button" type="submit" value="' . __("Save", HERISSON_TD) . '" />
     </p>
 
     </form>
@@ -289,14 +289,14 @@ function herisson_bookmark_submitedit() {
 function herisson_bookmark_view() {
  $id = intval(get('id'));
  if (!$id) {
-  echo __("Error : Missing id\n",HERISSONTD);
+  echo __("Error : Missing id\n",HERISSON_TD);
 		exit;
 	}
  $bookmark = herisson_bookmark_get($id);
 	if ($bookmark && $bookmark->content) {
  	echo $bookmark->content;
 	} else {
-  echo sprintf(__("Error : Missing content for bookmark %s\n",HERISSONTD),$bookmark->id);
+  echo sprintf(__("Error : Missing content for bookmark %s\n",HERISSON_TD),$bookmark->id);
 	}
 	exit;
 }

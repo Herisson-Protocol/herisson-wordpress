@@ -95,7 +95,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		 if ($content == "1") {
 			 $this->b_youwant=1;
 			} else {
-			 echo sprintf(__("Error while adding friend : %s",HERISSONTD),$url);
+			 echo sprintf(__("Error while adding friend : %s",HERISSON_TD),$url);
 			}
 		} else {
 			echo $content->get_error_message("herisson");
@@ -117,7 +117,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		 if ($content == "1") {
 			 echo __('ok');
 			} else {
-			 echo sprintf(__("Error while adding friend : %s",HERISSONTD),$url);
+			 echo sprintf(__("Error while adding friend : %s",HERISSON_TD),$url);
 			}
 		} else {
 			echo $content->get_error_message("herisson");

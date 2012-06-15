@@ -39,73 +39,73 @@ function herisson_manage_options() {
     echo '
 	<div class="wrap">
 
-		<h2>' . __("Herisson options", HERISSONTD) . '</h2>
+		<h2>' . __("Herisson options", HERISSON_TD) . '</h2>
 
 		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_options">
 
 		<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
 			<tr valign="top">
-				<th scope="row">' . __('Site name', HERISSONTD) . ':</th>
+				<th scope="row">' . __('Site name', HERISSON_TD) . ':</th>
 				<td>
 					<input type="text" name="sitename" style="width:30em" value="' .$options['sitename']. '" />
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row">' . __('Admin email', HERISSONTD) . ':</th>
+				<th scope="row">' . __('Admin email', HERISSON_TD) . ':</th>
 				<td>
 					<input type="text" name="adminEmail" style="width:30em" value="' .$options['adminEmail']. '" />
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="search">' . __("Search depth", HERISSONTD) . '</label>:</th>
+				<th scope="row"><label for="search">' . __("Search depth", HERISSON_TD) . '</label>:</th>
 				<td>
 				 <select name="search">
-					 <option value="0" '.($options['search'] == "0" ? ' selected="selected"' : '').'>'.__("No public search",HERISSONTD).'</option>
-					 <option value="1" '.($options['search'] == "1" ? ' selected="selected"' : '').'>'.__("Public search",HERISSONTD).'</option>
-					 <option value="2" '.($options['search'] == "2" ? ' selected="selected"' : '').'>'.__("Recursive search",HERISSONTD).'</option>
+					 <option value="0" '.($options['search'] == "0" ? ' selected="selected"' : '').'>'.__("No public search",HERISSON_TD).'</option>
+					 <option value="1" '.($options['search'] == "1" ? ' selected="selected"' : '').'>'.__("Public search",HERISSON_TD).'</option>
+					 <option value="2" '.($options['search'] == "2" ? ' selected="selected"' : '').'>'.__("Recursive search",HERISSON_TD).'</option>
 					</select>
 					<p>
-					' . __("<code>No public search</code> : Your public and private bookmarks are not available for you friends (for search and view).", HERISSONTD) . '<br/>
-					' . __("<code>Public search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private.", HERISSONTD) . '<br/>
-					' . __("<code>Recursive search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, friends search for bookmarks, you forward their search to all your friends.", HERISSONTD) . '<br/>
+					' . __("<code>No public search</code> : Your public and private bookmarks are not available for you friends (for search and view).", HERISSON_TD) . '<br/>
+					' . __("<code>Public search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private.", HERISSON_TD) . '<br/>
+					' . __("<code>Recursive search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, friends search for bookmarks, you forward their search to all your friends.", HERISSON_TD) . '<br/>
 					</p>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="bookmarks_per_page">' . __("Bookmarks per page", HERISSONTD) . '</label>:</th>
+				<th scope="row"><label for="bookmarks_per_page">' . __("Bookmarks per page", HERISSON_TD) . '</label>:</th>
 				<td>
 					<input type="text" name="bookmarks_per_page" id="books_per_page" style="width:4em;" value="' . ( intval($options['bookmarksPerPage']) ) . '" />
 					<p>
-					' . __("Limits the total number of bookmarks displayed <code>per page</code> within the administrative 'Bookmarks' menu.", HERISSONTD) . '
+					' . __("Limits the total number of bookmarks displayed <code>per page</code> within the administrative 'Bookmarks' menu.", HERISSON_TD) . '
 					</p>
 				</td>
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="basePath">' . __("Base Path", HERISSONTD) . '</label>:</th>
+				<th scope="row"><label for="basePath">' . __("Base Path", HERISSON_TD) . '</label>:</th>
 				<td>
 					<input type="text" name="basePath" id="basePath" style="width:30em;" value="' .$options['basePath'] . '" />
 					<p>
-					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSONTD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'<br/>
-					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSONTD).'
+					' . sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSON_TD), get_option('siteurl'),$options['basePath'],get_option('siteurl'),$options['basePath']).'<br/>
+					' . __("Be careful this path doesn't override an already existing path from your blog.", HERISSON_TD).'
 					</p>
 				</td>
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="basePath">' . __("Screenshot generator", HERISSONTD) . '</label>:</th>
+				<th scope="row"><label for="basePath">' . __("Screenshot generator", HERISSON_TD) . '</label>:</th>
 				<td>
 				 <select name="screenshotTool">
 					 ';
 						foreach ($screenshots as $tool) {
-						 echo '<option value="'.$tool->id.'" '.($options['screenshotTool'] == $tool->id ? ' selected="selected"' : '').">".__($tool->name,HERISSONTD)."</option>";
+						 echo '<option value="'.$tool->id.'" '.($options['screenshotTool'] == $tool->id ? ' selected="selected"' : '').">".__($tool->name,HERISSON_TD)."</option>";
 						}
 						echo '	
 					</select>
 					<p>
 					 ';
 						foreach ($screenshots as $tool) {
-					  echo __(sprintf("%s description",$tool->name), HERISSONTD).'<br>';
+					  echo __(sprintf("%s description",$tool->name), HERISSON_TD).'<br>';
 						}
 						echo '	
 					</p>
@@ -113,16 +113,16 @@ function herisson_manage_options() {
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="convertPath">' . __("Thumbnail generator", HERISSONTD) . '</label>:</th>
+				<th scope="row"><label for="convertPath">' . __("Thumbnail generator", HERISSON_TD) . '</label>:</th>
 				<td>
 					<input type="text" name="convertPath" id="convertPath" style="width:30em;" value="'.$options['convertPath'].'" />
 					'.(file_exists($options['convertPath']) ?  
 					 '<p class="success">'
-					 . sprintf(__("Path <code>%s</code> exists",HERISSONTD),$options['convertPath'])
+					 . sprintf(__("Path <code>%s</code> exists",HERISSON_TD),$options['convertPath'])
 						.'</p>'
 						:
 					 '<p class="error">'
-					 . sprintf(__("Path <code>%s</code> doesn't exist",HERISSONTD),$options['convertPath'])
+					 . sprintf(__("Path <code>%s</code> doesn't exist",HERISSON_TD),$options['convertPath'])
 						.'</p>'
 						).'
 
@@ -131,7 +131,7 @@ function herisson_manage_options() {
 			</tr>
 
 			<tr valign="top">
-				<th scope="row">' . __("Debug Mode", HERISSONTD) . ':</th>
+				<th scope="row">' . __("Debug Mode", HERISSON_TD) . ':</th>
 				<td>
 					<input type="checkbox" name="debug_mode" id="debug_mode"' . ( ($options['debugMode']) ? ' checked="checked"' : '' ) . ' />
 				</td>
@@ -141,7 +141,7 @@ function herisson_manage_options() {
 		<input type="hidden" name="action" value="submitedit" />
 
 		<p class="submit">
-			<input type="submit" value="' . __("Update Options", HERISSONTD) . '" />
+			<input type="submit" value="' . __("Update Options", HERISSON_TD) . '" />
 		</p>
 
 		</form>

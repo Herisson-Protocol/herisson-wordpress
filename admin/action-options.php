@@ -46,7 +46,7 @@ if ( !empty($_POST['update']) ) {
             break;
         default:
             $append .= '&imagesize=1';
-            $options['imageSize'] = __('Small', HERISSONTD);
+            $options['imageSize'] = __('Small', HERISSON_TD);
             break;
     }
 
@@ -59,7 +59,7 @@ if ( !empty($_POST['update']) ) {
             break;
         default:
             $append .= '&limagesize=1';
-            $options['limageSize'] = __('Medium', HERISSONTD);
+            $options['limageSize'] = __('Medium', HERISSON_TD);
             break;
     }
 // Added End

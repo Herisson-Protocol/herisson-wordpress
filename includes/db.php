@@ -86,19 +86,19 @@ function herisson_friend_get($id) {
 function herisson_friend_list_active() {
  $friends = Doctrine_Query::create()->from('WpHerissonFriends')
  ->where('is_active=1')->execute();
- herisson_friend_list_custom( __("Active friends", HERISSONTD),$friends);
+ herisson_friend_list_custom( __("Active friends", HERISSON_TD),$friends);
 }
 
 function herisson_friend_list_youwant() {
  $friends = Doctrine_Query::create()->from('WpHerissonFriends')
  ->where('b_youwant=1')->execute();
- herisson_friend_list_custom( __("Waiting for friend approval", HERISSONTD),$friends);
+ herisson_friend_list_custom( __("Waiting for friend approval", HERISSON_TD),$friends);
 }
 
 function herisson_friend_list_wantsyou() {
  $friends = Doctrine_Query::create()->from('WpHerissonFriends')
  ->where('b_wantsyou=1')->execute();
- herisson_friend_list_custom( __("Asking your permission", HERISSONTD),$friends);
+ herisson_friend_list_custom( __("Asking your permission", HERISSON_TD),$friends);
 }
 
 

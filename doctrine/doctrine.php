@@ -9,9 +9,9 @@
  */
 
 // constants of plugin
-define( 'DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME );
-define( 'DOCTRINE_MODELS_DIR', dirname( __FILE__ ) . '/models' );
-define( 'DOCTRINE_SHORTCODES_DIR', dirname( __FILE__ ) . '/shortcodes' );
+define( 'HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME );
+define( 'HERISSON_DOCTRINE_MODELS_DIR', dirname( __FILE__ ) . '/models' );
+define( 'HERISSON_DOCTRINE_SHORTCODES_DIR', dirname( __FILE__ ) . '/shortcodes' );
 $GLOBALS['doctrine_models_folder_reset_processed'] = false;
 
 
@@ -30,19 +30,19 @@ function herisson_doctrine_loadlibrary() {
     // this will allow Doctrine to load Model classes automatically
     spl_autoload_register( array( 'Doctrine', 'autoload' ) );
 
-    Doctrine_Manager::connection( DOCTRINE_DSN, 'default' );
+    Doctrine_Manager::connection( HERISSON_DOCTRINE_DSN, 'default' );
 
     herisson_doctrine_loadmodels();
 
     // (OPTIONAL) CONFIGURATION BELOW
 
     // load our shortcodes
-    if ( is_dir( DOCTRINE_SHORTCODES_DIR ) ) {
-        foreach ( glob( DOCTRINE_SHORTCODES_DIR . '/*.php' ) as $shortcode_file ) {
+    if ( is_dir( HERISSON_DOCTRINE_SHORTCODES_DIR ) ) {
+        foreach ( glob( HERISSON_DOCTRINE_SHORTCODES_DIR . '/*.php' ) as $shortcode_file ) {
             require_once( $shortcode_file );
         }
     } else {
-        mkdir( DOCTRINE_SHORTCODES_DIR, 0775 );
+        mkdir( HERISSON_DOCTRINE_SHORTCODES_DIR, 0775 );
     }
 
     // this will allow us to use "mutators"
@@ -73,19 +73,19 @@ function herisson_doctrine_loadlibrary() {
  */
 function herisson_doctrine_loadmodels() {
     // detect if model's folder exists and make if not
-    if ( !is_dir( DOCTRINE_MODELS_DIR ) ) {
-        mkdir( DOCTRINE_MODELS_DIR, 0775 );
+    if ( !is_dir( HERISSON_DOCTRINE_MODELS_DIR ) ) {
+        mkdir( HERISSON_DOCTRINE_MODELS_DIR, 0775 );
     }
 
     // detect if models exists and generate if not
-#    if ( count_files_in_dir( DOCTRINE_MODELS_DIR ) . '/*.php' ) {
-#        Doctrine_Core::generateModelsFromDb( DOCTRINE_MODELS_DIR, array( 'default' ),
+#    if ( count_files_in_dir( HERISSON_DOCTRINE_MODELS_DIR ) . '/*.php' ) {
+#        Doctrine_Core::generateModelsFromDb( HERISSON_DOCTRINE_MODELS_DIR, array( 'default' ),
 #            array( 'generateTableClasses' => true ) );
 #    }
 
     // telling Doctrine where our models are located
-    Doctrine::loadModels( DOCTRINE_MODELS_DIR . '/generated' );
-    Doctrine::loadModels( DOCTRINE_MODELS_DIR );
+    Doctrine::loadModels( HERISSON_DOCTRINE_MODELS_DIR . '/generated' );
+    Doctrine::loadModels( HERISSON_DOCTRINE_MODELS_DIR );
 }
 
 herisson_doctrine_loadlibrary();

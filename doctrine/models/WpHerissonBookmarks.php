@@ -13,6 +13,9 @@
 class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 {
 
+ public $prefix = null;
+ public $tags = null;
+
  public function setUp()
  {
   parent::setUp();
@@ -109,6 +112,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		 "title" => $this->title,
 		 "url" => $this->url,
 		 "description" => $this->description,
+		 "content" => $this->content,
 			"tags" => $this->getTagsArray(),
 		);
 	}

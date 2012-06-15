@@ -108,7 +108,7 @@ function herisson_front_list() {
 	$options = get_option('HerissonOptions');
  echo '
 	<div class="wrap">
-				<h1>' . sprintf(__("%s bookmarks", HERISSONTD),$options['sitename']).'</h1>
+				<h1>' . sprintf(__("%s bookmarks", HERISSON_TD),$options['sitename']).'</h1>
 				';
  if (sizeof($bookmarks)) {
   ?>
@@ -127,13 +127,13 @@ function herisson_front_list() {
 		</div>
 		<?
  } else {
-	 echo __("No bookmark",HERISSONTD);
+	 echo __("No bookmark",HERISSON_TD);
  }
 
  
 	$friends = Doctrine_Query::create()->from('WpHerissonFriends')->execute();
 	if (sizeof($friends)) { 
- echo "<h2>".__("Friend's bookmarks",HERISSONTD)."</h2>";
+ echo "<h2>".__("Friend's bookmarks",HERISSON_TD)."</h2>";
 	foreach ($friends as $friend) {
 		echo $friend->name."'s bookmarks<br>";
 		$bookmarks = $friend->retrieveBookmarks();
@@ -141,9 +141,9 @@ function herisson_front_list() {
  		foreach ($bookmarks as $bookmark) {
     echo '<a href="'.$bookmark['url'].'">'.$bookmark['title'].'</a> : '.$bookmark['description'].'<br>';
  		}
-		} else { echo __("No bookmark",HERISSONTD); }
+		} else { echo __("No bookmark",HERISSON_TD); }
  }
-	} else { echo __("No friend",HERISSONTD); }
+	} else { echo __("No friend",HERISSON_TD); }
 
 }
 

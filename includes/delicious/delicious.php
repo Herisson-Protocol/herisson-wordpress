@@ -12,7 +12,7 @@ function herisson_delicious_posts_all($username,$password) {
 	$res = $d->getAllPosts();
 
 	if (!$res) {
-  echo __("Someting went wrong while fetching Delicious bookmarks. (Eg. Wrong login/password, no bookmarks etc)",HERISSONTD);
+  echo __("Someting went wrong while fetching Delicious bookmarks. (Eg. Wrong login/password, no bookmarks etc)",HERISSON_TD);
   exit;
 	}
 	return $res;

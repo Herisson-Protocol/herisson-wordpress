@@ -1,14 +1,14 @@
 <?php
 /*
 Plugin Name: Herisson
-Version: 1.0
+Version: 0.1
 Plugin URI: 
 Description: Herisson displays bookmarks you own. It allows you to develop a complete list of tagged bookmarks and friends you are sharing them with.
 Author: Thibault Taillandier
 Author URI: http://blog.taillandier.name/
 License: GPL2
 */
-/*  Copyright 2012  Scott Olson  (email : thibault@taillandier.name)
+/*  Copyright 2012  Thibault Taillandier  (email : thibault@taillandier.name)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -27,22 +27,21 @@ License: GPL2
 <?php
 
 
-define('HERISSON_VERSION', '1.0');
-define('HERISSON_DB', 54);
-define('HERISSON_OPTIONS', 22);
-define('HERISSON_REWRITE', 8);
-define('HERISSONTD', 'herisson');
-define('HERISSON_BASE_DIR', dirname(__FILE__).'/');
+define('HERISSON_VERSION', '0.1');
+define('HERISSON_DB', 1);
+define('HERISSON_OPTIONS', 1);
+define('HERISSON_REWRITE', 1);
+define('HERISSON_TD', 'herisson');
+#define('HERISSON_BASE_DIR', dirname(__FILE__).'/');
+define('HERISSON_BASE_DIR', "/var/www/".$_SERVER['HTTP_HOST']."/wp-content/plugins/herisson/");
 define('HERISSON_INCLUDES_DIR', HERISSON_BASE_DIR.'includes/');
 define('HERISSON_TEMPLATES_DIR', HERISSON_BASE_DIR.'templates/');
 define('HERISSON_ADMIN_DIR', HERISSON_BASE_DIR.'admin/');
 define('HERISSON_LANG_DIR', HERISSON_BASE_DIR.'languages/');
 define('HERISSON_SCREENSHOTS_DIR', HERISSON_BASE_DIR.'screenshots/');
-#define('HERISSON_XML_DIR', HERISSON_BASE_DIR.'bookmarkxml/');
 define('HERISSON_MENU_SINGLE', 4);
 define('HERISSON_MENU_MULTIPLE', 2);
 
-#echo "<br><br>";
 require_once HERISSON_BASE_DIR."../../../wp-includes/plugin.php";
 require_once HERISSON_BASE_DIR."../../../wp-includes/pluggable.php";
 require_once HERISSON_BASE_DIR."../../../wp-includes/functions.php";
@@ -56,7 +55,7 @@ require_once HERISSON_BASE_DIR."../../../wp-admin/includes/plugin.php";
  */
 add_action('init', 'herisson_init');
 function herisson_init() {
-	load_plugin_textdomain(HERISSONTD, false, HERISSON_LANG_DIR);
+	load_plugin_textdomain(HERISSON_TD, false, HERISSON_LANG_DIR);
 }
 
 
@@ -67,6 +66,7 @@ require_once HERISSON_INCLUDES_DIR . 'functions.php';
 require_once HERISSON_INCLUDES_DIR . 'encryption.php';
 require_once HERISSON_INCLUDES_DIR . 'network.php';
 require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
+require_once HERISSON_INCLUDES_DIR . 'maintenance.php';
 require_once HERISSON_INCLUDES_DIR . 'db.php';
 
 /**
@@ -94,7 +94,7 @@ function herisson_install() {
 
     if ( version_compare('3.0', $wp_version) == 1 && strpos($wp_version, 'wordpress-mu') === false ) {
         echo "
-		<p>".__('(Herisson only works with WordPress 3.0 and above)', HERISSONTD)."</p>
+		<p>".__('(Herisson only works with WordPress 3.0 and above)', HERISSON_TD)."</p>
 		";
         return;
     }
@@ -240,7 +240,7 @@ function herisson_load_template( $filename ) {
     $template = HERISSON_TEMPLATES_DIR . "$template_directory" . "$filename";
 
     if ( !file_exists($template) )
-        return new WP_Error('template-missing', sprintf(__("Oops! The template file %s could not be found in the Herisson default_template or custom_template directories.", HERISSONTD), "<code>$filename</code>"));
+        return new WP_Error('template-missing', sprintf(__("Oops! The template file %s could not be found in the Herisson default_template or custom_template directories.", HERISSON_TD), "<code>$filename</code>"));
 
     load_template($template);
 }
@@ -331,6 +331,10 @@ if (param('nomenu')) {
   herisson_bookmark_actions();
  } else if (param('page') == "herisson_friends") {
   herisson_friend_actions();
+	} else if (param('page') == 'herisson_maintenance') {
+  herisson_maintenance_actions();
+	} else if (param('page') == 'herisson_backup') {
+  herisson_backup_actions();
 	} else if (param('page') == 'front') {
   herisson_front_actions();
 	}

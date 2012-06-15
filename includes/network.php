@@ -15,14 +15,14 @@ function herisson_network_download($url,$post=array()) {
 	
  	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
   if($httpCode >= 400) {
- 	 return WP_Error('herisson',sprintf(__("The address %s returns a %s error.",HERISSONTD),$url,$httpCode));
+ 	 return WP_Error('herisson',sprintf(__("The address %s returns a %s error.",HERISSON_TD),$url,$httpCode));
 		}
   $result =  curl_exec($curl);
 
 		curl_close($curl);
 		return $result;
  } else {
-	 return WP_Error('herisson',__('php-curl library is missing.',HERISSONTD));
+	 return WP_Error('herisson',__('php-curl library is missing.',HERISSON_TD));
 	}
 
 }
@@ -42,7 +42,7 @@ function herisson_network_check($url) {
  	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
   return herisson_network_httpcode($httpCode);
  } else {
-	 return WP_Error('herisson',__('php-curl library is missing.',HERISSONTD));
+	 return WP_Error('herisson',__('php-curl library is missing.',HERISSON_TD));
 	}
 
 }
@@ -133,7 +133,7 @@ function herisson_network_httpcode($code) {
   if (intval($code)>=400) { $color = "red"; $error = 1; }
   return array("code" => $code, "message" =>  $codes[$code], "color" => $color, "error" => $error);
  } else {
-  return array("code" => $code, "message" => __("HTTP code not found",HERISSONTD), "color" => "red", "error" => 1);
+  return array("code" => $code, "message" => __("HTTP code not found",HERISSON_TD), "color" => "red", "error" => 1);
  }
 
 

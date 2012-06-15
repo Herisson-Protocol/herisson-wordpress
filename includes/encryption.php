@@ -30,7 +30,7 @@ function herisson_encrypt($data,$friend_public_key) {
 # $data = "Only I know the purple fox. Trala la !";
  $hash = herisson_hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_private_key)) {
-	 echo __('Error while encrypting hash with my private key',HERISSONTD);
+	 echo __('Error while encrypting hash with my private key',HERISSON_TD);
 	}
 # echo "$hash -> $hash_crypted<br>\n";
  $data_crypted = null;
@@ -40,7 +40,7 @@ function herisson_encrypt($data,$friend_public_key) {
 #	echo "friend public key : $friend_public_key<br><br>\n";
 #	echo "friend public key : ".openssl_get_publickey($friend_public_key)."<br><br>\n";
  if (!openssl_seal($data,$data_crypted,$seal_key,array($friend_public_key))) {
-	 echo __('Error while encrypting data with friend public key<br>',HERISSONTD);
+	 echo __('Error while encrypting data with friend public key<br>',HERISSON_TD);
 	}
 # echo "$seal_key[0] , $data -> $data_crypted<br><br>\n";
 
@@ -83,13 +83,13 @@ function herisson_decrypt($json_string,$friend_public_key) {
 
 # $hash = herisson_hash($data);
 	if (!openssl_open($data_crypted,$data,$seal,$my_private_key)) {
-	 echo __('Error while decrypt with my private key<br>',HERISSONTD);
+	 echo __('Error while decrypt with my private key<br>',HERISSON_TD);
 	}
 # echo "$data_crypted -> $data<br>\n";
 
  
  if (!openssl_public_decrypt($hash_crypted,$hash,$friend_public_key)) {
-	 echo __('Error while decrypt with friend public key<br>',HERISSONTD);
+	 echo __('Error while decrypt with friend public key<br>',HERISSON_TD);
 	}
 # echo "$hash_crypted -> $hash<br>\n";
 
@@ -110,7 +110,7 @@ function herisson_encrypt_short($data) {
 
  $hash = herisson_hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_private_key)) {
-	 echo __('Error while encrypting hash with my private key',HERISSONTD);
+	 echo __('Error while encrypting hash with my private key',HERISSON_TD);
 	}
 	return base64_encode($hash_crypted);
 }
@@ -119,7 +119,7 @@ function herisson_encrypt_short($data) {
 function herisson_decrypt_short($data,$friend_public_key) {
 	$hash_crypted = base64_decode($data);
 	if (!openssl_public_decrypt($hash_crypted,$hash,$friend_public_key)) {
-	 echo __('Error while decrypting hash with friend public key',HERISSONTD);
+	 echo __('Error while decrypting hash with friend public key',HERISSON_TD);
 	}
  return $hash;
 }
@@ -152,12 +152,12 @@ function herisson_encrypt_backup() {
 
  $hash = herisson_hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_public_key)) {
-	 echo __('Error while encrypting bkacup hash with my public key',HERISSONTD);
+	 echo __('Error while encrypting bkacup hash with my public key',HERISSON_TD);
 	}
  $data_crypted = null;
 
  if (!openssl_seal($data,$data_crypted,$seal_key,array($my_public_key))) {
-	 echo __('Error while encrypting backup data with my public key<br>',HERISSONTD);
+	 echo __('Error while encrypting backup data with my public key<br>',HERISSON_TD);
 	}
 
 	return array(
