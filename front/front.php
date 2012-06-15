@@ -103,7 +103,6 @@ function herisson_front_retrieve() {
 }
 
 function herisson_front_list() {
- global $wpdb;
 
 	$bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
 	$options = get_option('HerissonOptions');

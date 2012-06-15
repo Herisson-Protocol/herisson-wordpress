@@ -16,8 +16,6 @@ if( !isset($_SERVER['REQUEST_URI']) ) {
  */
 function herisson_manage_options() {
 
-    global $wpdb;
-
 				if (post('action') == 'submitedit') {
      $options = get_option('HerissonOptions');
 				 $new_options = array();
@@ -42,16 +40,9 @@ function herisson_manage_options() {
 	<div class="wrap">
 
 		<h2>' . __("Herisson options", HERISSONTD) . '</h2>
-	';
 
-    echo '
 		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_options">
-	';
 
-    if ( function_exists('wp_nonce_field') )
-        wp_nonce_field('herisson-update-options');
-
-    echo '
 		<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
 			<tr valign="top">
 				<th scope="row">' . __('Site name', HERISSONTD) . ':</th>

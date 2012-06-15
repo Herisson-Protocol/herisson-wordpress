@@ -50,7 +50,6 @@ require_once HERISSON_BASE_DIR."../../../wp-includes/cache.php";
 wp_cache_init();
 require_once HERISSON_BASE_DIR."../../../wp-includes/wp-db.php";
 require_once HERISSON_BASE_DIR."../../../wp-admin/includes/plugin.php";
-require_once HERISSON_BASE_DIR."/orm.php";
 
 /**
  * Load our I18n domain.
@@ -62,6 +61,7 @@ function herisson_init() {
 
 
 // Include other functionality
+require_once HERISSON_BASE_DIR . 'doctrine/doctrine.php';
 require_once HERISSON_INCLUDES_DIR . 'admin.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
 require_once HERISSON_INCLUDES_DIR . 'encryption.php';

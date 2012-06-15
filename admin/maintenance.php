@@ -4,53 +4,51 @@
  * @package herisson
  */
 
-function herisson_backup_actions() {
+function herisson_maintenance_actions() {
 
  $action = param('action');
  switch ($action) {
-	 case 'backup': herisson_backup_backup();
+	 case 'export': herisson_maintenance_export();
 		break;
-	 case 'export': herisson_backup_export();
+	 case 'maintenance': herisson_maintenance_maintenance();
 		break;
-	 case 'maintenance': herisson_backup_maintenance();
+	 case 'maintenance_submit': herisson_maintenance_maintenance_submit();
 		break;
-	 case 'maintenance_submit': herisson_backup_maintenance_submit();
+	 case 'import_firefox': herisson_maintenance_import_firefox();
 		break;
-	 case 'import_firefox': herisson_backup_import_firefox();
+	 case 'import_firefox_submit': herisson_maintenance_import_firefox_submit();
 		break;
-	 case 'import_firefox_submit': herisson_backup_import_firefox_submit();
+	 case 'import_delicious': herisson_maintenance_import_delicious();
 		break;
-	 case 'import_delicious': herisson_backup_import_delicious();
+	 case 'import_delicious_submit': herisson_maintenance_import_delicious_submit();
 		break;
-	 case 'import_delicious_submit': herisson_backup_import_delicious_submit();
-		break;
-  default: herisson_manage_backup();
+  default: herisson_maintenance_manage();
 	}
 
 }
 
-function herisson_manage_backup() {
-
-    global $wpdb;
+function herisson_maintenance_manage() {
 
     echo '
 	<div class="wrap">
 
-		<h2>' . __("Import, export, maintenance and backup", HERISSONTD) . '</h2>
-	';
+		<h2>' . __("Import, export, maintenance", HERISSONTD) . '</h2>
 
-    if ( function_exists('wp_nonce_field') )
-        wp_nonce_field('herisson-update-backup');
-
-    echo '
 		<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
 
-		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
-		 <input type="hidden" name="action" value="import_firefox" />
+  <tr><td colspan="3">
+   <h3>'.__('Import',HERISSONTD).'</h3>
+		</td></tr>
+		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_maintenance" enctype="multipart/form-data">
+		 <input type="hidden" name="action" value="import" />
 			<tr valign="top">
-				<th scope="row">' . __('Import Firefox bookmarks', HERISSONTD) . ':</th>
-				<td style="width: 200px">
-					<input type="file" name="firefox" />
+				<th scope="row">' . __('Import bookmarks', HERISSONTD) . ':</th>
+				<td style="width: 400px">
+				 '.__('Source',HERISSONTD).' : 
+				 <select name="import_source">
+					 <option value="firefox">'.__('Firefox',HERISSONTD).'</option>
+					</select><br/>
+					'.__('File',HERISSONTD).' : <input type="file" name="import_file" />
 				</td>
 				<td>
   			<input type="submit" value="' . __("Import bookmarks", HERISSONTD) . '" />
@@ -58,14 +56,14 @@ function herisson_manage_backup() {
 			</tr>
 		</form>
 
-		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
+		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_maintenance">
 		 <input type="hidden" name="action" value="import_delicious" />
 			<tr valign="top">
 				<th scope="row">' . __('Import Delicious bookmarks', HERISSONTD) . ':</th>
 				<td style="width: 200px">
-					<input type="text" name="username_delicious" />
-					<input type="password" name="password_delicious" />
-					'.__("Theses informations are not stored by this plugins.",HERISSONTD).'
+					'.__('Login',HERISSONTD).' :<input type="text" name="username_delicious" /><br/>
+					'.__('Password',HERISSONTD).' :<input type="password" name="password_delicious" /><br/>
+					'.__("Theses informations are not stored by this plugin.",HERISSONTD).'
 				</td>
 				<td>
   			<input type="submit" value="' . __("Import bookmarks", HERISSONTD) . '" />
@@ -73,7 +71,14 @@ function herisson_manage_backup() {
 			</tr>
 		</form>
 
-		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_backup" enctype="multipart/form-data">
+  <tr><td colspan="3">
+   <h3>'.__('Export',HERISSONTD).'</h3>
+		</td></tr>
+
+  <tr><td colspan="3">
+   <h3>'.__('Maintenance',HERISSONTD).'</h3>
+		</td></tr>
+		<form method="post" action="' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_maintenance">
 		 <input type="hidden" name="action" value="maintenance" />
 			<tr valign="top">
 				<th scope="row">' . __('Check Maintenance', HERISSONTD) . ':</th>
@@ -98,7 +103,7 @@ function herisson_manage_backup() {
 
 /** MAINTENANCE OPERATIONS **/
 
-function herisson_backup_maintenance_submit() {
+function herisson_maintenance_maintenance_submit() {
  $condition = "
 	 LENGTH(favicon_url)=0 or favicon_url is null or
 	 LENGTH(favicon_image)=0 or favicon_image is null or
@@ -117,12 +122,12 @@ function herisson_backup_maintenance_submit() {
 	 <?=__("Maintenance has been done, here are the results after the maintenance operation. Some of the errors may not be fixable.",HERISSONTD)?>
 	</p>
 	<?
- herisson_backup_maintenance();
+ herisson_maintenance_maintenance();
 
 }
 
 
-function herisson_backup_maintenance() {
+function herisson_maintenance_maintenance() {
  
 	$bookmarks_no_favicon_url   = herisson_bookmark_get_where("LENGTH(favicon_url)=0 or favicon_url is null");
 	$bookmarks_no_favicon_image = herisson_bookmark_get_where("LENGTH(favicon_image)=0 or favicon_image is null");
@@ -144,8 +149,8 @@ function herisson_backup_maintenance() {
 	<p><?=__("Bookmarks with no screenshots",HERISSONTD)?> : <?=sizeof($bookmarks_no_content_image)?> </p>
 	
 	
-	<p><b style="color:red"><?=__("Warning, this operation can take several minutes. If you stop it during the process it's ok and you can do another maintenance operation to finish the maintenance.",HERISSONTD);?></b></p>
-	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup">
+	<p><b style="color:red"><?=__("Warning, this operation can take several minutes (especially for screenshots). If you stop it during the process it's ok and you can do another maintenance operation to finish the maintenance.",HERISSONTD);?></b></p>
+	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
 	<input type="hidden" name="action" value="maintenance_submit" />
 	<input type="submit" value="Correct theses errors" />
 	</form>
@@ -157,7 +162,7 @@ function herisson_backup_maintenance() {
 
 /** DELICIOUS IMPORTATION **/
 
-function herisson_backup_import_delicious_submit() {
+function herisson_maintenance_import_delicious_submit() {
  $bookmarks = post('bookmarks');
 
  $nb = 0;
@@ -173,17 +178,17 @@ function herisson_backup_import_delicious_submit() {
  		));
 		}
 	}
-	herisson_manage_backup();
+	herisson_maintenance_manage();
 
 }
 
 
-function herisson_backup_import_delicious() {
+function herisson_maintenance_import_delicious() {
  $username = post('username_delicious');
  $password = post('password_delicious');
  if (!$username || !$password) {
 	 echo __("Delicious login and password not complete.",HERISSONTD);
-		herisson_manage_backup();
+		herisson_maintenance_manage();
 		exit;
 	}
 	require HERISSON_INCLUDES_DIR."delicious/delicious.php";
@@ -198,7 +203,7 @@ function herisson_backup_import_delicious() {
 	-->
 	<div class="wrap">
 		<h2><?= __("Importation results from Delicious bookmarks", HERISSONTD); ?></h2>
-	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup">
+	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
 	 <input type="hidden" name="action" value="import_delicious_submit" />
  <table class="widefat post">
 	 <tr>
@@ -263,7 +268,7 @@ function herisson_backup_import_delicious() {
 
 /** FIREFOX IMPORTATION **/
 
-function herisson_backup_import_firefox_submit() {
+function herisson_maintenance_import_firefox_submit() {
  $bookmarks = post('bookmarks');
 
  $nb = 0;
@@ -277,15 +282,15 @@ function herisson_backup_import_firefox_submit() {
  		));
 		}
 	}
-	herisson_manage_backup();
+	herisson_maintenance_manage();
 
 }
 
 
-function herisson_backup_import_firefox() {
+function herisson_maintenance_import_firefox() {
  if (!isset($_FILES['firefox'])) { 
 	 echo __("Firefox bookmarks file not found.",HERISSONTD);
-		herisson_manage_backup();
+		herisson_maintenance_manage();
 		exit;
 	}
 	require HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
@@ -306,7 +311,7 @@ function herisson_backup_import_firefox() {
 	-->
 	<div class="wrap">
 		<h2><?= __("Importation results from Firefox bookmarks", HERISSONTD); ?></h2>
-	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup">
+	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
 	 <input type="hidden" name="action" value="import_firefox_submit" />
  <table class="widefat post">
 	 <tr>

@@ -106,3 +106,18 @@ CREATE TABLE `#PREFIX#herisson_screenshots`
 	PRIMARY KEY (`id`),
 	KEY `name`(`name`)
 );
+
+--  ---------------------------------------------------------------------------
+--   screenshots
+--  ---------------------------------------------------------------------------
+
+CREATE TABLE `#PREFIX#herisson_backups`
+(
+	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
+	`size` int(10),
+	`nb` int(10),
+	`creation` datetime,
+	`friend_id` INTEGER(10) NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY `friend_id`(`friend_id`)
+);

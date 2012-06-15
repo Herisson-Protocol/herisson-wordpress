@@ -29,7 +29,6 @@ function herisson_bookmark_actions() {
 
 
 function herisson_bookmark_list() {
- global $wpdb;
  
  if (get('tag')) {
  	$bookmarks = herisson_bookmark_get_tag(get('tag'));
@@ -39,9 +38,6 @@ function herisson_bookmark_list() {
  echo '
 	<div class="wrap">
 				<h2>' . __("All bookmarks", HERISSONTD).'<a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0" class="add-new-h2">'.__('Add',HERISSONTD).'</a></h2>
-<!--
- <a href="'.get_option('siteurl').'/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0">'.__('Add new bookmark',HERISSONTD).'</a></td>
-	-->
 				';
  if (sizeof($bookmarks)) {
   ?>
@@ -62,14 +58,8 @@ function herisson_bookmark_list() {
   <td><a href="<? echo $bookmark->url; ?>"><? echo $bookmark->url; ?></a></td>
   <td><? foreach ($bookmark->getTagsArray() as $tag) { ?><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&tag=<?=$tag?>"><?=$tag?></a>,&nbsp;<? } ?></td>
   <td>
-		<!--
-		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><?=__('Edit',HERISSONTD)?></a>
-			-->
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSONTD)?>')) { return true; } return false;"><?=__('Delete',HERISSONTD)?></a>
 		</td>
-		<!--
-  <td><a href="<?=get_option('siteurl')?>/wp-content/plugins/herisson/admin/bookmark-edit.php"><?=__('Edit',HERISSONTD)?></a></td>
-		-->
  </tr>
  <?
  
@@ -118,7 +108,6 @@ function herisson_bookmark_edit($id=0) {
  if ( function_exists('wp_nonce_field') ) wp_nonce_field('bookmark-edit');
  if ( function_exists('wp_referer_field') ) wp_referer_field();
 
-#require_once(HERISSON_BASE_DIR.'../../../wp-admin/includes/meta-boxes.php');
 
 
             echo '
@@ -280,17 +269,12 @@ echo '
 function herisson_bookmark_submitedit() {
 
   $id = intval(post('id'));
-  $url			= post('url');
-  $title			= post('title');
-  $description			= post('description');
-
-  $is_public = intval(post('is_public'));
 
 		$bookmark = herisson_bookmark_get($id);
-		$bookmark->title = $title;
-		$bookmark->url = $url;
-		$bookmark->description = $description;
-		$bookmark->is_public = $is_public;
+		$bookmark->title = post('title');
+		$bookmark->url = post('url');
+		$bookmark->description = post('description');
+		$bookmark->is_public = post('is_public');
 		$bookmark->save();
  	$bookmark->maintenance();
  	$bookmark->captureFromUrl();
