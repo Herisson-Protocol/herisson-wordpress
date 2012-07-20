@@ -15,6 +15,8 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
  public $prefix = null;
  public $tags = null;
+	public $SCREENSHOT = "_screenshot.png";
+	public $SCREENSHOT_SMALL = "_screenshot_small.png";
 
  public function setUp()
  {
@@ -29,11 +31,12 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
  public function setUrl($url) {
   parent::_set('url',$url);
   $this->setHashFromUrl();
-  $this->checkUrl();
+#  $this->checkUrl();
  }
 
 	public function checkUrl() {
-		$status = herisson_network_check($this->url);
+	 $network = new HerissonNetwork();
+		$status = $network->check($this->url);
 		if ($status['error']) { $this->error = 1; }
 	}
 
@@ -45,6 +48,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		$this->getFaviconImageFromUrl();
   $this->setHashFromUrl();
 	}
+
 	public function setHashFromUrl() {
   $this->_set('hash',md5($this->url));
 	}
@@ -89,21 +93,42 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
 	public function getFaviconImageFromUrl() {
 		if (!$this->content && $this->favicon_image) { return false; }
-		$content = herisson_network_download($this->favicon_url);
-		$base64 = base64_encode($content);
-		$this->_set('favicon_image',$base64);
+		$network = new HerissonNetwork();
+		$content = $network->download($this->favicon_url);
+		if (!is_wp_error($content)) {
+ 		$base64 = base64_encode($content['data']);
+ 		$this->_set('favicon_image',$base64);
+ 	} else { 
+ 		errors_add($content->get_error_message("herisson"));
+ 	}
 	}
 
 	public function getContentFromUrl() {
 		if ($this->error) { return false; }
 		if (!$this->content) {
-		 $content = herisson_network_download($this->url);
+ 		$network = new HerissonNetwork();
+		 $content = $network->download($this->url);
  		if (!is_wp_error($content)) {
-    $this->_set('content',$content);
+			 $this->_set('content_type',$content['type']);
+				if (preg_match('#^text#',$content['type'])) {
+     $this->_set('content',$content['data']);
+				} else {
+				 $this->saveBinary($content);
+				}
  		} else { 
- 			echo $data->get_error_message("herisson");
+ 			errors_add($content->get_error_message("herisson"));
  		}
   }
+	}
+	
+	public function saveBinary($content) {
+	 $data = $content['data'];
+	 $type = $content['type'];
+		$filename = preg_replace("#/#",".",$type);
+		$this->_set('content',$filename);
+		$fh = fopen($this->getDir()."/".$filename,"w+b");
+		fwrite($fh,$data);
+		fclose($fh);
 	}
 
  /** Export **/
@@ -167,47 +192,89 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 	}
  
  /** Capture **/
+
+	public function getDirUrl() {
+	 return get_option('siteurl')."/wp-content/plugins/herisson/data/".$this->hash;
+	}
+
 	public function getThumbUrl() {
-	 return get_option('siteurl')."/wp-content/plugins/herisson/screenshots/".$this->id."_small.png";
+	 return $this->getDirUrl()."/".$this->SCREENSHOT_SMALL;
 	}
 
 	public function getImageUrl() {
-	 return get_option('siteurl')."/wp-content/plugins/herisson/screenshots/".$this->id.".png";
+	 return $this->getDirUrl()."/".$this->SCREENSHOT;
+	}
+
+	public function getDir() {
+	 return HERISSON_DATA_DIR.$this->hash;
 	}
 
 	public function getThumb() {
-	 return HERISSON_SCREENSHOTS_DIR.$this->id."_small.png";
+	 return $this->getDir()."/".$this->SCREENSHOT_SMALL;
 	}
 
 	public function getImage() {
-	 return HERISSON_SCREENSHOTS_DIR.$this->id.".png";
+	 return $this->getDir()."/".$this->SCREENSHOT;
+	}
+
+	public function hasImage() {
+	 return file_exists($this->getImage());
+	}
+
+	public function hasThumb() {
+	 return file_exists($this->getThumb());
 	}
 
 	public function captureFromUrl() {
 	 if (!$this->id) { return false; }
 		if ($this->error) { return false; }
+		if (!$this->hash) { return false; }
 
 	 # ./wkhtmltoimage-amd64 --disable-javascript --quality 50 http://www.wilkins.fr/ /home/web/www.wilkins.fr/google.png
   $options = get_option('HerissonOptions');
-		$image = $this->getImage();
-		$thumb = $this->getThumb();
-		$convert = $options['convertPath'];
-
-		$screenshotTool = herisson_screenshots_get($options['screenshotTool']);
-		call_user_func($screenshotTool->fonction,$this->url,$image);
-
-		if (!file_exists($image) || filesize($image) == 0) {
-		 $this->content_image = $image;
-			$this->save();
-		} else {
-		 $this->content_image = null;
-			$this->save();
+		if (!file_exists($this->getDir())) {
+			mkdir($this->getDir(),0775);
+		} else if (file_exists($this->getDir()) && !is_dir($this->getDir())) {
+		 errors_add(__("Can't create directory ".$this->getDir().". A file already exists",HERISSON_TD));
+		} else if (!is_writeable($this->getDir())) {
+		 errors_add(__("Directory ".$this->getDir()." exists, but is not writable.",HERISSON_TD));
 		}
+		echo '<br/><br/><b>Gestion du bookmark : <a href="/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id='.$this->id.'">'.$this->title.'</a>'."</b><br/>\n";
+		flush();
+		if ($options['spiderOptionTextOnly']) {
+		 $this->getContentFromUrl();
+		}
+		flush();
+		if ($options['spiderOptionFullPage']) {
+		 herisson_spider_fullpage($this->url,$this->getDir());
+		}
+		flush();
+		if ($options['spiderOptionScreenshot']) {
+ 		$image = $this->getImage();
+ 		$thumb = $this->getThumb();
+ 		$screenshotTool = herisson_screenshots_get($options['screenshotTool']);
+ 		call_user_func($screenshotTool->fonction,$this->url,$image);
+ 
+ 		if (!file_exists($image) || filesize($image) == 0) {
+		 $this->content_image = $image;
+ 			$this->save();
+ 		} else {
+ 		 $this->content_image = null;
+ 			$this->save();
+	 	}
+ 
+   herisson_screenshots_thumb($image,$thumb);
 
+		}
+		flush();
+#		$convert = $options['convertPath'];
+
+	/*
 		if (!file_exists($thumb) || filesize($thumb) == 0) {
  		exec("$convert -resize 200x \"$image\" \"$thumb\"",$output);
 #		 echo implode("\n",$output);
 		}
+		*/
 
 
 	}

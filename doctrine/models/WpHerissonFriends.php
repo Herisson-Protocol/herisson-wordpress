@@ -27,24 +27,25 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
   } else {
 		 $this->is_active=0;
-			echo $data->get_error_message("herisson");
+		 errors_dispatch($json_data,array(
+    404 => __("This site is not a Herisson site or is closed."),
+			));
 		}
  }
 
  public function setUrl($url) {
-  parent::_set('url',$url);
+  parent::_set('url',rtrim($url,'/'));
 		$this->reloadPublicKey();
  }
 
 	public function reloadPublicKey() {
-	 $url = $this->_get('url');
-		if (substr($url, -1) != "/") {	$url .= "/"; }
-		$url .= "publickey";
-		$content = herisson_network_download($url);
+		$content = herisson_network_download($this->url."/publickey");
 		if (!is_wp_error($content)) {
    $this->_set('public_key',$content);
 		} else { 
-			echo $data->get_error_message("herisson");
+		 errors_dispatch($content,array(
+    404 => __("This site is not a Herisson site or is closed."),
+			));
 		}
 	}
 
@@ -60,7 +61,9 @@ class WpHerissonFriends extends BaseWpHerissonFriends
  			$bookmarks = json_decode($json_data,1);
     return $bookmarks;
  		} else { 
- 			echo $data->get_error_message("herisson");
+		 errors_dispatch($content,array(
+    404 => __("This site is not a Herisson site or is closed."),
+			));
  		}
   }
 	}
@@ -90,15 +93,18 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 			'signature' => $signature
 		);
 		$content = herisson_network_download($url,$data);
-		echo $content."<br>\n";
 		if (!is_wp_error($content)) {
-		 if ($content == "1") {
+#		 if ($content == "1") {
 			 $this->b_youwant=1;
-			} else {
-			 echo sprintf(__("Error while adding friend : %s",HERISSON_TD),$url);
-			}
+#			} else {
+#			 echo sprintf(__("Error while adding friend : %s",HERISSON_TD),$url);
+#			}
 		} else {
-			echo $content->get_error_message("herisson");
+		 errors_dispatch($content,array(
+    403 => __("This site refuses new friends."),
+    404 => __("This site is not a Herisson site or is closed."),
+    417 => __("Friend say you dont communicate correctly (key problems?)."),
+			));
 		}
  }
 
@@ -112,7 +118,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 			'signature' => $signature
 		);
 		$content = herisson_network_download($url,$data);
-		echo $content."<br>\n";
+#		echo $content."<br>\n";
 		if (!is_wp_error($content)) {
 		 if ($content == "1") {
 			 echo __('ok');
