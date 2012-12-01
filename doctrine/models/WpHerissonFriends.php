@@ -15,9 +15,10 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
  public function getInfo() {
 	 $url = $this->url."/info";
-		$json_data = herisson_network_download($url);
+	 $network = new HerissonNetwork();
+		$json_data = $network->download($url);
 		if (!is_wp_error($json_data)) {
-			$data = json_decode($json_data,1);
+			$data = json_decode($json_data['data'],1);
 
 			if (sizeof($data)) {
  			$this->name  = $data['sitename'];
@@ -39,9 +40,10 @@ class WpHerissonFriends extends BaseWpHerissonFriends
  }
 
 	public function reloadPublicKey() {
-		$content = herisson_network_download($this->url."/publickey");
+	 $network = new HerissonNetwork();
+		$content = $network->download($this->url."/publickey");
 		if (!is_wp_error($content)) {
-   $this->_set('public_key',$content);
+   $this->_set('public_key',$content['data']);
 		} else { 
 		 errors_dispatch($content,array(
     404 => __("This site is not a Herisson site or is closed."),
@@ -50,14 +52,20 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 	}
 
 
-	public function retrieveBookmarks() {
+	public function retrieveBookmarks($params=array()) {
 	 
 	 $options = get_option('HerissonOptions');
 		$my_public_key = $options['publicKey'];
   if (function_exists('curl_init')) {
- 		$content = herisson_network_download($this->url."/retrieve",array('key' => $my_public_key));
+   $network = new HerissonNetwork();
+			$params['key'] = $my_public_key;
+#			print_r($params);
+ 		$content = $network->download($this->url."/retrieve",$params);
+#			return $content['data'];
  		if (!is_wp_error($content)) {
- 			$json_data = herisson_decrypt($content,$this->public_key);
+#			 print_r($content['data']);
+ 			$json_data = herisson_decrypt($content['data'],$this->public_key);
+
  			$bookmarks = json_decode($json_data,1);
     return $bookmarks;
  		} else { 
@@ -68,12 +76,23 @@ class WpHerissonFriends extends BaseWpHerissonFriends
   }
 	}
 
- public function generateBookmarksdata() {
+ public function generateBookmarksdata($params=array()) {
+  $q = Doctrine_Query::create()->from('WpHerissonBookmarks as b')->where('is_public=1');
+#echo "pokpok";
+#print_r($params);
+  if (array_key_exists('tag',$params)) {
+   $q = $q->leftJoin('b.WpHerissonTags t');
+   $q = $q->where("t.name=?");
+   $params = array($params['tag']);
+  } else if (array_key_exists('search',$params)) {
+   $search = "%".$params['search']."%";
+   $q = $q->leftJoin('b.WpHerissonTags t');
+   $q = $q->where("t.name LIKE ? OR b.url like ? OR b.title LIKE ? OR b.description LIKE ? OR b.content LIKE ?");
+   $params = array($search,$search,$search,$search,$search);
+  }
+  $bookmarks = $q->execute($params);
+
   $data_bookmarks = array();
-  $bookmarks = Doctrine_Query::create()
-   ->from('WpHerissonBookmarks')
-   ->where('is_public=1')
-   ->execute();
   foreach ($bookmarks as $bookmark) {
    $data_bookmarks[] = $bookmark->toArray();
   }
@@ -92,7 +111,8 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		 'url'=> $mysite,
 			'signature' => $signature
 		);
-		$content = herisson_network_download($url,$data);
+		$network = new HerissonNetwork();
+		$content = $network->download($url,$data);
 		if (!is_wp_error($content)) {
 #		 if ($content == "1") {
 			 $this->b_youwant=1;
@@ -117,10 +137,11 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		 'url'=> $mysite,
 			'signature' => $signature
 		);
-		$content = herisson_network_download($url,$data);
+		$network = new HerissonNetwork();
+		$content = $network->download($url,$data);
 #		echo $content."<br>\n";
 		if (!is_wp_error($content)) {
-		 if ($content == "1") {
+		 if ($content['data'] == "1") {
 			 echo __('ok');
 			} else {
 			 echo sprintf(__("Error while adding friend : %s",HERISSON_TD),$url);

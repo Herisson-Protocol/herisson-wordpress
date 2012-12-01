@@ -1,56 +1,6 @@
 <?
-
-function herisson_network_download($url,$post=array()) {
-
- if (function_exists('curl_init')) {
-  $curl = curl_init();
-  curl_setopt($curl, CURLOPT_URL, $url);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-  curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-		if (sizeof($post)) {
-	  curl_setopt($curl, CURLOPT_POST,TRUE);
-	  curl_setopt($curl, CURLOPT_POSTFIELDS,$post);
-		}
-	
- 	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-  if($httpCode >= 400) {
- 	 return WP_Error('herisson',sprintf(__("The address %s returns a %s error.",HERISSON_TD),$url,$httpCode));
-		}
-  $result =  curl_exec($curl);
-
-		curl_close($curl);
-		return $result;
- } else {
-	 return WP_Error('herisson',__('php-curl library is missing.',HERISSON_TD));
-	}
-
-}
-
-
-function herisson_network_check($url) {
-
- if (function_exists('curl_init')) {
-  $curl = curl_init();
-  curl_setopt($curl, CURLOPT_URL, $url);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-  curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 2);
-		curl_setopt($curl, CURLOPT_NOBODY, true);
-#  curl_setopt($curl, CURLOPT_VERBOSE, 1);
-  $result =  curl_exec($curl);
- 	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-  return herisson_network_httpcode($httpCode);
- } else {
-	 return WP_Error('herisson',__('php-curl library is missing.',HERISSON_TD));
-	}
-
-}
-
-
-function herisson_network_httpcode($code) {
-
- $codes = array(
+# http://www.checkupdown.com/status/E417.html
+$http_codes = array(
  "100" => "Continue",
  "101" => "Switching Protocols",
  "102" => "Processing (WebDAV; RFC 2518)",
@@ -125,15 +75,171 @@ function herisson_network_httpcode($code) {
  "511" => "Network Authentication Required (RFC 6585)",
  "598" => "Network read timeout error (Unknown)",
  "599" => "Network connect timeout error (Unknown)",
- );
+);
 
- if (array_key_exists($code,$codes)) {
-  $color = "green";
-  $error = 0;
-  if (intval($code)>=400) { $color = "red"; $error = 1; }
-  return array("code" => $code, "message" =>  $codes[$code], "color" => $color, "error" => $error);
- } else {
-  return array("code" => $code, "message" => __("HTTP code not found",HERISSON_TD), "color" => "red", "error" => 1);
+$mime_types = array(
+ "text/html",
+	"image/png",
+	"image/jpg",
+	"image/jpeg",
+	"image/gif",
+);
+
+#function herisson_network_download($url,$post=array()) {
+#
+# if (function_exists('curl_init')) {
+#  $curl = curl_init();
+#  curl_setopt($curl, CURLOPT_URL, $url);
+#  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+#  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+#  curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+#		if (sizeof($post)) {
+#	  curl_setopt($curl, CURLOPT_POST,TRUE);
+#	  curl_setopt($curl, CURLOPT_POSTFIELDS,$post);
+#		}
+#	
+#  $result =  curl_exec($curl);
+# 	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+##	 echo "$url => $httpCode<br>";
+#  if($httpCode >= 400) {
+#		 global $http_codes;
+#		 $httpText = $http_codes[$httpCode];
+# 	 return new WP_Error('herisson',sprintf(__("The address %s returns a %s error (%s).",HERISSON_TD),$url,$httpCode,$httpText),$httpCode);
+#		}
+#
+#		curl_close($curl);
+#		return $result;
+# } else {
+#	 return new WP_Error('herisson',__('php-curl library is missing.',HERISSON_TD));
+#	}
+#
+#}
+
+
+#function herisson_network_check($url) {
+#
+# if (function_exists('curl_init')) {
+#  $curl = curl_init();
+#  curl_setopt($curl, CURLOPT_URL, $url);
+#  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+#  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+#  curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 2);
+#		curl_setopt($curl, CURLOPT_NOBODY, true);
+##  curl_setopt($curl, CURLOPT_VERBOSE, 1);
+#  $result =  curl_exec($curl);
+# 	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+#  return herisson_network_httpcode($httpCode);
+# } else {
+#	 return WP_Error('herisson',__('php-curl library is missing.',HERISSON_TD));
+#	}
+#
+#}
+
+
+#function herisson_network_httpcode($code) {
+# global $http_codes;
+# if (array_key_exists($code,$http_codes)) {
+#  $color = "green";
+#  $error = 0;
+#  if (intval($code)>=400) { $color = "red"; $error = 1; }
+#  return array("code" => $code, "message" =>  $http_codes[$code], "color" => $color, "error" => $error);
+# } else {
+#  return array("code" => $code, "message" => __("HTTP code not found",HERISSON_TD), "color" => "red", "error" => 1);
+# }
+#}
+
+
+#function herisson_network_reply_code($code) {
+# global $http_codes;
+# if (array_key_exists($code,$http_codes)) {
+#	 header("HTTP/1.1 $code ".$http_codes[$code]);
+#		exit;
+#	}
+#	echo __("Error, HTTP code $code does not exist.",HERISSON_TD);
+#}
+
+
+class HerissonNetwork {
+ public $code = 0;
+ public $message = "";
+ public $content = "";
+ public $error = 0;
+ public $http_code = 0;
+ public $http_message = "";
+ public function __construct($code='',$message='',$content='') {
+  $this->code = $code;
+  $this->message = $message;
+  $this->content = $content;
+ }
+
+	public function getCurl($url,$post=null) {
+  if (function_exists('curl_init')) {
+   $curl = curl_init();
+   curl_setopt($curl, CURLOPT_URL, $url);
+   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+   curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+ 		if (sizeof($post)) {
+ 	  curl_setopt($curl, CURLOPT_POST,TRUE);
+ 	  curl_setopt($curl, CURLOPT_POSTFIELDS,$post);
+ 		}
+			return $curl;
+		} else {
+ 	 errors_add(__('php-curl library is missing.',HERISSON_TD));
+			throw new Exception(__('php-curl library is missing.',HERISSON_TD));
+		}
+	}
+
+	public function download($url,$post=array()) {
+	 $curl = $this->getCurl($url,$post);
+ 	
+  $content =  curl_exec($curl);
+ 	$this->http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  if($this->http_code >= 400) {
+		 global $http_codes;
+		 $this->error = 1;
+			$this->http_message = $http_codes[$this->http_code];
+ 	 return new WP_Error('herisson',sprintf(__("The address %s returns a %s error (%s).",HERISSON_TD),$url,$this->http_code,$this->http_message),$this->http_code);
+		}
+
+ 	$content_type = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
+	 $result = array("data"=>$content, "type" => $content_type);
+
+		curl_close($curl);
+		return $result;
+	}
+
+	public function check($url) {
+	 $curl = $this->getCurl($url);
+  $result =  curl_exec($curl);
+ 	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  return $this->http_data($httpCode);
+	}
+
+ public function http_data($code) {
+  global $http_codes;
+  if (array_key_exists($code,$http_codes)) {
+   $color = "green";
+   $error = 0;
+   if (intval($code)>=400) { $color = "red"; $error = 1; }
+   return array("code" => $code, "message" =>  $http_codes[$code], "color" => $color, "error" => $error);
+  } else {
+   return array("code" => $code, "message" => __("HTTP code not found",HERISSON_TD), "color" => "red", "error" => 1);
+  }
+	}
+
+ public static function reply($code) {
+  global $http_codes;
+  if (array_key_exists($code,$http_codes)) {
+ 		if (!headers_sent()) {
+  	 header("HTTP/1.1 $code ".$http_codes[$code]);
+  		exit;
+			} else { 
+			 echo $http_codes[$code];
+			}
+ 	} else {
+  	echo __("Error, HTTP code $code does not exist.",HERISSON_TD);
+		}
  }
 
 

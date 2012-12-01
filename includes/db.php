@@ -72,7 +72,7 @@ function herisson_bookmark_create($url,$options=array()) {
 
 /** Friends **/
 function herisson_friend_get($id) {
- if (!is_numeric($id)) { return new Object(); }
+ if (!is_numeric($id)) { return new WpHerissonFriends(); }
  $friends = Doctrine_Query::create()
   ->from('WpHerissonFriends')
   ->where("id=$id")
@@ -80,7 +80,7 @@ function herisson_friend_get($id) {
  foreach ($friends as $friend) {
   return $friend;
  }
- return new Object();
+ return new WpHerissonFriends();
 }
 
 function herisson_friend_list_active() {

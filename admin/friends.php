@@ -103,8 +103,10 @@ function herisson_friend_edit($id=0) {
     $existing = herisson_friend_get($id);
 			}
 
+
             echo '
 			<div class="wrap">
+   '.herisson_messages().'
 				<h2>' . __("Edit Friend", HERISSON_TD) . '</h2>
 
 				<!--<form method="post" action="' . get_option('siteurl') . '/wp-content/plugins/herisson/admin/action-friend-edit.php">-->
@@ -223,8 +225,11 @@ function herisson_friend_submitedit() {
 		$friend->alias = $alias;
 		$friend->url = $url;
   $friend->getInfo();
-  $friend->askForFriend();
+   $friend->askForFriend();
+		if ($id == 0) {
+		}
 		$friend->save();
+		success_add(__("Friend has been added, but needs to be validated by him"));
 
 	 herisson_friend_edit($friend->id);
 #header('Location: /' . get_option('siteurl') . '/wp-admin/admin.php?page=herisson_friends?action=edit&id='.$id);

@@ -20,6 +20,8 @@ function herisson_bookmark_actions() {
 		break;
 		case 'delete': herisson_bookmark_delete();
 		break;
+		case 'download': herisson_bookmark_download();
+		break;
 		case 'tagcloud': herisson_bookmark_tagcloud();
 		break;
   default: herisson_bookmark_list();
@@ -55,8 +57,8 @@ function herisson_bookmark_list() {
  <tr>
   <td style="width: 30px; vertical-align:baseline"><? if ($bookmark->favicon_image) { ?><img src="data:image/png;base64,<?=$bookmark->favicon_image?>" /><? } ?></td>
   <td><b><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>"><? echo $bookmark->title ? $bookmark->title : "Unamed-".$bookmark->$id; ?></a></b></td>
-  <td><a href="<? echo $bookmark->url; ?>"><? echo $bookmark->url; ?></a></td>
-  <td><? foreach ($bookmark->getTagsArray() as $tag) { ?><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&tag=<?=$tag?>"><?=$tag?></a>,&nbsp;<? } ?></td>
+  <td><a href="<? echo $bookmark->url; ?>"><? echo strlen($bookmark->url) > 80 ? substr($bookmark->url,0,80)."&hellip;" : $bookmark->url; ?></a></td>
+  <td><? foreach ($bookmark->getTagsArray() as $tag) { ?><a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&tag=<?=$tag?>"><?=$tag?></a>, &nbsp; <? } ?></td>
   <td>
 		 <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSON_TD)?>')) { return true; } return false;"><?=__('Delete',HERISSON_TD)?></a>
 		</td>
@@ -107,7 +109,7 @@ function herisson_bookmark_edit($id=0) {
 
  if ( function_exists('wp_nonce_field') ) wp_nonce_field('bookmark-edit');
  if ( function_exists('wp_referer_field') ) wp_referer_field();
-
+    echo herisson_messages();
 
 
             echo '
@@ -133,8 +135,13 @@ function herisson_bookmark_edit($id=0) {
 						<input type="text" class="main" id="title-0" name="title" value="' . $existing->title . '" />
 					</td>
 					<td rowspan="5" style="text-align: center; vertical-align: top">
+						<!--
 					 <br/>
 						<b><a href="/wp-admin/admin.php?page=herisson_bookmarks&action=view&id='.$existing->id.'&nomenu=1" target="_blank">'.__('View archive',HERISSON_TD).'</a></b><br/><br/>
+					 <br/>
+						-->
+						<b><a href="/wp-admin/admin.php?page=herisson_bookmarks&action=download&id='.$existing->id.'"><img src="'.HERISSON_PLUGIN_URL.'/images/ico-download.png"/><br/>'.__('Download',HERISSON_TD).'</a></b><br/><br/>
+						<b><a href="'.$existing->getDirUrl().'" target="_blank">'.__('View archive',HERISSON_TD).'</a></b><br/><br/>
 					'.($existing->id && file_exists($existing->getImage()) && filesize($existing->getImage()) ? '
 						<b>'.__('Capture',HERISSON_TD).'</b><br/>
 					 <a href="'.$existing->getImageUrl().'"><img alt="Capture" src="'.$existing->getThumbUrl().'" style="border:0.5px solid black"/></a>
@@ -150,7 +157,7 @@ function herisson_bookmark_edit($id=0) {
 						<label for="url-0">' . __("URL", HERISSON_TD) . ':</label>
 					</th>
 					<td>
-						<input type="text" size="80" class="main" id="url-0" name="url" value="' . $existing->url . '" />
+						<input type="text" size="80" class="main" id="url-0" name="url" value="' . $existing->url . '" readonly="readonly" />
 						<br/><small><a href="'.$existing->url.'" style="text-decoration:none">Visit '.$existing->url.'</a></small>
 					</td>
 				</tr>
@@ -181,6 +188,48 @@ function herisson_bookmark_edit($id=0) {
 
 				';
 */
+			// Statut.
+            echo '
+				<tr class="form-field">
+					<th valign="top" scope="row">
+						<label for="url-0">' . __("Favicon", HERISSON_TD) . ':</label>
+					</th>
+					<td>
+      '.($existing->favicon_image ? '<img src="data:image/png;base64,'.$existing->favicon_image.'"/>' : '').'
+						<input type="text" size="80" class="main" id="url-0" name="url" value="' . $existing->favicon_url . '" readonly="readonly" />
+					</td>
+				</tr>
+				';
+            echo '
+				<tr class="form-field">
+					<th valign="top" scope="row">
+						<label for="content-0">' . __("Content", HERISSON_TD) . ':</label>
+					</th>
+					<td>
+      '.($existing->content ? '<span class="herisson-success">' . __("Yes", HERISSON_TD) . '</span>' : '<span class="herisson-errors">' . __("No", HERISSON_TD) . '</span>').'
+					</td>
+				</tr>';
+
+            echo '
+				<tr class="form-field">
+					<th valign="top" scope="row">
+						<label for="type-0">' . __("Type", HERISSON_TD) . ':</label>
+					</th>
+					<td>
+      '.$existing->content_type.'
+					</td>
+				</tr>';
+
+            echo '
+				<tr class="form-field">
+					<th valign="top" scope="row">
+						<label for="size-0">' . __("Archive size", HERISSON_TD) . ':</label>
+					</th>
+					<td>
+      '.format_size($existing->dirsize).'
+					</td>
+				</tr>';
+
 			// Visibility.
             echo '
 				<tr class="form-field">
@@ -302,14 +351,24 @@ function herisson_bookmark_view() {
 }
 
 function herisson_bookmark_delete() {
- 		$id = intval(param('id'));
-			if ($id>0) {
-    $bookmark = herisson_bookmark_get($id);
- 			$bookmark->delete();
-			}
-			herisson_bookmark_list();
+ $id = intval(param('id'));
+	if ($id>0) {
+  $bookmark = herisson_bookmark_get($id);
+ 	$bookmark->delete();
+	}
+	herisson_bookmark_list();
 }
 
+
+function herisson_bookmark_download() {
+ $id = intval(param('id'));
+	if ($id>0) {
+  $bookmark = herisson_bookmark_get($id);
+  $bookmark->maintenance();
+ 	$bookmark->captureFromUrl();
+ 	herisson_bookmark_edit($bookmark->id);
+	}
+}
 
 function herisson_bookmark_tagcloud() {
 

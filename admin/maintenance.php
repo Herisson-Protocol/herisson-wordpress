@@ -18,8 +18,12 @@ function herisson_maintenance_actions() {
 		break;
 	 case 'import_submit': herisson_maintenance_import_submit();
 		break;
+		/*
 	 case 'import_firefox': herisson_maintenance_import_firefox();
 		break;
+	 case 'import_json': herisson_maintenance_import_json();
+		break;
+		*/
 	 case 'import_delicious': herisson_maintenance_import_delicious();
 		break;
   default: herisson_maintenance_manage();
@@ -47,6 +51,7 @@ function herisson_maintenance_manage() {
 				 '.__('Source',HERISSON_TD).' : 
 				 <select name="import_source">
 					 <option value="firefox">'.__('Firefox',HERISSON_TD).'</option>
+					 <option value="json">'.__('JSON',HERISSON_TD).'</option>
 					</select><br/>
 					'.__('File',HERISSON_TD).' : <input type="file" name="import_file" />
 				</td>
@@ -134,14 +139,20 @@ function herisson_maintenance_maintenance_submit() {
 		LENGTH(content_image)=0 or content_image is null";
 
 	$bookmarks_errors   = herisson_bookmark_get_where($condition);
+?>
+
+ <div style="width: 1000px; height: 300px; overflow:scroll; ">
+<?
+
  foreach ($bookmarks_errors as $b) {
 	 $b->maintenance();
 		$b->captureFromUrl();
 		$b->save();
 	}
 	?>
+	</div>
 
-	<p class="success">
+	<p class="herisson-success">
 	 <?=__("Maintenance has been done, here are the results after the maintenance operation. Some of the errors may not be fixable.",HERISSON_TD)?>
 	</p>
 	<?
@@ -158,6 +169,7 @@ function herisson_maintenance_maintenance() {
 	$bookmarks_no_content       = herisson_bookmark_get_where("LENGTH(content)=0 or content is null");
 	$bookmarks_no_content_image = herisson_bookmark_get_where("LENGTH(content_image)=0 or content_image is null");
 
+ $options = get_option('HerissonOptions');
  ?>
 	<h1><?=__("Maintenance",HERISSON_TD)?></h1>
 	<h2><?=__("Favicon url",HERISSON_TD)?></h2>
@@ -188,12 +200,12 @@ function herisson_maintenance_maintenance() {
 
 function herisson_maintenance_import_submit() {
  $bookmarks = post('bookmarks');
-
  $nb = 0;
 	foreach ($bookmarks as $bookmark) {
 	 if (array_key_exists('import',$bookmark) && $bookmark['import']) { 
 		 $nb++;
-		 $tags = array_key_exists('tags',$bookmark) ? explode(" ",$bookmark['tags']) : array();
+		 $tags = array_key_exists('tags',$bookmark) ? explode(",",$bookmark['tags']) : array();
+			if (!strlen($bookmark['url'])) { print_r($bookmark); }
    herisson_bookmark_create($bookmark['url'],array(
   	 'favicon_url'=> array_key_exists('favicon_url',$bookmark) ? $bookmark['favicon_url'] : "",
   	 'favicon_image'=>array_key_exists('favicon_image',$bookmark) ? $bookmark['favicon_image'] : "",
@@ -203,7 +215,7 @@ function herisson_maintenance_import_submit() {
  		));
 		}
 	}
-	echo '<p class="success">'.sprintf(__("Successfully add %s bookmarks !",HERISSON_TD),$nb).'</p>';
+	echo '<p class="herisson-success">'.sprintf(__("Successfully add %s bookmarks !",HERISSON_TD),$nb).'</p>';
 	herisson_maintenance_manage();
 
 }
@@ -231,14 +243,14 @@ function herisson_maintenance_import_delicious() {
 		$bookmark['title'] = $b['description'];
 		$bookmark['description'] = $b['extended'];
 		$bookmark['is_public'] = $b['private'] == 'yes' ? 0 : 1;
-		$bookmark['tags'] = $b['tag'];
+		$bookmark['tags'] = preg_replace("/ +/",",",$b['tag']);
 		$bookmark['prefix'] = false;
  	$bookmark['favicon_url'] = "";
  	$bookmark['favicon_image'] = "";
 
 		$list[] = $bookmark;
 	}
-	unset($bookmarks);
+	unset($delicious_bookmarks);
 	herisson_maintenance_import_list($list);
 ?>
 	</div>
@@ -256,6 +268,8 @@ function herisson_maintenance_import() {
 
 	switch (post('import_source')) {
 	 case 'firefox' : herisson_maintenance_import_firefox();
+		break;
+	 case 'json' : herisson_maintenance_import_json();
 		break;
   default: herisson_maintenance_manage();
 	}
@@ -298,12 +312,14 @@ function herisson_maintenance_import_firefox() {
  		$bookmark['is_public'] = 1;
  		$bookmark['favicon_image'] = "";
  		$bookmark['favicon_url'] = "";
+ 		$bookmark['tags'] = "";
   } else {
  		$bookmark['url'] = $item->HREF;
  		$bookmark['description'] = "";
  		$bookmark['is_public'] = 1;
  		$bookmark['favicon_image'] = $item->ICON_DATA;
  		$bookmark['favicon_url'] = $item->ICON_URI;
+ 		$bookmark['tags'] = "";
 		}
 		$list[] = $bookmark;
 	}
@@ -316,7 +332,38 @@ function herisson_maintenance_import_firefox() {
 }
 
 
+function herisson_maintenance_import_json() {
+ if (!isset($_FILES['import_file'])) { 
+	 echo __("Bookmarks file not found.",HERISSON_TD);
+		herisson_maintenance_manage();
+		exit;
+	}
+	$filename = $_FILES['import_file']['tmp_name'];
+	$content = file_get_contents($filename);
+
+	$bookmarks = json_decode($content,1);
+
+?>
+	<div class="wrap">
+		<h2><?= __("Importation results from JSON bookmarks", HERISSON_TD); ?></h2>
+	<? 
+
+ foreach ($bookmarks as $i=>$bookmark) {
+	 $bookmarks[$i]['is_public'] = $bookmark['public'];
+	 $bookmarks[$i]['tags'] = implode(',',$bookmark['tags']);
+ 	$bookmarks[$i]['favicon_image'] = "";
+ 	$bookmarks[$i]['favicon_url'] = "";
+	}
+	herisson_maintenance_import_list($bookmarks);
+?>
+	</div>
+<?		
+
+}
+
+
 function herisson_maintenance_import_list($bookmarks) {
+ $options = get_option('HerissonOptions');
 
 ?>
 	<form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
@@ -339,8 +386,11 @@ function herisson_maintenance_import_list($bookmarks) {
 	  if ($bookmark['url']) { 
 		  if (herisson_bookmark_check_duplicate($bookmark['url'])) { 
 					$status = array("code" => __("Duplicate",HERISSON_TD), "message" => __('This bookmark already exist'), "color" => "red", "error"=>1);
+				} else if ($options['checkHttpImport']) {
+				 $network = new HerissonNetwork();
+  		 $status = $network->check($bookmark['url']);
 				} else {
-  		 $status = herisson_network_check($bookmark['url']);
+				$status = array("code" => "No&nbsp;check", "message" => "No check has been processed. See options for more information", "color" => "orange", "error"=>0);
 				}
 			} else {
 				$status = array("code" => "", "message" => "", "color" => "white", "error"=>1);

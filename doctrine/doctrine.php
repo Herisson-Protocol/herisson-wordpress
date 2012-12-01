@@ -78,10 +78,10 @@ function herisson_doctrine_loadmodels() {
     }
 
     // detect if models exists and generate if not
-#    if ( count_files_in_dir( HERISSON_DOCTRINE_MODELS_DIR ) . '/*.php' ) {
-#        Doctrine_Core::generateModelsFromDb( HERISSON_DOCTRINE_MODELS_DIR, array( 'default' ),
-#            array( 'generateTableClasses' => true ) );
-#    }
+    if ( count_files_in_dir( HERISSON_DOCTRINE_MODELS_DIR ) . '/generated/*.php' ) {
+        Doctrine_Core::generateModelsFromDb( HERISSON_DOCTRINE_MODELS_DIR, array( 'default' ),
+            array( 'generateTableClasses' => true ) );
+    }
 
     // telling Doctrine where our models are located
     Doctrine::loadModels( HERISSON_DOCTRINE_MODELS_DIR . '/generated' );

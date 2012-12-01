@@ -55,12 +55,15 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
 	public function getTitleFromContent() {
 		if (!$this->content || $this->title) { return false; }
+		if ($this->is_binary) { return false; }
 		preg_match("#<title>([^<]*)</title>#",$this->content,$match);
 		$this->title = $match[1];
+		success_add(sprintf(__("Setting title : %s",HERISSON_TD),$this->title));
 	}
 
 	public function getFaviconUrlFromContent() {
 		if (!$this->content && $this->favicon_url) { return false; }
+		if ($this->is_binary) { return false; }
 #		preg_match_all('#(<link[^>]*href="([^"]*)"|<meta itemprop="image" content="([^"]*)"))#',$this->content,$match);
 		preg_match_all('#<link[^>]*href="([^"]*)"#',$this->content,$match);
 		$parsed_url = parse_url($this->url);
@@ -77,27 +80,35 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 				 $favicon_url = dirname($this->url)."/".$favicon_url;
 				}
 				$this->_set('favicon_url',$favicon_url);
+				success_add(__("Setting favicon url : %s",HERISSON_TD));
 			}
 		}
 		if (!$this->favicon_url) {
 		 # We try to get /favicon.ico
 			$favicon_url = $parsed_url['scheme'].'://'.$parsed_url['host']."/favicon.ico";
 			$this->_set('favicon_url',$favicon_url);
+			success_add(__("Setting favicon url : %s",HERISSON_TD));
 		}
 		if (!$this->favicon_url) {
 		 # We try to use google caching system.
    $favicon_url = "http://www.google.com/s2/favicons?domain=".$parsed_url['host'];
 			$this->_set('favicon_url',$favicon_url);
+			success_add(sprintf(__("Setting favicon url : %s",HERISSON_TD),$favicon_url));
 		}
+ 	$this->save();
 	}
 
 	public function getFaviconImageFromUrl() {
 		if (!$this->content && $this->favicon_image) { return false; }
+		if ($this->favicon_image) { return false; }
+		if ($this->is_binary) { return false; }
 		$network = new HerissonNetwork();
 		$content = $network->download($this->favicon_url);
 		if (!is_wp_error($content)) {
  		$base64 = base64_encode($content['data']);
  		$this->_set('favicon_image',$base64);
+  	$this->save();
+			success_add(sprintf(__("Setting favicon image content : %s",HERISSON_TD),$this->favicon_url));
  	} else { 
  		errors_add($content->get_error_message("herisson"));
  	}
@@ -112,9 +123,11 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 			 $this->_set('content_type',$content['type']);
 				if (preg_match('#^text#',$content['type'])) {
      $this->_set('content',$content['data']);
+  			success_add(__("Setting content from URL",HERISSON_TD));
 				} else {
 				 $this->saveBinary($content);
 				}
+  		$this->save();
  		} else { 
  			errors_add($content->get_error_message("herisson"));
  		}
@@ -126,6 +139,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 	 $type = $content['type'];
 		$filename = preg_replace("#/#",".",$type);
 		$this->_set('content',$filename);
+		$this->_set('is_binary',1);
 		$fh = fopen($this->getDir()."/".$filename,"w+b");
 		fwrite($fh,$data);
 		fclose($fh);
@@ -225,10 +239,17 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 	 return file_exists($this->getThumb());
 	}
 
+	public function calculateDirSize() {
+	 $size = exec("du -b ".$this->getDir());
+		$this->_set('dirsize',$size);
+		$this->save();
+	}
+
 	public function captureFromUrl() {
 	 if (!$this->id) { return false; }
 		if ($this->error) { return false; }
 		if (!$this->hash) { return false; }
+		if ($this->is_binary) { return false; }
 
 	 # ./wkhtmltoimage-amd64 --disable-javascript --quality 50 http://www.wilkins.fr/ /home/web/www.wilkins.fr/google.png
   $options = get_option('HerissonOptions');
@@ -239,7 +260,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 		} else if (!is_writeable($this->getDir())) {
 		 errors_add(__("Directory ".$this->getDir()." exists, but is not writable.",HERISSON_TD));
 		}
-		echo '<br/><br/><b>Gestion du bookmark : <a href="/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id='.$this->id.'">'.$this->title.'</a>'."</b><br/>\n";
+		success_add(sprintf(__('<b>Downloading bookmark : <a href="%s">%s</a></b>',HERISSON_TD),"/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=".$this->id,$this->title));
 		flush();
 		if ($options['spiderOptionTextOnly']) {
 		 $this->getContentFromUrl();
@@ -267,6 +288,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
 		}
 		flush();
+		$this->calculateDirSize();
 #		$convert = $options['convertPath'];
 
 	/*

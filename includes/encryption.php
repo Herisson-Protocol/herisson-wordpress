@@ -30,6 +30,7 @@ function herisson_encrypt($data,$friend_public_key) {
 # $data = "Only I know the purple fox. Trala la !";
  $hash = herisson_hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_private_key)) {
+	 HerissonNetwork::reply(417);
 	 echo __('Error while encrypting hash with my private key',HERISSON_TD);
 	}
 # echo "$hash -> $hash_crypted<br>\n";
@@ -40,6 +41,7 @@ function herisson_encrypt($data,$friend_public_key) {
 #	echo "friend public key : $friend_public_key<br><br>\n";
 #	echo "friend public key : ".openssl_get_publickey($friend_public_key)."<br><br>\n";
  if (!openssl_seal($data,$data_crypted,$seal_key,array($friend_public_key))) {
+	 HerissonNetwork::reply(417);
 	 echo __('Error while encrypting data with friend public key<br>',HERISSON_TD);
 	}
 # echo "$seal_key[0] , $data -> $data_crypted<br><br>\n";
@@ -73,9 +75,12 @@ function herisson_decrypt($json_string,$friend_public_key) {
 	$my_public_key  = $options['publicKey'];
 	$my_private_key = $options['privateKey'];
 
-
  $json_data = json_decode($json_string,1);
- 
+
+ if ($json_data === null) {
+	 HerissonNetwork::reply(417);
+	 echo __('Error while decoding json string<br>',HERISSON_TD);
+ }
 
  $data_crypted = base64_decode($json_data['data']);
  $hash_crypted = base64_decode($json_data['hash']);
@@ -83,17 +88,20 @@ function herisson_decrypt($json_string,$friend_public_key) {
 
 # $hash = herisson_hash($data);
 	if (!openssl_open($data_crypted,$data,$seal,$my_private_key)) {
+	 HerissonNetwork::reply(417);
 	 echo __('Error while decrypt with my private key<br>',HERISSON_TD);
 	}
 # echo "$data_crypted -> $data<br>\n";
 
  
  if (!openssl_public_decrypt($hash_crypted,$hash,$friend_public_key)) {
+	 HerissonNetwork::reply(417);
 	 echo __('Error while decrypt with friend public key<br>',HERISSON_TD);
 	}
 # echo "$hash_crypted -> $hash<br>\n";
 
  if (herisson_hash($data) != $hash) {
+	 HerissonNetwork::reply(417);
   echo __('Error : mismatch between hash and data, maybe the publickey stored for this site is not correct, or maybe it is a man in the middle attack !<br>');
 	}
 	return $data;

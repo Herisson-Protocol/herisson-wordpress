@@ -14,12 +14,12 @@ if( !isset($_SERVER['REQUEST_URI']) ) {
 /**
  * Creates the options admin page and manages the updating of options.
  */
-function herisson_manage_options() {
+function herisson_options_manage() {
 
 				if (post('action') == 'submitedit') {
      $options = get_option('HerissonOptions');
 				 $new_options = array();
-				 $allowedoptions = array('basePath','bookmarksPerPage','sitename','debugMode','adminEmail','search','screenshotTool','convertPath');
+				 $allowedoptions = array('basePath','bookmarksPerPage','sitename','debugMode','adminEmail','search','screenshotTool','convertPath','checkHttpImport','acceptFriends','spiderOptionTextOnly','spiderOptionFullPage','spiderOptionScreenshot');
 					foreach ($allowedoptions as $option) {
 					 $new_options[$option] = post($option);
 					}
@@ -67,7 +67,7 @@ function herisson_manage_options() {
 					<p>
 					' . __("<code>No public search</code> : Your public and private bookmarks are not available for you friends (for search and view).", HERISSON_TD) . '<br/>
 					' . __("<code>Public search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private.", HERISSON_TD) . '<br/>
-					' . __("<code>Recursive search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, friends search for bookmarks, you forward their search to all your friends.", HERISSON_TD) . '<br/>
+					' . __("<code>Recursive search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, when friends search for bookmarks, you forward their search to all your friends.", HERISSON_TD) . '<br/>
 					</p>
 				</td>
 			</tr>
@@ -77,6 +77,32 @@ function herisson_manage_options() {
 					<input type="text" name="bookmarks_per_page" id="books_per_page" style="width:4em;" value="' . ( intval($options['bookmarksPerPage']) ) . '" />
 					<p>
 					' . __("Limits the total number of bookmarks displayed <code>per page</code> within the administrative 'Bookmarks' menu.", HERISSON_TD) . '
+					</p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><label for="search">' . __("Check urls at import", HERISSON_TD) . '</label>:</th>
+				<td>
+				 <select name="checkHttpImport">
+					 <option value="0" '.($options['checkHttpImport'] == "0" ? ' selected="selected"' : '').'>'.__("No (faster)",HERISSON_TD).'</option>
+					 <option value="1" '.($options['checkHttpImport'] == "1" ? ' selected="selected"' : '').'>'.__("Yes (slower)",HERISSON_TD).'</option>
+					</select>
+					<p>
+					' . __("If you don't check the urls when importing bookmarks, you might import obsolete bookmarks with 404 errors or non existing domains. We recommend to check urls, but if you have more more than 200 bookmarks to import, it might be too long to wait.", HERISSON_TD) . '<br/>
+					</p>
+				</td>
+			</tr>
+
+			<tr valign="top">
+				<th scope="row"><label for="acceptFriends">' . __("Friend requests", HERISSON_TD) . '</label>:</th>
+				<td>
+				 <select name="acceptFriends">
+					 <option value="0" '.($options['acceptFriends'] == "0" ? ' selected="selected"' : '').'>'.__("Never (automatically)",HERISSON_TD).'</option>
+					 <option value="1" '.($options['acceptFriends'] == "1" ? ' selected="selected"' : '').'>'.__("Manually",HERISSON_TD).'</option>
+					 <option value="2" '.($options['acceptFriends'] == "2" ? ' selected="selected"' : '').'>'.__("Always (automatically)",HERISSON_TD).'</option>
+					</select>
+					<p>
+					' . __("This concerns only people that try to become your friend.",HERISSON_TD).'<br/>
 					</p>
 				</td>
 			</tr>
@@ -95,15 +121,26 @@ function herisson_manage_options() {
 			<tr valign="top">
 				<th scope="row"><label for="basePath">' . __("Screenshot generator", HERISSON_TD) . '</label>:</th>
 				<td>
-				 <select name="screenshotTool">
-					 ';
+				';
+				$uname = exec('uname -a');
+				$selected = null;
+				echo ' <select name="screenshotTool"> ';
 						foreach ($screenshots as $tool) {
 						 echo '<option value="'.$tool->id.'" '.($options['screenshotTool'] == $tool->id ? ' selected="selected"' : '').">".__($tool->name,HERISSON_TD)."</option>";
+							if ($options['screenshotTool'] == $tool->id) { $selected = $tool->name; }
 						}
-						echo '	
-					</select>
-					<p>
-					 ';
+						echo '	</select> ';
+  				if (
+						 (preg_match("/(amd64|_64)/",$uname) && preg_match("/amd64/",$selected)) ||
+						 (preg_match("/386/",$uname) && preg_match("/i386/",$selected))
+							) {
+  				 echo '<p class="herisson-success">'. sprintf(__("It seems <code>%s</code> is the correct tool for you.",HERISSON_TD),$selected).'</p>';
+ 				 
+  				} else {
+  				 echo '<p class="herisson-errors">'. sprintf(__("It seems <code>%s</code> is not the correct tool for you.",HERISSON_TD),$selected).'</p>';
+						}
+
+						echo ' <p> ';
 						foreach ($screenshots as $tool) {
 					  echo __(sprintf("%s description",$tool->name), HERISSON_TD).'<br>';
 						}
@@ -117,14 +154,28 @@ function herisson_manage_options() {
 				<td>
 					<input type="text" name="convertPath" id="convertPath" style="width:30em;" value="'.$options['convertPath'].'" />
 					'.(file_exists($options['convertPath']) ?  
-					 '<p class="success">'
+					 '<p class="herisson-success">'
 					 . sprintf(__("Path <code>%s</code> exists",HERISSON_TD),$options['convertPath'])
 						.'</p>'
 						:
-					 '<p class="error">'
+					 '<p class="herisson-errors">'
 					 . sprintf(__("Path <code>%s</code> doesn't exist",HERISSON_TD),$options['convertPath'])
 						.'</p>'
 						).'
+
+					</p>
+				</td>
+			</tr>
+
+			<tr valign="top">
+				<th scope="row"><label for="spiderOption">' . __("Spider Options", HERISSON_TD) . '</label>:</th>
+				<td>
+				<!-- TODO : Verifier wget 1.12 pour de meilleurs resultats de full HTML -->
+				 '.__("When saving a bookmark and running maintenance : ", HERISSON_TD).'
+					<p><input type="checkbox" name="spiderOptionTextOnly" id="spiderOptionTextOnly"'.($options['spiderOptionTextOnly'] ? ' checked="checked"' : '').' /> '.__("Save page text only <br><code>This is necessary to make full text search in the bookmarks. Lighter than full page, but no images, css, javascript etc</code>",HERISSON_TD).'</p>
+					<p><input type="checkbox" name="spiderOptionFullPage" id="spiderOptionFullPage"'.($options['spiderOptionFullPage'] ? ' checked="checked"' : '').' /> '.__("Save the full HTML page <br/><code>Recommanded to make sure you have a backup of your bookmarks (includes css, images, javascript etc)</code>",HERISSON_TD).'</p>
+					<p><input type="checkbox" name="spiderOptionScreenshot" id="spiderOptionScreenshot"'.($options['spiderOptionScreenshot'] ? ' checked="checked"' : '').' /> '.__("<sup>BETA</sup>Save a screenshot of the whole page like in a browser <br/><code>The result is only 50% guaranteed, does not include javascript, and is very slow... but makes nice screenshots</code>",HERISSON_TD).'</p>
+					 <p>'.__("Note: After changing theses parameters, you might want to run a maintenance check to save the bookmarks locally.", HERISSON_TD).'</p>
 
 					</p>
 				</td>

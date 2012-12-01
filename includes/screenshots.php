@@ -24,3 +24,31 @@ function herisson_screenshots_wkhtmltoimage($type,$url,$image) {
 #		 echo implode("\n",$output);
 		}
 }
+
+function herisson_screenshots_thumb($image,$thumb) {
+  $options = get_option('HerissonOptions');
+  $convert = $options['convertPath'];
+  if (file_exists($convert) && is_executable($convert)) {
+
+   if (!file_exists($thumb) || filesize($thumb) == 0) {
+    exec("$convert -resize 200x -crop 200x150 \"$image\" \"$thumb\"",$output);
+ #   echo implode("\n",$output);
+   }
+  }
+}
+
+function herisson_spider_fullpage($url,$directory) {
+ $default = "index.html";
+	if (file_exists("$directory/$default")) { return false; }
+ success_add("/usr/bin/wget --no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories -erobots=off -P $directory ".'"<a href="'.$url.'" target="_blank">'.$url.'</a>"');
+ exec("/usr/bin/wget --no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories -erobots=off -P $directory ".'"'.$url.'"');
+	$file = basename($url);
+	if ($file) {
+	 success_add("mv \"$directory/$file\" \"$directory/index.html\"");
+	 exec("mv \"$directory/$file\" \"$directory/index.html\"");
+	}
+}
+
+
+
+
