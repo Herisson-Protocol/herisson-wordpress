@@ -75,8 +75,8 @@ function herisson_friend_get($id) {
  if (!is_numeric($id)) { return new WpHerissonFriends(); }
  $friends = Doctrine_Query::create()
   ->from('WpHerissonFriends')
-  ->where("id=$id")
-  ->execute();
+  ->where("id=?")
+  ->execute(array($id));
  foreach ($friends as $friend) {
   return $friend;
  }
@@ -99,6 +99,12 @@ function herisson_friend_list_wantsyou() {
  $friends = Doctrine_Query::create()->from('WpHerissonFriends')
  ->where('b_wantsyou=1')->execute();
  herisson_friend_list_custom( __("Asking your permission", HERISSON_TD),$friends);
+}
+
+function herisson_friend_list_error() {
+ $friends = Doctrine_Query::create()->from('WpHerissonFriends')
+ ->where('b_wantsyou!=1 and b_youwant!=1 and is_active!=1')->execute();
+ herisson_friend_list_custom( __("Others", HERISSON_TD),$friends);
 }
 
 

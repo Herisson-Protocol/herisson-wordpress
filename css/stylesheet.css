@@ -1,0 +1,28 @@
+p.herisson-success {
+ background-color: #adec83;
+	border: 1px solid green;
+	padding: 3px;
+}
+
+p.herisson-errors {
+ background-color: #ec8383;
+	border: 1px solid red;
+	padding: 3px;
+}
+
+p.herisson-warnings {
+ background-color: #eccc83;
+	border: 1px solid orange;
+	padding: 3px;
+}
+
+span.herisson-success {
+ color: #63a94b;
+	font-weight: bold;
+}
+
+span.herisson-errors {
+ color: #a94b4b;
+	font-weight: bold;
+}
+

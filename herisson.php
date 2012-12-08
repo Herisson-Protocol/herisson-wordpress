@@ -45,6 +45,8 @@ define('HERISSON_SCREENSHOTS_DIR', 'screenshots/');
 define('HERISSON_MENU_SINGLE', 4);
 define('HERISSON_MENU_MULTIPLE', 2);
 
+define('HERISSON_EXIT', 1);
+
 define('HERISSON_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 
 require_once HERISSON_WP_BASE_DIR."/wp-includes/plugin.php";

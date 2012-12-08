@@ -13,149 +13,145 @@
 class WpHerissonFriends extends BaseWpHerissonFriends
 {
 
- public function getInfo() {
-	 $url = $this->url."/info";
-	 $network = new HerissonNetwork();
+	public function getInfo() {
+		$url = $this->url."/info";
+		$network = new HerissonNetwork();
 		$json_data = $network->download($url);
 		if (!is_wp_error($json_data)) {
 			$data = json_decode($json_data['data'],1);
 
 			if (sizeof($data)) {
- 			$this->name  = $data['sitename'];
- 			$this->email = $data['adminEmail'];
-#				$this->is_active=1;
-   } else { $this->is_active=0; }
+				$this->name  = $data['sitename'];
+				$this->email = $data['adminEmail'];
+			} else { $this->is_active=0; }
 
-  } else {
-		 $this->is_active=0;
-		 errors_dispatch($json_data,array(
-    404 => __("This site is not a Herisson site or is closed."),
+		} else {
+			$this->is_active=0;
+			errors_dispatch($json_data,array(
+				404 => __("This site is not a Herisson site or is closed."),
 			));
 		}
- }
+	}
 
- public function setUrl($url) {
-  parent::_set('url',rtrim($url,'/'));
+	public function setUrl($url) {
+		parent::_set('url',rtrim($url,'/'));
 		$this->reloadPublicKey();
- }
+	}
 
 	public function reloadPublicKey() {
-	 $network = new HerissonNetwork();
+		$network = new HerissonNetwork();
 		$content = $network->download($this->url."/publickey");
 		if (!is_wp_error($content)) {
-   $this->_set('public_key',$content['data']);
+			$this->_set('public_key',$content['data']);
 		} else { 
-		 errors_dispatch($content,array(
-    404 => __("This site is not a Herisson site or is closed."),
+			errors_dispatch($content,array(
+				404 => __("This site is not a Herisson site or is closed."),
 			));
 		}
 	}
 
 
 	public function retrieveBookmarks($params=array()) {
-	 
-	 $options = get_option('HerissonOptions');
+		
+		$options = get_option('HerissonOptions');
 		$my_public_key = $options['publicKey'];
-  if (function_exists('curl_init')) {
-   $network = new HerissonNetwork();
+		if (function_exists('curl_init')) {
+			$network = new HerissonNetwork();
 			$params['key'] = $my_public_key;
-#			print_r($params);
- 		$content = $network->download($this->url."/retrieve",$params);
-#			return $content['data'];
- 		if (!is_wp_error($content)) {
-#			 print_r($content['data']);
- 			$json_data = herisson_decrypt($content['data'],$this->public_key);
-
- 			$bookmarks = json_decode($json_data,1);
-    return $bookmarks;
- 		} else { 
-		 errors_dispatch($content,array(
-    404 => __("This site is not a Herisson site or is closed."),
+			$content = $network->download($this->url."/retrieve",$params);
+			if (!is_wp_error($content)) {
+				$json_data = herisson_decrypt($content['data'],$this->public_key);
+				$bookmarks = json_decode($json_data,1);
+				return $bookmarks;
+			} else { 
+			errors_dispatch($content,array(
+				404 => __("This site is not a Herisson site or is closed."),
 			));
- 		}
-  }
+			}
+		}
 	}
 
- public function generateBookmarksdata($params=array()) {
-  $q = Doctrine_Query::create()->from('WpHerissonBookmarks as b')->where('is_public=1');
-#echo "pokpok";
-#print_r($params);
-  if (array_key_exists('tag',$params)) {
-   $q = $q->leftJoin('b.WpHerissonTags t');
-   $q = $q->where("t.name=?");
-   $params = array($params['tag']);
-  } else if (array_key_exists('search',$params)) {
-   $search = "%".$params['search']."%";
-   $q = $q->leftJoin('b.WpHerissonTags t');
-   $q = $q->where("t.name LIKE ? OR b.url like ? OR b.title LIKE ? OR b.description LIKE ? OR b.content LIKE ?");
-   $params = array($search,$search,$search,$search,$search);
-  }
-  $bookmarks = $q->execute($params);
+	public function generateBookmarksdata($params=array()) {
+		$q = Doctrine_Query::create()->from('WpHerissonBookmarks as b')->where('is_public=1');
+		if (array_key_exists('tag',$params)) {
+			$q = $q->leftJoin('b.WpHerissonTags t');
+			$q = $q->where("t.name=?");
+			$params = array($params['tag']);
+		} else if (array_key_exists('search',$params)) {
+			$search = "%".$params['search']."%";
+			$q = $q->leftJoin('b.WpHerissonTags t');
+			$q = $q->where("t.name LIKE ? OR b.url like ? OR b.title LIKE ? OR b.description LIKE ? OR b.content LIKE ?");
+			$params = array($search,$search,$search,$search,$search);
+		}
+		$bookmarks = $q->execute($params);
 
-  $data_bookmarks = array();
-  foreach ($bookmarks as $bookmark) {
-   $data_bookmarks[] = $bookmark->toArray();
-  }
-  $json_data = json_encode($data_bookmarks);
-#  print_r($json_data);
-  $json_display = herisson_encrypt($json_data,$this->public_key);
-  return json_encode($json_display);
- }
+		$data_bookmarks = array();
+		foreach ($bookmarks as $bookmark) {
+			$data_bookmarks[] = $bookmark->toArray();
+		}
+		$json_data = json_encode($data_bookmarks);
+		$json_display = herisson_encrypt($json_data,$this->public_key);
+		return json_encode($json_display);
+	}
 
- public function askForFriend() {
-	 $options = get_option('HerissonOptions');
-	 $url = $this->url."/ask";
+	public function askForFriend() {
+		$options = get_option('HerissonOptions');
+		$url = $this->url."/ask";
 		$mysite = get_option('siteurl')."/".$options['basePath'];
-  $signature = herisson_encrypt_short($mysite);
+		$signature = herisson_encrypt_short($mysite);
 		$data = array(
-		 'url'=> $mysite,
+			'url'=> $mysite,
 			'signature' => $signature
 		);
 		$network = new HerissonNetwork();
 		$content = $network->download($url,$data);
 		if (!is_wp_error($content)) {
-#		 if ($content == "1") {
-			 $this->b_youwant=1;
-#			} else {
-#			 echo sprintf(__("Error while adding friend : %s",HERISSON_TD),$url);
-#			}
+			switch ($content['code']) {
+				case 200: {
+					# Friend need to process the request manually, you will be notified when validated.
+					$this->b_youwant=1;
+					break;
+				}
+				case 202: {
+					# Friend automatically accepted the request. Adding now.
+					$this->is_active=1;
+					break;
+				}
+			}
+			$this->save();
 		} else {
-		 errors_dispatch($content,array(
-    403 => __("This site refuses new friends."),
-    404 => __("This site is not a Herisson site or is closed."),
-    417 => __("Friend say you dont communicate correctly (key problems?)."),
+			errors_dispatch($content,array(
+				403 => __("This site refuses new friends."),
+				404 => __("This site is not a Herisson site or is closed."),
+				417 => __("Friend say you dont communicate correctly (key problems?)."),
 			));
 		}
- }
+	}
 
- public function validateFriend() {
-	 $options = get_option('HerissonOptions');
-	 $url = $this->url."/validate";
+	public function validateFriend() {
+		$options = get_option('HerissonOptions');
+		$url = $this->url."/validate";
 		$mysite = get_option('siteurl')."/".$options['basePath'];
-  $signature = herisson_encrypt_short($mysite);
+		$signature = herisson_encrypt_short($mysite);
 		$data = array(
-		 'url'=> $mysite,
+			'url'=> $mysite,
 			'signature' => $signature
 		);
 		$network = new HerissonNetwork();
 		$content = $network->download($url,$data);
-#		echo $content."<br>\n";
 		if (!is_wp_error($content)) {
-		 if ($content['data'] == "1") {
-			 echo __('ok');
+			if ($content['data'] === "1") {
+				$this->b_wantsyou=0;
+				$this->is_active=1;
+				$this->save();
+				return true;
 			} else {
-			 echo sprintf(__("Error while adding friend : %s",HERISSON_TD),$url);
+				return false;
 			}
 		} else {
-			echo $content->get_error_message("herisson");
+			errors_add($content->get_error_message("herisson"));
+			return false;
 		}
- }
-
-	public function approve() {
-	 $this->b_wantsyou=0;
-	 $this->is_active=1;
-		$this->save();
-		$this->validateFriend();
 	}
 
 }

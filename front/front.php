@@ -39,13 +39,13 @@ function herisson_front_get($id) {
 	return new WpHerissonBookmarks();
 }
 
-function herisson_front_get_where($where) {
-	$bookmarks = Doctrine_Query::create()
+function herisson_front_friends_get_where($where,$data=array()) {
+	$friends = Doctrine_Query::create()
 		->from('WpHerissonFriends')
 		->where("$where")
-		->execute();
-	foreach ($bookmarks as $bookmark) {
-		return $bookmark;
+		->execute($data);
+	foreach ($friends as $friend) {
+		return $friend;
 	}
 	return new WpHerissonFriends();
 }
@@ -54,23 +54,23 @@ function herisson_front_get_where($where) {
 function herisson_front_validate() {
 	$signature = post('signature');
 	$url = post('url');
-	$f = herisson_front_get_where("url='$url' AND b_youwant=1");
+	$f = herisson_front_friends_get_where("url=? AND b_youwant=1",array($url));
 	if (herisson_check_short($url,$signature,$f->public_key)) {
 		$f->b_youwant=0;
 		$f->is_active=1;
 		$f->save();
 		HerissonNetwork::reply(200);
 		echo "1";
+		exit;
 	}
-	else { HerissonNetwork::reply(200); }
+	else { HerissonNetwork::reply(417,HERISSON_EXIT); }
 }
 
 function herisson_front_ask() {
 	$options = get_option('HerissonOptions');
 #	print_r($options);
 	if ($options['acceptFriends'] == 0) {
-		HerissonNetwork::reply(403);
-		exit;
+		HerissonNetwork::reply(403,HERISSON_EXIT);
 	}
 	$signature = post('signature');
 	$f = new WpHerissonFriends();
@@ -79,18 +79,18 @@ function herisson_front_ask() {
 	if (herisson_check_short($f->url,$signature,$f->public_key)) {
 		$f->getInfo();
 		if ($options['acceptFriends'] == 2) {
-			HerissonNetwork::reply(200);
+			HerissonNetwork::reply(202);
 			$f->is_active=1;
 		} else {
 			# Friend request need to be manually processed, so it's a 202 Accepted for further process response
-			HerissonNetwork::reply(202);
+			HerissonNetwork::reply(200);
 			$f->b_wantsyou=1;
 			$f->is_active=0;
 		}
 		$f->save();
 	}
 	else { 
-		HerissonNetwork::reply(417);
+		HerissonNetwork::reply(417,HERISSON_EXIT);
 	}
 	exit;
 }
@@ -148,7 +148,7 @@ function herisson_front_list() {
 		<h1>' . sprintf(__("%s bookmarks", HERISSON_TD),$options['sitename']).'</h1>
 		<div id="search">
 			<form action="" method="get">
-				Recherche <input type="text" name="search" value="" /><br/>
+				Recherche <input type="text" name="search" value="" /><input type="submit" value="OK"/>
 			</form>
 		</div>
 
