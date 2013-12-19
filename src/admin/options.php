@@ -72,9 +72,9 @@ function herisson_options_manage() {
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><label for="bookmarks_per_page">' . __("Bookmarks per page", HERISSON_TD) . '</label>:</th>
+				<th scope="row"><label for="bookmarksPerPage">' . __("Bookmarks per page", HERISSON_TD) . '</label>:</th>
 				<td>
-					<input type="text" name="bookmarks_per_page" id="books_per_page" style="width:4em;" value="' . ( intval($options['bookmarksPerPage']) ) . '" />
+					<input type="text" name="bookmarksPerPage" id="books_per_page" style="width:4em;" value="' . ( intval($options['bookmarksPerPage']) ) . '" />
 					<p>
 					' . __("Limits the total number of bookmarks displayed <code>per page</code> within the administrative 'Bookmarks' menu.", HERISSON_TD) . '
 					</p>

@@ -230,6 +230,7 @@ if (param('nomenu')) {
 	exit;
 }
 
+
 /**
  * Hook to display the [herisson] content
 	*/

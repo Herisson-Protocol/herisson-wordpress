@@ -31,9 +31,8 @@ function param($var) { $p = post($var); return $p ? $p : get($var); }
  * @return la variable str escapée correctement
  */
 function escape($str) {
- global $wpdb;
 # if (! is_array($str) && !get_magic_quotes_gpc()) { return addslashes($str); }
- return $wpdb->escape($str);
+ return esc_sql($str);
 }
 
 #function remove_menus () {
@@ -136,4 +135,18 @@ function format_size($size) {
  for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024;
  return round($size, 2).$units[$i];
 }
+
+
+/**
+ * Pagination 
+	*/
+function pagination_get_vars() {
+ $options = get_option('HerissonOptions');
+	print_r($options);
+ return array(
+	 'offset' => param('offset'),
+	 'limit' => $options['bookmarksPerPage'],
+	);
+}
+
 
