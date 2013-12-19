@@ -137,3 +137,17 @@ function format_size($size) {
  return round($size, 2).$units[$i];
 }
 
+
+/**
+ * Pagination 
+	*/
+function pagination_get_vars() {
+ $options = get_option('HerissonOptions');
+	print_r($options);
+ return array(
+	 'offset' => param('offset'),
+	 'limit' => $options['bookmarksPerPage'],
+	);
+}
+
+

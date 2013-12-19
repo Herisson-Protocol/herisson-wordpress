@@ -15,9 +15,12 @@ function herisson_bookmark_get_tag($tag) {
 }
 
 function herisson_bookmark_get_where($where) {
+ $pagination = pagination_get_vars();
  $bookmarks = Doctrine_Query::create()
   ->from('WpHerissonBookmarks')
   ->where($where)
+		->limit($pagination['limit'])
+		->offset($pagination['offset'])
   ->execute();
  return $bookmarks;
 }

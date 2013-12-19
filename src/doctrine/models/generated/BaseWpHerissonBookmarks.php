@@ -16,15 +16,12 @@ Doctrine_Manager::getInstance()->bindComponent('WpHerissonBookmarks', 'default')
  * @property string $favicon_url
  * @property string $favicon_image
  * @property integer $is_public
- * @property integer $is_binary
  * @property string $content_image
  * @property integer $error
  * @property timestamp $expires_at
  * @property timestamp $created
  * @property timestamp $updated
  * @property integer $type_id
- * @property string $content_type
- * @property integer $dirsize
  * 
  * @package    ##PACKAGE##
  * @subpackage ##SUBPACKAGE##
@@ -114,16 +111,6 @@ abstract class BaseWpHerissonBookmarks extends Doctrine_Record
              'notnull' => false,
              'autoincrement' => false,
              ));
-        $this->hasColumn('is_binary', 'integer', 1, array(
-             'type' => 'integer',
-             'length' => 1,
-             'fixed' => false,
-             'unsigned' => false,
-             'primary' => false,
-             'default' => '0',
-             'notnull' => false,
-             'autoincrement' => false,
-             ));
         $this->hasColumn('content_image', 'string', 255, array(
              'type' => 'string',
              'length' => 255,
@@ -169,24 +156,6 @@ abstract class BaseWpHerissonBookmarks extends Doctrine_Record
              'autoincrement' => false,
              ));
         $this->hasColumn('type_id', 'integer', 4, array(
-             'type' => 'integer',
-             'length' => 4,
-             'fixed' => false,
-             'unsigned' => false,
-             'primary' => false,
-             'notnull' => false,
-             'autoincrement' => false,
-             ));
-        $this->hasColumn('content_type', 'string', 50, array(
-             'type' => 'string',
-             'length' => 50,
-             'fixed' => false,
-             'unsigned' => false,
-             'primary' => false,
-             'notnull' => false,
-             'autoincrement' => false,
-             ));
-        $this->hasColumn('dirsize', 'integer', 4, array(
              'type' => 'integer',
              'length' => 4,
              'fixed' => false,
