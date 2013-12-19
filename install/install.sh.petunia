@@ -1,3 +1,0 @@
-cat drop_db.sql | sed 's/#PREFIX#/wp_/g' | mysql -uroot -pke9agg4epethibault japon_taillandier_name
-cat init_db.sql | sed 's/#PREFIX#/wp_/g' | mysql -uroot -pke9agg4epethibault japon_taillandier_name
-cat init_data.sql | sed 's/#PREFIX#/wp_/g' | mysql -uroot -pke9agg4epethibault japon_taillandier_name
