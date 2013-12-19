@@ -31,9 +31,8 @@ function param($var) { $p = post($var); return $p ? $p : get($var); }
  * @return la variable str escapée correctement
  */
 function escape($str) {
- global $wpdb;
 # if (! is_array($str) && !get_magic_quotes_gpc()) { return addslashes($str); }
- return $wpdb->escape($str);
+ return esc_sql($str);
 }
 
 #function remove_menus () {
