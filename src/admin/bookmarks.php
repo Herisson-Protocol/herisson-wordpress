@@ -99,37 +99,37 @@ function herisson_bookmark_view() {
 }
 
 function herisson_bookmark_delete() {
-	$id = intval(param('id'));
+    $id = intval(param('id'));
     if ($id>0) {
-		$bookmark = herisson_bookmark_get($id);
-    	$bookmark->delete();
+        $bookmark = herisson_bookmark_get($id);
+        $bookmark->delete();
     }
     herisson_bookmark_list();
 }
 
 
 function herisson_bookmark_download() {
-	$id = intval(param('id'));
+    $id = intval(param('id'));
     if ($id>0) {
-		$bookmark = herisson_bookmark_get($id);
-		$bookmark->maintenance();
-    	$bookmark->captureFromUrl();
-    	herisson_bookmark_edit($bookmark->id);
+        $bookmark = herisson_bookmark_get($id);
+        $bookmark->maintenance();
+        $bookmark->captureFromUrl();
+        herisson_bookmark_edit($bookmark->id);
     }
 }
 
 function herisson_bookmark_tagcloud() {
 
-	# select count(*) as c ,name from wp_herisson_tags group by name order by name;
-	$tags = Doctrine_Query::create()
-    	->select('count(*) as c, name')
+    # select count(*) as c ,name from wp_herisson_tags group by name order by name;
+    $tags = Doctrine_Query::create()
+        ->select('count(*) as c, name')
         ->from('WpHerissonTags')
         ->groupby('name')
         ->orderby('name')
         ->execute();
     $string="";
     foreach ($tags as $tag) {
-    	$string.='<a href="#" class="tag-link-'.$tag->id.'" title="3 sujets" style="font-size: '.( 10+$tag->c*2).'pt">'.$tag->name.'</a>&nbsp;';
+        $string.='<a href="#" class="tag-link-'.$tag->id.'" title="3 sujets" style="font-size: '.( 10+$tag->c*2).'pt">'.$tag->name.'</a>&nbsp;';
     }
     echo $string;
     exit;

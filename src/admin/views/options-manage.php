@@ -9,13 +9,13 @@
 			<tr valign="top">
 				<th scope="row"><? echo __('Site name', HERISSON_TD); ?>:</th>
 				<td>
-					<input type="text" name="sitename" style="width:30em" value="' .$options['sitename']. '" />
+					<input type="text" name="sitename" style="width:30em" value="<? echo $options['sitename']; ?>" />
 				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><? echo __('Admin email', HERISSON_TD); ?>:</th>
 				<td>
-					<input type="text" name="adminEmail" style="width:30em" value="' .$options['adminEmail']. '" />
+					<input type="text" name="adminEmail" style="width:30em" value="<? echo $options['adminEmail']; ?>" />
 				</td>
 			</tr>
 			<tr valign="top">
