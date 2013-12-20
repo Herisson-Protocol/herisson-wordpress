@@ -63,7 +63,7 @@ require_once HERISSON_WP_BASE_DIR."/wp-admin/includes/plugin.php";
  */
 add_action('init', 'herisson_init');
 function herisson_init() {
-	load_plugin_textdomain(HERISSON_TD, false, HERISSON_LANG_DIR);
+    load_plugin_textdomain(HERISSON_TD, false, HERISSON_LANG_DIR);
 }
 
 
@@ -83,12 +83,12 @@ require_once HERISSON_INCLUDES_DIR . 'db.php';
 function herisson_check_versions()
 {
     $versions = get_option('HerissonVersions');
-    if (empty($versions) ||
-		$versions['db'] < HERISSON_DB ||
-		$versions['options'] < HERISSON_OPTIONS ||
-		$versions['rewrite'] < HERISSON_REWRITE)
+    if (empty($versions)
+        || $versions['db'] < HERISSON_DB
+        || $versions['options'] < HERISSON_OPTIONS
+        || $versions['rewrite'] < HERISSON_REWRITE)
     {
-		herisson_install();
+        herisson_install();
     }
 }
 add_action('init', 'herisson_check_versions');
@@ -102,8 +102,8 @@ function herisson_install() {
 
     if ( version_compare('3.3', $wp_version) == 1 && strpos($wp_version, 'wordpress-mu') === false ) {
         echo "
-		<p>".__('(Herisson only works with WordPress 3.3 and above)', HERISSON_TD)."</p>
-		";
+        <p>".__('(Herisson only works with WordPress 3.3 and above)', HERISSON_TD)."</p>
+        ";
         return;
     }
 
@@ -132,30 +132,30 @@ function herisson_install() {
         }
     }
 
-  # Generate a couple of public/private key to handle encryption between this site and friends
-  list($publicKey,$privateKey) = herisson_generate_keys_pair();
+	# Generate a couple of public/private key to handle encryption between this site and friends
+	$encryption = HerissonEncryption::i()->generateKeyPairs();
 
     $defaultOptions = array(
-		'formatDate'	=> 'd/m/Y',
-		'sitename'	=> 'Herisson new instance',
-#		'httpLib'	=> 'snoopy',
-		'useModRewrite'	=> true,
-		'debugMode'	=> false,
-		'bookmarksPerPage'	=> 50,
-		'templateBase'		=> 'default_templates/',
-		#'permalinkBase'		=> 'bookmarks/',
-		'basePath'		=> 'bookmarks',
-		'publicKey'		=> $publicKey,
-		'privateKey'		=> $privateKey,
-		'adminEmail'		=> '',
-		'screenshotTool'		=> 'wkhtmltoimage-amd64',
-		'convertPath'		=> '/usr/bin/convert',
-		'search'		=> '1',
-		'checkHttpImport'		=> '1',
-		'acceptFriends'		=> '1',
-		'spiderOptionTextOnly'		=> '1',
-		'spiderOptionFullPage'		=> '1',
-		'spiderOptionScreenshot'		=> '0',
+        'formatDate'                => 'd/m/Y',
+        'sitename'                  => 'Herisson new instance',
+#        'httpLib'                   => 'snoopy',
+        'useModRewrite'             => true,
+        'debugMode'                 => false,
+        'bookmarksPerPage'          => 50,
+        'templateBase'              => 'default_templates/',
+        #'permalinkBase'             => 'bookmarks/',
+        'basePath'                  => 'bookmarks',
+        'publicKey'                 => $encryption->public,
+        'privateKey'                => $encryption->private,
+        'adminEmail'                => '',
+        'screenshotTool'            => 'wkhtmltoimage-amd64',
+        'convertPath'               => '/usr/bin/convert',
+        'search'                    => '1',
+        'checkHttpImport'           => '1',
+        'acceptFriends'             => '1',
+        'spiderOptionTextOnly'      => '1',
+        'spiderOptionFullPage'      => '1',
+        'spiderOptionScreenshot'    => '0',
     );
     add_option('HerissonOptions', $defaultOptions);
 
@@ -164,12 +164,12 @@ function herisson_install() {
     $options = array_merge($defaultOptions, $options);
     update_option('herissonOptions', $options);
 
-	// May be unset if called during plugins_loaded action.
-	if (isset($wp_rewrite))
+    // May be unset if called during plugins_loaded action.
+    if (isset($wp_rewrite))
     {
-		// Update our .htaccess file.
-		$wp_rewrite->flush_rules();
-	}
+        // Update our .htaccess file.
+        $wp_rewrite->flush_rules();
+    }
 
     // Set an option that stores the current installed versions of the database, options and rewrite.
     $versions = array('db' => HERISSON_DB, 'options' => HERISSON_OPTIONS, 'rewrite' => HERISSON_REWRITE);
@@ -182,10 +182,10 @@ register_activation_hook('herisson/herisson.php', 'herisson_install');
  * Loads the given filename from The Herisson templates directory.
  * @param string $filename The filename of the template to load.
  */
-	/*
+    /*
 function herisson_load_template( $filename ) {
     $template_option = get_option('herissonOptions');
-	$template_directory = $template_option['templateBase'];
+    $template_directory = $template_option['templateBase'];
 
     $template = HERISSON_TEMPLATES_DIR . "$template_directory" . "$filename";
 
@@ -197,15 +197,15 @@ function herisson_load_template( $filename ) {
 */
 
 function herisson_router() {
- # Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
- global $route,$wp_query,$window_title;
- $options = get_option('HerissonOptions');
- $path =explode("/",$_SERVER['REQUEST_URI']);
-	if (sizeof($path) && $path[1] == $options['basePath']) { # && array_key_exists(2,$path) && $path[2]) {
-  require_once HERISSON_BASE_DIR."/front/front.php";
-	 herisson_front_actions();
-		die();
-	}
+    # Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
+    global $route,$wp_query,$window_title;
+    $options = get_option('HerissonOptions');
+    $path =explode("/",$_SERVER['REQUEST_URI']);
+    if (sizeof($path) && $path[1] == $options['basePath']) { # && array_key_exists(2,$path) && $path[2]) {
+        require_once HERISSON_BASE_DIR."/front/front.php";
+        herisson_front_actions();
+        die();
+    }
 }
 
 add_action( 'send_headers', 'herisson_router');
@@ -216,40 +216,40 @@ add_action( 'send_headers', 'herisson_router');
 #add_action('admin_menu', 'remove_menus');
 
 if (param('nomenu')) {
- if (param('page') == "herisson_bookmarks") {
-  herisson_bookmark_actions();
- } else if (param('page') == "herisson_friends") {
-  herisson_friend_actions();
-	} else if (param('page') == 'herisson_maintenance') {
-  herisson_maintenance_actions();
-	} else if (param('page') == 'herisson_backup') {
-  herisson_backup_actions();
-	} else if (param('page') == 'front') {
-  herisson_front_actions();
-	}
-	exit;
+    if (param('page') == "herisson_bookmarks") {
+        herisson_bookmark_actions();
+    } else if (param('page') == "herisson_friends") {
+        herisson_friend_actions();
+    } else if (param('page') == 'herisson_maintenance') {
+        herisson_maintenance_actions();
+    } else if (param('page') == 'herisson_backup') {
+        herisson_backup_actions();
+    } else if (param('page') == 'front') {
+        herisson_front_actions();
+    }
+    exit;
 }
 
 
 /**
  * Hook to display the [herisson] content
-	*/
+ */
 /*
 require_once HERISSON_BASE_DIR."/front/front.php";
 function herisson_front_test($content) {
- if (preg_match("#(.*)\[herisson\](.*)#mis",$content,$match)) {
-  ob_start();
-	 echo $match[1];
-		herisson_front_list();
-	 echo $match[2];
-  $text = ob_get_contents();
-  ob_end_clean();
-		return $text;
-	} else {
-	 return $content;
-	}
+    if (preg_match("#(.*)\[herisson\](.*)#mis",$content,$match)) {
+        ob_start();
+        echo $match[1];
+        herisson_front_list();
+        echo $match[2];
+        $text = ob_get_contents();
+         ob_end_clean();
+        return $text;
+    } else {
+        return $content;
+    }
 }
 add_action('the_content','herisson_front_test');
 */
-	
+    
 ?>

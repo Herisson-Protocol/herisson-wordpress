@@ -1,5 +1,5 @@
 <?php
-
+/*
 function herisson_generate_keys_pair() {
 
  // Create the keypair
@@ -17,7 +17,7 @@ function herisson_generate_keys_pair() {
 
  return array($pubkey,$privkey);
 }
-
+*/
 
 function herisson_encrypt($data,$friend_public_key) {
  $options = get_option('HerissonOptions');
@@ -28,7 +28,7 @@ function herisson_encrypt($data,$friend_public_key) {
 # $sealed = null;
 
 # $data = "Only I know the purple fox. Trala la !";
- $hash = herisson_hash($data);
+ $hash = HerissonEncryption::i()->hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_private_key)) {
 	 HerissonNetwork::reply(417);
 	 echo __('Error while encrypting hash with my private key',HERISSON_TD);
@@ -86,7 +86,7 @@ function herisson_decrypt($json_string,$friend_public_key) {
  $hash_crypted = base64_decode($json_data['hash']);
 	$seal         = base64_decode($json_data['seal']);
 
-# $hash = herisson_hash($data);
+# $hash = HerissonEncryption::i()->hash($data);
 	if (!openssl_open($data_crypted,$data,$seal,$my_private_key)) {
 	 HerissonNetwork::reply(417);
 	 echo __('Error while decrypt with my private key<br>',HERISSON_TD);
@@ -100,23 +100,24 @@ function herisson_decrypt($json_string,$friend_public_key) {
 	}
 # echo "$hash_crypted -> $hash<br>\n";
 
- if (herisson_hash($data) != $hash) {
+ if (HerissonEncryption::i()->hash($data) != $hash) {
 	 HerissonNetwork::reply(417);
   echo __('Error : mismatch between hash and data, maybe the publickey stored for this site is not correct, or maybe it is a man in the middle attack !<br>');
 	}
 	return $data;
 }
-
+/*
 function herisson_hash($data) {
  return sha256($data);
 }
+*/
 
 function herisson_encrypt_short($data) {
  $options = get_option('HerissonOptions');
 	$my_public_key  = $options['publicKey'];
 	$my_private_key = $options['privateKey'];
 
- $hash = herisson_hash($data);
+ $hash = HerissonEncryption::i()->hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_private_key)) {
 	 echo __('Error while encrypting hash with my private key',HERISSON_TD);
 	}
@@ -134,7 +135,7 @@ function herisson_decrypt_short($data,$friend_public_key) {
 
 
 function herisson_check_short($data,$signature,$friend_public_key) {
- if (herisson_decrypt_short($signature,$friend_public_key) == herisson_hash($data)) {
+ if (herisson_decrypt_short($signature,$friend_public_key) == HerissonEncryption::i()->hash($data)) {
 	 return true;
 	}
 	return false;
@@ -158,7 +159,7 @@ function herisson_encrypt_backup() {
 	$my_public_key  = $options['publicKey'];
 	$my_private_key = $options['privateKey'];
 
- $hash = herisson_hash($data);
+ $hash = HerissonEncryption::i()->hash($data);
 	if (!openssl_private_encrypt($hash,$hash_crypted,$my_public_key)) {
 	 echo __('Error while encrypting bkacup hash with my public key',HERISSON_TD);
 	}
@@ -174,5 +175,112 @@ function herisson_encrypt_backup() {
 				'seal' => base64_encode($seal_key[0]),
 			);
 }
+
+
+
+class HerissonEncryption {
+
+    /**
+     * singleton
+     * @var HerissonEncryption
+     */
+	public static $i;
+
+    /**
+     * Public key
+     */
+	public static $public;
+
+    /**
+     * Private key
+     */
+	public static $private;
+
+    /**
+     * Creating singleton
+     * @return HerissonEncryption instance
+     */
+    public static function i()
+    {
+        if(is_null(self::$i)) {
+            self::$i = new HerissonEncryption();
+        }
+        return self::$i;
+    }
+
+    /**
+     * Constructor
+     * @return void
+     */
+    public function __construct()
+    {
+		$this->loadKeys();
+    }
+
+	/**
+	 * Load keys from wordpress options
+	 *
+	 * @return void
+	 */
+	public function loadKeys()
+	{
+		$options		= get_option('HerissonOptions');
+		$this->public	= $options['publicKey'];
+		$this->private	= $options['privateKey'];
+	}
+
+	/**
+	 * Generate a public/private keys pair, and set them in $public and $private attributes
+	 *
+	 * @return void
+	 */
+	public function generateKeyPairs()
+	{
+		// Create the keypair
+		$res = openssl_pkey_new();
+
+		// Get private key
+		openssl_pkey_export($res, $this->private);
+
+		// Get public key
+		$pubkey = openssl_pkey_get_details($res);
+		$this->public = $pubkey["key"];
+	}
+
+	/**
+	 * Hash a variable in sha256
+	 *
+	 * @return hashed data in sha256
+	 */
+	public function hash($data)
+	{
+		return hash("sha256",$data);
+	}
+
+	/**
+	 * Encrypt data with the private key, and convert it into base64
+	 *
+	 * @param $data string to be encrypted
+	 * @return base64 encrypted data
+	 */
+	function encryptShort($data)
+	{
+		$hash = HerissonEncryption::i()->hash($data);
+		if (!openssl_private_encrypt($hash,$hash_crypted,$this->private)) {
+			echo __('Error while encrypting hash with my private key',HERISSON_TD);
+		}
+		return base64_encode($hash_crypted);
+	}
+
+
+
+}
+
+
+class HerissonEncryptionException {
+
+
+}
+
 
 
