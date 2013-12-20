@@ -60,7 +60,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 			$params['key'] = $my_public_key;
 			$content = $network->download($this->url."/retrieve",$params);
 			if (!is_wp_error($content)) {
-				$json_data = herisson_decrypt($content['data'],$this->public_key);
+				$json_data = HerissonEncrypt::i()->decryptShort($content['data'],$this->public_key);
 				$bookmarks = json_decode($json_data,1);
 				return $bookmarks;
 			} else { 
@@ -90,7 +90,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 			$data_bookmarks[] = $bookmark->toArray();
 		}
 		$json_data = json_encode($data_bookmarks);
-		$json_display = herisson_encrypt($json_data,$this->public_key);
+		$json_display = HerissonEncrypt::i()->encrypt($json_data,$this->public_key);
 		return json_encode($json_display);
 	}
 
@@ -98,7 +98,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		$options = get_option('HerissonOptions');
 		$url = $this->url."/ask";
 		$mysite = get_option('siteurl')."/".$options['basePath'];
-		$signature = herisson_encrypt_short($mysite);
+		$signature = HerissonEncrypt::i()->encryptShort($mysite);
 		$data = array(
 			'url'=> $mysite,
 			'signature' => $signature
@@ -132,7 +132,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 		$options = get_option('HerissonOptions');
 		$url = $this->url."/validate";
 		$mysite = get_option('siteurl')."/".$options['basePath'];
-		$signature = herisson_encrypt_short($mysite);
+		$signature = HerissonEncrypt::i()->encryptShort($mysite);
 		$data = array(
 			'url'=> $mysite,
 			'signature' => $signature
