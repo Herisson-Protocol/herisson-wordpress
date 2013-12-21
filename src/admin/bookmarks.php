@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set("display_errors",1);
 /**
  * The admin interface for managing and editing bookmarks.
  * @package herisson
@@ -7,29 +10,39 @@
 function herisson_bookmark_actions() {
     $action = param('action');
     switch ($action) {
-       case 'add': herisson_bookmark_add();
-            break;
-    case 'edit': herisson_bookmark_edit();
+    case 'add':
+        herisson_bookmark_add();
         break;
-    case 'view': herisson_bookmark_view();
+    case 'edit':
+        herisson_bookmark_edit();
         break;
-    case 'submitedit': herisson_bookmark_submitedit();
+    case 'view':
+        herisson_bookmark_view();
         break;
-    case 'list': herisson_bookmark_list();
+    case 'submitedit':
+        herisson_bookmark_submitedit();
         break;
-    case 'delete': herisson_bookmark_delete();
+    case 'list':
+        herisson_bookmark_list();
         break;
-    case 'download': herisson_bookmark_download();
+    case 'delete':
+        herisson_bookmark_delete();
         break;
-    case 'tagcloud': herisson_bookmark_tagcloud();
+    case 'download':
+        herisson_bookmark_download();
         break;
-      default: herisson_bookmark_list();
+    case 'tagcloud':
+        herisson_bookmark_tagcloud();
+        break;
+    default:
+        herisson_bookmark_list();
     }
 }
 
 
 function herisson_bookmark_list() {
- 
+
+    echo "ok";
     if (get('tag')) {
         $bookmarks = herisson_bookmark_get_tag(get('tag'));
     } else {

@@ -32,7 +32,7 @@ function param($var) { $p = post($var); return $p ? $p : get($var); }
  */
 function escape($str) {
 # if (! is_array($str) && !get_magic_quotes_gpc()) { return addslashes($str); }
- return esc_sql($str);
+ return $str; #esc_sql($str);
 }
 
 #function remove_menus () {
@@ -142,7 +142,7 @@ function format_size($size) {
 	*/
 function pagination_get_vars() {
  $options = get_option('HerissonOptions');
-	print_r($options);
+	#print_r($options);
  return array(
 	 'offset' => param('offset'),
 	 'limit' => $options['bookmarksPerPage'],

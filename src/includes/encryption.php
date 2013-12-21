@@ -108,7 +108,7 @@ function herisson_decrypt($json_string,$friend_public_key) {
 }
 
 function herisson_hash($data) {
- return sha256($data);
+ return hash("sha256",$data);
 }
 
 function herisson_encrypt_short($data) {
