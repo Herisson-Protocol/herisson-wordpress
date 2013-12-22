@@ -39,5 +39,5 @@
     </div>
 
 <?
-	include("front-friends.php");
+	include("friends.php");
 	include("footer.php");

@@ -202,9 +202,17 @@ function herisson_router() {
  $options = get_option('HerissonOptions');
  $path =explode("/",$_SERVER['REQUEST_URI']);
 	if (sizeof($path) && $path[1] == $options['basePath']) { # && array_key_exists(2,$path) && $path[2]) {
+  require HERISSON_BASE_DIR."/Herisson/Controller.php";
+  require HERISSON_BASE_DIR."/Herisson/Controller/Front.php";
+
+  $c = new HerissonControllerFront();
+  $c->route();
+  exit;
+  /*
   require_once HERISSON_BASE_DIR."/front/front.php";
 	 herisson_front_actions();
 		die();
+  */
 	}
 }
 
