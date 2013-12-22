@@ -26,15 +26,15 @@ function herisson_friend_actions() {
 }
 
 
+/*
 function herisson_friend_list() {
     require __DIR__."/views/friends-list.php";
 }
 
-
 function herisson_friend_list_custom($title,$friends) {
     require __DIR__."/views/friends-list-custom.php";
 }
-
+*/
 
 function herisson_friend_add() {
     herisson_friend_edit(0);

@@ -40,7 +40,7 @@ function escape($str) {
 #	$restricted = array(__('Dashboard'), __('Posts'), __('Media'), __('Links'), __('Pages'), __('Appearance'), __('Tools'), __('Users'), __('Settings'), __('Comments'), __('Plugins'), __('Herisson'));
 #	end ($menu);
 #	while (prev($menu)){
-#		$value = explode(' ',$menu[key($menu)][0]);
+#		$value = explode(' ', $menu[key($menu)][0]);
 #		if(in_array($value[0] != NULL?$value[0]:"" , $restricted)){unset($menu[key($menu)]);}
 #	}
 #}
@@ -57,7 +57,7 @@ $ERRORS = array();
 function errors_add($e) {
  global $ERRORS;
 	echo "<span class=\"herisson-errors\">$e</span><br>";
- array_push($ERRORS,$e);
+ array_push($ERRORS, $e);
 }
 
 /**
@@ -86,7 +86,7 @@ $SUCCESS = array();
  */
 function success_add($e) {
  global $SUCCESS;
- array_push($SUCCESS,$e);
+ array_push($SUCCESS, $e);
 }
 
 /**
@@ -119,14 +119,14 @@ function herisson_messages() {
 }
 
 
-function errors_dispatch($content,$errors) {
+function errors_dispatch($content, $errors) {
  $error_code = $content->get_error_data("herisson");
  foreach ($errors as $code=>$message) {
   if ($error_code == $code) {
    errors_add($message);
   }
  }
- errors_add(__($content->get_error_message("herisson"),HERISSON_TD));
+ errors_add(__($content->get_error_message("herisson"), HERISSON_TD));
 
 }
 
@@ -134,6 +134,13 @@ function format_size($size) {
  $units = array(' B', ' KB', ' MB', ' GB', ' TB', 'PB');
  for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024;
  return round($size, 2).$units[$i];
+}
+
+function include_partial($view, $data) {
+    foreach ($data as $var=>$value) {
+        $$var = $value;
+    }
+    require $view;
 }
 
 

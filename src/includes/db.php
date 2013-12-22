@@ -85,7 +85,7 @@ function herisson_friend_get($id) {
  }
  return new WpHerissonFriends();
 }
-
+/*
 function herisson_friend_list_active() {
  $friends = Doctrine_Query::create()->from('WpHerissonFriends')
  ->where('is_active=1')->execute();
@@ -109,7 +109,7 @@ function herisson_friend_list_error() {
  ->where('b_wantsyou!=1 and b_youwant!=1 and is_active!=1')->execute();
  herisson_friend_list_custom( __("Others", HERISSON_TD),$friends);
 }
-
+*/
 
 /** Screenshots **/
 function herisson_screenshots_all() {

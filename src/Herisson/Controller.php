@@ -9,6 +9,7 @@ class HerissonController {
     public $name;
     public $view;
     public $options;
+    public $app;
 
     function __construct() {
         $this->view = new HerissonView;
@@ -21,8 +22,8 @@ class HerissonController {
         }
     }
 
-    private function getActionName($name) {
-        return $name."Action";
+    private function getActionName($actionName) {
+        return $actionName."Action";
     }
 
     function route() {
@@ -46,7 +47,8 @@ class HerissonController {
         foreach (get_object_vars($this->view) as $attr=>$value) {
             $$attr = $value;
         }
-        $viewfile = HERISSON_BASE_DIR."/views/".$this->name."/".$this->action.".php";
+        $viewfile = HERISSON_BASE_DIR."/views/".$this->app."/".$this->name."/".$this->action.".php";
+#        echo $viewfile;
         if (file_exists($viewfile)) {
             require $viewfile;
         }

@@ -202,10 +202,10 @@ function herisson_router() {
  $options = get_option('HerissonOptions');
  $path =explode("/",$_SERVER['REQUEST_URI']);
 	if (sizeof($path) && $path[1] == $options['basePath']) { # && array_key_exists(2,$path) && $path[2]) {
-  require HERISSON_BASE_DIR."/Herisson/Controller.php";
-  require HERISSON_BASE_DIR."/Herisson/Controller/Front.php";
+#  require HERISSON_BASE_DIR."/Herisson/Controller.php";
+  require HERISSON_BASE_DIR."/Herisson/Controller/Front/Index.php";
 
-  $c = new HerissonControllerFront();
+  $c = new HerissonControllerFrontIndex();
   $c->route();
   exit;
   /*
@@ -227,7 +227,12 @@ if (param('nomenu')) {
  if (param('page') == "herisson_bookmarks") {
   herisson_bookmark_actions();
  } else if (param('page') == "herisson_friends") {
-  herisson_friend_actions();
+#  require HERISSON_BASE_DIR."/Herisson/Controller.php";
+  require HERISSON_BASE_DIR."/Herisson/Controller/Admin/Friend.php";
+  $c = new HerissonControllerAdminFriend();
+  $c->route();
+    
+#  herisson_friend_actions();
 	} else if (param('page') == 'herisson_maintenance') {
   herisson_maintenance_actions();
 	} else if (param('page') == 'herisson_backup') {

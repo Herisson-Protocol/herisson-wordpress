@@ -1,4 +1,4 @@
-<? include("header.php"); ?>
+<? include(__DIR__."/../header.php"); ?>
 
     <div id="page">
         <h1>
@@ -40,4 +40,4 @@
 
 <?
 	include("friends.php");
-	include("footer.php");
+	include(__DIR__."/../footer.php");

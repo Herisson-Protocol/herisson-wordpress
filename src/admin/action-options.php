@@ -3,7 +3,7 @@
  * Updates our options
  * @package herisson
  */
-
+/*
 if ( !empty($_POST['update']) ) {
     require '../../../../wp-config.php';
 
@@ -86,5 +86,5 @@ if ( !empty($_POST['update']) ) {
     wp_redirect($herisson_url->urls['options'] . "&updated=1$append");
     die;
 }
+*/
 
-?>

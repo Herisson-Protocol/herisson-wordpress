@@ -16,4 +16,18 @@ class WpHerissonFriendsTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('WpHerissonFriends');
     }
+
+    public static function getWhere($where)
+    {
+        $pagination = pagination_get_vars();
+        $friends = Doctrine_Query::create()
+            ->from('WpHerissonFriends')
+            ->where($where)
+            ->limit($pagination['limit'])
+            ->offset($pagination['offset'])
+            ->execute();
+        return $friends;
+    }
+
+
 }

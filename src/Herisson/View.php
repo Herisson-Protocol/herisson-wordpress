@@ -3,6 +3,7 @@
 
 class HerissonView {
 
+    public $controller;
 
 }
 
