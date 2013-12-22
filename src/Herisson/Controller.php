@@ -12,14 +12,24 @@ class HerissonController {
     public $app;
 
     function __construct() {
-        $this->view = new HerissonView;
         $this->options = get_option('HerissonOptions');
-        $path =explode("/",$_SERVER['REQUEST_URI']);
-        if (array_key_exists(2,$path) && strlen($path[2])) {
+        $path =explode("/", $_SERVER['REQUEST_URI']);
+        if (array_key_exists(2, $path) && strlen($path[2])) {
             $this->action = $path[2];
         } else {
             $this->action = "index";
         }
+        $this->setView();
+    }
+
+    protected function setView($action=null, $controller=null) {
+        if ($action) {
+            $this->action = $action;
+        }
+        if ($controller) {
+            $this->controller = $controller;
+        }
+        $this->view = new HerissonView($this->app, $this->name, $this->action);
     }
 
     private function getActionName($actionName) {
@@ -39,20 +49,11 @@ class HerissonController {
             $this->indexAction();
         }
 
-        $this->showView();
+        $this->view->display();
 
     }
 
     function showView() {
-        foreach (get_object_vars($this->view) as $attr=>$value) {
-            $$attr = $value;
-        }
-        $viewfile = HERISSON_BASE_DIR."/views/".$this->app."/".$this->name."/".$this->action.".php";
-#        echo $viewfile;
-        if (file_exists($viewfile)) {
-            require $viewfile;
-        }
-        
 
 
     }

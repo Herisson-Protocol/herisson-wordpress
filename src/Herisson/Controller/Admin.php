@@ -8,7 +8,13 @@ class HerissonControllerAdmin extends HerissonController {
         parent::__construct();
         $this->app = "admin";
 
-        $this->action = "index";
+        $action = param('action');
+        if ($action) {
+            $this->action = $action;
+        } else {
+            $this->action = "index";
+        }
+        $this->setView();
 
     }
 
