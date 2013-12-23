@@ -1,5 +1,5 @@
 <div class="wrap">
-    <? echo herisson_messages(); ?>
+    <? include_partial(__DIR__."/../elements/messages.php",array()); ?>
     <h2>
     <? if ($id) { ?>
         <? echo __("Edit Bookmark", HERISSON_TD); ?>
@@ -13,7 +13,6 @@
 <?
  if ( function_exists('wp_nonce_field') ) wp_nonce_field('bookmark-edit');
  if ( function_exists('wp_referer_field') ) wp_referer_field();
- echo herisson_messages();
 ?>
 
         <? if ($id) { ?>

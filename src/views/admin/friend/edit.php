@@ -1,6 +1,6 @@
 
 <div class="wrap">
-    <? echo herisson_messages(); ?>
+    <? include_partial(__DIR__."/../elements/messages.php",array()); ?>
     <h2>
     <? if ($id) { ?>
         <? echo __("Edit Friend", HERISSON_TD); ?>
@@ -48,6 +48,7 @@
                     </td>
                 </tr>
 
+                <? if ($id) { ?>
                 <!-- Sitename -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
@@ -57,6 +58,7 @@
                         <i><? echo $existing->name; ?></i>
                     </td>
                 </tr>
+                <? } ?>
 
                 <!-- URL -->
                 <tr class="form-field">
@@ -65,7 +67,12 @@
                     </th>
                     <td>
                         <input type="text" size="80" class="main" id="url-0" name="url" value="<? echo $existing->url; ?>" />
-                        <br/><small><a href="<? echo $existing->url; ?>" style="text-decoration:none">Visit <? echo $existing->url; ?></a></small>
+                        <? if ($id) { ?>
+                        <br/>
+                        <small>
+                            <a href="<? echo $existing->url; ?>" style="text-decoration:none">Visit <? echo $existing->url; ?></a>
+                        </small>
+                        <? } ?>
                     </td>
                 </tr>
 

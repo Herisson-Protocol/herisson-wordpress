@@ -9,6 +9,7 @@ $success = HerissonMessage::i()->getSuccess();
     <? echo $error; ?><br />
     <? } ?>
 </p>
+<div style="clear: both"></div>
 <? } ?>
 
 

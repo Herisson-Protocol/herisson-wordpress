@@ -31,6 +31,8 @@ class HerissonMessage {
     {
         if(is_null(self::$i)) {
             self::$i = new HerissonMessage();
+            self::$i->errors = array();
+            self::$i->success = array();
         }
         return self::$i;
     }
@@ -40,7 +42,7 @@ class HerissonMessage {
     }
 
     public function addError($e) {
-        array_push($this->errors,$e);
+        array_push($this->errors, $e);
     }
 
     public function hasErrors() {
@@ -52,7 +54,7 @@ class HerissonMessage {
     }
 
     public function addSucces($e) {
-        array_push($this->success,$e);
+        array_push($this->success, $e);
     }
 
     public function hasSuccess() {

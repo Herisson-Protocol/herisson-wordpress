@@ -73,7 +73,7 @@ class HerissonControllerAdminFriend extends HerissonControllerAdmin {
                 if ($new && $friend->is_active) {
                     HerissonMessage::i()->addSucces(__("Friend has been added and automatically validated"));
                 } else {
-                    HerissonMessage::i()->addSucces(__("Friend has been added, but needs to be validated by him"));
+                    HerissonMessage::i()->addSucces(__("Friend has been added, but needs to be validated by its owner"));
                 }
             } else {
                 HerissonMessage::i()->addSucces(__("Friend saved"));
