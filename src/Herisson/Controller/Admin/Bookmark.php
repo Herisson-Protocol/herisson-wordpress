@@ -14,8 +14,6 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
         $this->setView('edit');
         $this->editAction();
     }
- 
-
 
     function deleteAction() {
         $id = intval(param('id'));
@@ -30,7 +28,6 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
     }
 
     function downloadAction() {
-
         $id = intval(param('id'));
         if ($id>0) {
             $bookmark = WpHerissonBookmarksTable::get($id);
@@ -63,6 +60,7 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
 
         if ($id == 0) {
             $this->view->existing = new WpHerissonBookmarks();
+            $this->view->tags = array();
         } else {
             $this->view->existing = WpHerissonBookmarksTable::get($id);
             $this->view->tags = $this->view->existing->getTagsArray();
@@ -79,7 +77,8 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
     }
 
     function tagCloudAction() {
-
+        $this->view->tags = WpHerissonTagsTable::getAll();
+        $this->layout = false;
     }
 
     function viewAction() {

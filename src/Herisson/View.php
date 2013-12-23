@@ -11,23 +11,28 @@ class HerissonView {
 
     function __construct($app, $controller, $action) {
         $this->app = $app;
-        $this->controller = $controller;
-        $this->action = $action;
-        $this->viewFile = HERISSON_BASE_DIR."/views/".$this->app."/".$this->controller."/".$this->action.".php";
+        $this->controller = $controller ? $controller : "index";
+        $this->action = $action ? $action : "index";
         $this->options = get_option('HerissonOptions');
-        
+    }
+
+    function setAction($action) {
+        $this->action = $action;
+    }
+
+    function setController($controller) {
+        $this->controller = $controller;
     }
 
     function display() {
+        $this->viewFile = HERISSON_BASE_DIR."views/".$this->app."/".$this->controller."/".$this->action.".php";
         foreach (get_object_vars($this) as $attr=>$value) {
             $$attr = $value;
         }
         echo "viewFile : $this->viewFile<br>";
         if (file_exists($this->viewFile)) {
-            require $viewFile;
+            require $this->viewFile;
         }
-        
-
     }
 
 }

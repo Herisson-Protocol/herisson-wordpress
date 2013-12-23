@@ -6,8 +6,8 @@ class HerissonControllerFrontIndex extends HerissonControllerFront {
 
 
     function __construct() {
-        parent::__construct();
         $this->name = "index";
+        parent::__construct();
     }
 
     function askAction() {

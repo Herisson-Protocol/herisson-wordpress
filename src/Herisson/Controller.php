@@ -1,6 +1,6 @@
 <?
 
-include ("View.php");
+require_once("View.php");
 
 
 class HerissonController {
@@ -10,6 +10,7 @@ class HerissonController {
     public $view;
     public $options;
     public $app;
+    public $layout;
 
     function __construct() {
         $this->options = get_option('HerissonOptions');
@@ -19,6 +20,7 @@ class HerissonController {
         } else {
             $this->action = "index";
         }
+        $this->layout = true;
         $this->setView();
     }
 
@@ -27,16 +29,21 @@ class HerissonController {
             $this->action = $action;
         }
         if ($controller) {
-            $this->controller = $controller;
+            $this->name = $controller;
         }
-        $this->view = new HerissonView($this->app, $this->name, $this->action);
+        if (!is_a($this->view,"HerissonView")) {
+            $this->view = new HerissonView($this->app, $this->name, $this->action);
+        } else {
+            $this->view->setAction($this->action);
+            $this->view->setController($this->name);
+        }
     }
 
     private function getActionName($actionName) {
         return $actionName."Action";
     }
 
-    function route() {
+    public function route() {
         if ($this->action) {
             $method = $this->getActionName($this->action);
             if (method_exists($this, $method)) {
@@ -44,20 +51,26 @@ class HerissonController {
             } else {
                 $this->indexAction();
             }
-
         } else {
             $this->indexAction();
         }
 
         $this->view->display();
 
+        if (! $this->layout) {
+            exit;
+        }
+
     }
 
-    function showView() {
-
+    public function debug() {
+        foreach (get_object_vars($this) as $attr=>$value) {
+            if (is_string($value)) {
+                print "$attr = $value<br/>";
+            }
+        }
 
     }
-
 
 }
 

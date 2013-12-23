@@ -1,5 +1,12 @@
 <div class="wrap">
-    <h2><? echo __("Edit Bookmark", HERISSON_TD); ?></h2>
+    <? echo herisson_messages(); ?>
+    <h2>
+    <? if ($id) { ?>
+        <? echo __("Edit Bookmark", HERISSON_TD); ?>
+    <? } else { ?>
+        <? echo __("Add Bookmark", HERISSON_TD); ?>
+    <? } ?>
+    </h2>
 
     <form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark">
 
@@ -9,10 +16,12 @@
  echo herisson_messages();
 ?>
 
+        <? if ($id) { ?>
         <h3>
             <? echo __("Bookmark", HERISSON_TD); ?> <? echo $existing->id; ?>&nbsp;:
             <cite> &laquo;&nbsp;<? echo $existing->title ?>&nbsp;&raquo;</cite>
         </h3>
+        <? } ?>
     
         <input type="hidden" name="action" value="edit" />
         <input type="hidden" name="page" value="herisson_bookmark" />
@@ -36,11 +45,26 @@
                         <b><a href="/wp-admin/admin.php?page=herisson_bookmark&action=view&id='.$existing->id.'&nomenu=1" target="_blank"><? echo __('View archive',HERISSON_TD) ?></a></b><br/><br/>
                     <br/>
                     -->
-                    <b><a href="/wp-admin/admin.php?page=herisson_bookmark&action=download&id=<? echo $existing->id ?>"><img src="<? echo HERISSON_PLUGIN_URL; ?>/images/ico-download.png"/><br/><? echo __('Download',HERISSON_TD); ?></a></b><br/><br/>
-                        <b><a href="<? echo $existing->getDirUrl(); ?>" target="_blank"><? echo __('View archive',HERISSON_TD); ?></a></b><br/><br/>
-                    <? if ($existing->id && file_exists($existing->getImage()) && filesize($existing->getImage()))  { ?>
-                        <b><? echo __('Capture',HERISSON_TD); ?></b><br/>
-                     <a href="<? echo $existing->getImageUrl(); ?>"><img alt="Capture" src="<? echo $existing->getThumbUrl(); ?>" style="border:0.5px solid black"/></a>
+                    <? if ($id) { ?>
+                    <b>
+                        <a href="/wp-admin/admin.php?page=herisson_bookmark&action=download&id=<? echo $existing->id ?>">
+                            <img src="<? echo HERISSON_PLUGIN_URL; ?>/images/ico-download.png" /><br/>
+                            <? echo __('Download',HERISSON_TD); ?>
+                        </a>
+                    </b>
+                    <br/><br/>
+                    <b>
+                        <a href="<? echo $existing->getDirUrl(); ?>" target="_blank">
+                        <? echo __('View archive',HERISSON_TD); ?>
+                        </a>
+                    </b>
+                    <br/><br/>
+                        <? if (file_exists($existing->getImage()) && filesize($existing->getImage()))  { ?>
+                            <b><? echo __('Capture',HERISSON_TD); ?></b><br/>
+                            <a href="<? echo $existing->getImageUrl(); ?>">
+                                <img alt="Capture" src="<? echo $existing->getThumbUrl(); ?>" style="border:0.5px solid black" />
+                            </a>
+                        <? } ?>
                      <? } ?>
                     </td>
                 </tr>
@@ -51,7 +75,7 @@
                         <label for="url-0"><? echo __("URL", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <input type="text" size="80" class="main" id="url-0" name="url" value="<? echo $existing->url; ?>" readonly="readonly" />
+                        <input type="text" size="80" class="main" id="url-0" name="url" value="<? echo $existing->url; ?>" <? if ($id) { ?> readonly="readonly"<? } ?> />
                         <br/><small><a href="<? echo $existing->url; ?>" style="text-decoration:none">Visit <? echo $existing->url; ?></a></small>
                     </td>
                 </tr>
@@ -77,7 +101,8 @@
                     </td>
                 </tr>
                 */ ?>
-        
+            
+                <? if ($id) { ?>
                 <!-- Favicon -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
@@ -90,7 +115,9 @@
                         <input type="text" size="80" class="main" id="url-0" name="url" value="<? echo $existing->favicon_url; ?>" readonly="readonly" />
                     </td>
                 </tr>
+                <? } ?>
         
+                <? if ($id) { ?>
                 <!-- Content -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
@@ -100,7 +127,9 @@
                         <? echo ($existing->content ? '<span class="herisson-success"><? echo __("Yes", HERISSON_TD); ?></span>' : '<span class="herisson-errors"><? echo __("No", HERISSON_TD); ?></span>'); ?>
                     </td>
                 </tr>
+                <? } ?>
         
+                <? if ($id) { ?>
                 <!-- Type -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
@@ -110,7 +139,9 @@
                         <? echo $existing->content_type; ?>
                     </td>
                 </tr>
+                <? } ?>
         
+                <? if ($id) { ?>
                 <!-- Archive size -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
@@ -120,6 +151,7 @@
                         <? echo format_size($existing->dirsize); ?>
                     </td>
                 </tr>
+                <? } ?>
         
                 <!-- Visibility -->
                 <tr class="form-field">

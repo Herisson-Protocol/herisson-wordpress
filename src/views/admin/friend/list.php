@@ -13,7 +13,7 @@
     <tr>
         <td>
             <b>
-                <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=edit&id=<?=$friend->id?>">
+                <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friend&action=edit&id=<?=$friend->id?>">
                     <? echo $friend->alias ? $friend->alias : 'Unnamed-'.$friend->id; ?>
                 </a>
             </b>
@@ -28,11 +28,11 @@
             <?=$friend->is_active?> | <?=$friend->b_youwant?> | <?=$friend->b_wantsyou?>
         </td>
         <td>
-            <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=delete&id=<?=$friend->id?>" onclick="if (confirm('<?=__('Are you sure ? ', HERISSON_TD)?>')) { return true; } return false;">
+            <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friend&action=delete&id=<?=$friend->id?>" onclick="if (confirm('<?=__('Are you sure ? ', HERISSON_TD)?>')) { return true; } return false;">
                 <?=__('Delete', HERISSON_TD)?>
             </a>
             <? if ($friend->b_wantsyou) { ?>
-            <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friends&action=approve&id=<?=$friend->id?>" onclick="if (confirm('<?=__('Are you sure ? ', HERISSON_TD)?>')) { return true; } return false;">
+            <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_friend&action=approve&id=<?=$friend->id?>" onclick="if (confirm('<?=__('Are you sure ? ', HERISSON_TD)?>')) { return true; } return false;">
                 <?=__('Approve', HERISSON_TD)?>
             </a>
             <? } ?>

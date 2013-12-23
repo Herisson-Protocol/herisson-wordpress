@@ -16,4 +16,14 @@ class WpHerissonTagsTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('WpHerissonTags');
     }
+
+    public static function getAll() {
+        # select count(*) as c ,name from wp_herisson_tags group by name order by name;
+        return Doctrine_Query::create()
+            ->select('count(*) as c, name')
+            ->from('WpHerissonTags')
+            ->groupby('name')
+            ->orderby('name')
+            ->execute();
+    }
 }

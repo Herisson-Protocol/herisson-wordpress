@@ -9,9 +9,7 @@
     <? } ?>
     </h2>
 
-    <!--<form method="post" action="<? echo get_option('siteurl'); ?>/wp-content/plugins/herisson/admin/action-friend-edit.php">-->
-    <form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_friends">
-            <!-- ?page=herisson_friends&action=submitedit&id=<? echo $id; ?>"> -->
+    <form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_friend">
 
 <?
     if ( function_exists('wp_nonce_field') ) wp_nonce_field('friend-edit');
@@ -26,14 +24,15 @@
 
         <? if ($id) { ?>
         <h3>
-            <? echo __("Friend", HERISSON_TD); ?> <? echo $existing->id; ?>:<cite> &laquo;&nbsp;<? echo $existing->name; ?>&nbsp;&raquo;</cite>
+            <? echo __("Friend", HERISSON_TD); ?> <? echo $existing->id; ?>&nbsp;:
+            <cite> &laquo;&nbsp;<? echo $existing->name; ?>&nbsp;&raquo;</cite>
         </h3>
         <? } ?>
 
         <table class="form-table" cellspacing="2" cellpadding="5">
 
             <input type="hidden" name="action" value="edit" />
-            <input type="hidden" name="page" value="herisson_friends" />
+            <input type="hidden" name="page" value="herisson_friend" />
             <input type="hidden" name="id" value="<? echo $existing->id; ?>" />
 
             <tbody>
