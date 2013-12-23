@@ -1,8 +1,23 @@
 
 <div class="wrap">
-        <h2><? echo __("All bookmarks", HERISSON_TD) ?>
-            <a href="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark&action=add&id=0" class="add-new-h2"><? echo __('Add',HERISSON_TD) ?></a>
-        </h2>
+    
+    <? include_partial(__DIR__."/../elements/messages.php",array()); ?>
+    <span style="float: right">
+        <form method="get" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark">
+            <input type="hidden" name="page" value="herisson_bookmark" />
+            <input type="hidden" name="action" value="search" />
+            <input type="text" name="search" value="" placeholder="<? echo __("Search here", HERISSON_TD);?>" />
+            <input type="submit" value="<? echo __("Search", HERISSON_TD); ?>" />
+        </form>
+    </span>
+    <h2>
+        <? if (isset($subtitle)) { ?>
+            <? echo $subtitle; ?>
+        <? } else { ?>
+            <? echo __("All bookmarks", HERISSON_TD); ?>
+        <? } ?>
+        <a href="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark&action=add&id=0" class="add-new-h2"><? echo __('Add',HERISSON_TD) ?></a>
+    </h2>
 
 <? if (sizeof($bookmarks)) { ?>
     <table class="widefat post " cellspacing="0">
@@ -45,6 +60,13 @@
         </tr>
 <? } ?>
     </table>
+    <? include_partial(__DIR__."/../elements/pagination.php", array(
+        'all' => $countAll,
+        'max' => sizeof($bookmarks),
+        'limit' => $pagination['limit'],
+        'offset' => $pagination['offset'],
+        ));
+        ?>
 
     <? echo __(sizeof($bookmarks)." bookmarks.",HERISSON_TD); ?>
 </div>

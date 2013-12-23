@@ -185,7 +185,7 @@ class HerissonNetwork {
             }
             return $curl;
         } else {
-            errors_add(__('php-curl library is missing.',HERISSON_TD));
+            HerissonMessage::i()->addError(__('php-curl library is missing.',HERISSON_TD));
             throw new Exception(__('php-curl library is missing.',HERISSON_TD));
         }
     }

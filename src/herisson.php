@@ -69,6 +69,8 @@ function herisson_init() {
 
 // Include other functionality
 require_once HERISSON_BASE_DIR . 'doctrine/doctrine.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Pagination.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Message.php';
 require_once HERISSON_INCLUDES_DIR . 'admin.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
 require_once HERISSON_INCLUDES_DIR . 'encryption.php';

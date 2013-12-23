@@ -69,17 +69,32 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
     }
 
     function indexAction() {
-        if (get('tag')) {
-            $this->view->bookmarks = WpHerissonBookmarksTable::getTag(get('tag'));
+        $tag = get('tag');
+        if ($tag) {
+            $this->view->subtitle = __("Results for tag &laquo;&nbsp;".esc_html($tag)."&nbsp;&raquo;");
+            $this->view->countAll = sizeof(WpHerissonBookmarksTable::getTag($tag));
+            $this->view->bookmarks = WpHerissonBookmarksTable::getTag($tag,true);
         } else {
-            $this->view->bookmarks = WpHerissonBookmarksTable::getAll();
+            $this->view->bookmarks = WpHerissonBookmarksTable::getAll(true);
+            $this->view->countAll = sizeof(WpHerissonBookmarksTable::getAll());
         }
+        $this->view->pagination = HerissonPagination::i()->getVars();
     }
 
     function tagCloudAction() {
         $this->view->tags = WpHerissonTagsTable::getAll();
         $this->layout = false;
     }
+
+    function searchAction() {
+        $search = get('search');
+        $this->view->bookmarks = WpHerissonBookmarksTable::getSearch($search,true);
+        $this->view->countAll = sizeof(WpHerissonBookmarksTable::getSearch($search));
+        $this->view->subtitle = __("Search results for &laquo;&nbsp;".esc_html($search)."&nbsp;&raquo;");
+        $this->view->pagination = HerissonPagination::i()->getVars();
+        $this->setView('index');
+    }
+
 
     function viewAction() {
         $id = intval(get('id'));

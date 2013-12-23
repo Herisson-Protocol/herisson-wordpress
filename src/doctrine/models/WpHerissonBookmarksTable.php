@@ -27,7 +27,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         return false;
     }
 
-    public static function createBookmark($url,$options=array()) {
+    public static function createBookmark($url, $options=array()) {
 
         if (self::checkDuplicate($url)) {
            echo "Ignoring duplicate entry : $url<br>";
@@ -35,18 +35,18 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         $bookmark = new WpHerissonBookmarks();
         $bookmark->url = $url;
         if (sizeof($options)) {
-            if (array_key_exists('favicon_url',$options) && $options['favicon_url']) {
+            if (array_key_exists('favicon_url', $options) && $options['favicon_url']) {
                 $bookmark->favicon_url = $options['favicon_url'];
             }
-            if (array_key_exists('favicon_image',$options) && $options['favicon_image']) {
+            if (array_key_exists('favicon_image', $options) && $options['favicon_image']) {
                 $bookmark->favicon_image = $options['favicon_image'];
             }
-            if (array_key_exists('title',$options) && $options['title']) {
+            if (array_key_exists('title', $options) && $options['title']) {
                 $bookmark->title = $options['title'];
             }
         }
         $bookmark->save();
-        if (array_key_exists('tags',$options) && $options['tags']) {
+        if (array_key_exists('tags', $options) && $options['tags']) {
             $bookmark->setTags($options['tags']);
         }
     }
@@ -66,32 +66,61 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         return new WpHerissonBookmarks();
     }
 
-    public static function getAll()
+    public static function countWhere()
     {
-        return self::getWhere("1=1");
+        $bookmarks = Doctrine_Query::create()
+            ->select('COUNT(*)')
+            ->from('WpHerissonBookmarks')
+            ->execute(array(), Doctrine_Core::HYDRATE_NONE);
+        return $bookmarks[0][0];
     }
 
-    public static function getWhere($where)
+    public static function getAll($paginate=false)
     {
-        $pagination = pagination_get_vars();
-        $bookmarks = Doctrine_Query::create()
-            ->from('WpHerissonBookmarks')
-            ->where($where)
-            ->limit($pagination['limit'])
-            ->offset($pagination['offset'])
-            ->execute();
+        return self::getWhere("1=1", $paginate);
+    }
+
+
+    public static function getSearch($search, $paginate=false)
+    {
+        $q = Doctrine_Query::create()
+         ->from('WpHerissonBookmarks b')
+         ->leftJoin('b.WpHerissonTags t')
+         ->where("t.name LIKE ? OR b.title LIKE ? OR b.url LIKE ?", array("%".$search."%", "%".$search."%", "%".$search."%"));
+        if ($paginate) {
+            $pagination = HerissonPagination::i()->getVars();
+            $q->limit($pagination['limit'])->offset($pagination['offset']);
+        }
+        $bookmarks = $q->execute();
         return $bookmarks;
     }
 
-    public static function getTag($tag)
+    public static function getTag($tag, $paginate=false)
     {
-         $bookmarks = Doctrine_Query::create()
-          ->from('WpHerissonBookmarks b')
-          ->leftJoin('b.WpHerissonTags t')
-          ->where("name= ?",$tag)
-          ->execute();
-         return $bookmarks;
+        $q = Doctrine_Query::create()
+         ->from('WpHerissonBookmarks b')
+         ->leftJoin('b.WpHerissonTags t')
+         ->where("name= ?", $tag);
+        if ($paginate) {
+            $pagination = HerissonPagination::i()->getVars();
+            $q->limit($pagination['limit'])->offset($pagination['offset']);
+        }
+        $bookmarks = $q->execute();
+        return $bookmarks;
     }
 
+
+    public static function getWhere($where, $paginate=false)
+    {
+        $q = Doctrine_Query::create()
+            ->from('WpHerissonBookmarks')
+            ->where($where);
+        if ($paginate) {
+            $pagination = HerissonPagination::i()->getVars();
+            $q->limit($pagination['limit'])->offset($pagination['offset']);
+        }
+        $bookmarks = $q->execute();
+        return $bookmarks;
+    }
 
 }

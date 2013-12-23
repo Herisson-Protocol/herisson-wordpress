@@ -34,7 +34,7 @@ class WpHerissonFriendsTable extends Doctrine_Table
 
     public static function getWhere($where)
     {
-        $pagination = pagination_get_vars();
+        $pagination = HerissonPagination::i()->getVars();
         $friends = Doctrine_Query::create()
             ->from('WpHerissonFriends')
             ->where($where)

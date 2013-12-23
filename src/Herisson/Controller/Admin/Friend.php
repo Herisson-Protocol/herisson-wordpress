@@ -20,9 +20,9 @@ class HerissonControllerAdminFriend extends HerissonControllerAdmin {
         if ($id>0) {
             $friend = WpHerissonFriendsTable::get($id);
             if ($friend->validateFriend()) {
-                success_add(__("Friend has been notified of your approvement"));
+                HerissonMessage::i()->addSucces(__("Friend has been notified of your approvement"));
             } else {
-                errors_add(__("Something went wrong while adding friendFriend has been notified of your approvement"));
+                HerissonMessage::i()->addError(__("Something went wrong while adding friendFriend has been notified of your approvement"));
             }
         }
         # Redirect to Friends list
@@ -71,12 +71,12 @@ class HerissonControllerAdminFriend extends HerissonControllerAdmin {
             $friend->save();
             if ($new) { 
                 if ($new && $friend->is_active) {
-                    success_add(__("Friend has been added and automatically validated"));
+                    HerissonMessage::i()->addSucces(__("Friend has been added and automatically validated"));
                 } else {
-                    success_add(__("Friend has been added, but needs to be validated by him"));
+                    HerissonMessage::i()->addSucces(__("Friend has been added, but needs to be validated by him"));
                 }
             } else {
-                success_add(__("Friend saved"));
+                HerissonMessage::i()->addSucces(__("Friend saved"));
             }
         }
 
