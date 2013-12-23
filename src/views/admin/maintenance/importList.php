@@ -5,7 +5,7 @@
     </h2>
 
     <form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
-        <input type="hidden" name="action" value="import_submit" />
+        <input type="hidden" name="action" value="importValidate" />
         <table class="widefat post">
             <tr>
                 <th style="width: 50px"><?=__('Add', HERISSON_TD)?></th>
@@ -21,7 +21,7 @@
             $i++;
      
             if ($bookmark['url']) { 
-                if (herisson_bookmark_check_duplicate($bookmark['url'])) { 
+                if (WpHerissonBookmarksTable::checkDuplicate($bookmark['url'])) { 
                     $status = array(
                         "code" => __("Duplicate", HERISSON_TD),
                         "message" => __('This bookmark already exist'),
@@ -93,7 +93,7 @@
                 </td>
             </tr>
     
-    <? 
+            <? 
             flush();
         }
         ?>

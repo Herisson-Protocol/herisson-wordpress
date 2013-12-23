@@ -1,6 +1,6 @@
 <?
 
-require __DIR__."/../Controller.php";
+require_once __DIR__."/../Controller.php";
 
 class HerissonControllerAdmin extends HerissonController {
 

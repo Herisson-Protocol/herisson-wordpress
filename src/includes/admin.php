@@ -8,13 +8,13 @@
  * Adds our stylesheets and JS to admin pages.
  */
 
-require_once HERISSON_ADMIN_DIR . 'bookmarks.php';
-require_once HERISSON_ADMIN_DIR . 'friends.php';
-require_once HERISSON_ADMIN_DIR . 'maintenance.php';
-require_once HERISSON_ADMIN_DIR . 'backup.php';
-require_once HERISSON_ADMIN_DIR . 'options.php';
-
+require_once HERISSON_BASE_DIR."/Herisson/Router.php";
+require_once HERISSON_BASE_DIR."/Herisson/Controller/Admin/Bookmark.php";
 require_once HERISSON_BASE_DIR."/Herisson/Controller/Admin/Friend.php";
+require_once HERISSON_BASE_DIR."/Herisson/Controller/Admin/Maintenance.php";
+require_once HERISSON_BASE_DIR."/Herisson/Controller/Admin/Backup.php";
+require_once HERISSON_BASE_DIR."/Herisson/Controller/Admin/Option.php";
+
 /**
  * Manages the various admin pages Herisson uses.
  */
@@ -27,14 +27,14 @@ function herisson_add_pages() {
  $friends_waiting = sprintf($update, $nb, $nb);
 	$icon_url = plugin_dir_url("herisson")."/herisson/images/herisson_logo_mini_16x16.png";
 
- $c = new HerissonControllerAdminFriend();
+ $r = new HerissonRouter();
 
-	add_menu_page(__('Herisson', HERISSON_TD), __('Herisson', HERISSON_TD), 'manage_options', 'herisson_menu', 'herisson_bookmark_actions', $icon_url);
-	add_submenu_page('herisson_menu', __('Bookmarks', HERISSON_TD), __('Bookmarks', HERISSON_TD), 'manage_options', 'herisson_bookmarks', 'herisson_bookmark_actions');
-	add_submenu_page('herisson_menu', __('Friends', HERISSON_TD), __('Friends', HERISSON_TD).$friends_waiting, 'manage_options', 'herisson_friends', array(&$c,'route'));
-	add_submenu_page('herisson_menu', __('Import/Maintenance', HERISSON_TD), __('Import/Maintenance', HERISSON_TD), 'manage_options', 'herisson_maintenance', 'herisson_maintenance_actions');
-	add_submenu_page('herisson_menu', __('Backups', HERISSON_TD), __('Backups', HERISSON_TD), 'manage_options', 'herisson_backup', 'herisson_backup_actions');
-	add_submenu_page('herisson_menu', __('Options', HERISSON_TD), __('Options', HERISSON_TD), 'manage_options', 'herisson_options', 'herisson_options_manage');
+	add_menu_page(__('Bookmarks', HERISSON_TD), __('Bookmarks', HERISSON_TD), 'manage_options', 'herisson_menu', array(&$r, 'route'), $icon_url);
+	#add_submenu_page('herisson_menu', __('Bookmarks', HERISSON_TD), __('Bookmarks', HERISSON_TD), 'manage_options', 'herisson_bookmark', array(&$r, 'route'));
+	add_submenu_page('herisson_menu', __('Friends', HERISSON_TD), __('Friends', HERISSON_TD).$friends_waiting, 'manage_options', 'herisson_friend', array(&$r, 'route'));
+	add_submenu_page('herisson_menu', __('Import/Maintenance', HERISSON_TD), __('Import/Maintenance', HERISSON_TD), 'manage_options', 'herisson_maintenance', array(&$r, 'route'));
+	add_submenu_page('herisson_menu', __('Backups', HERISSON_TD), __('Backups', HERISSON_TD), 'manage_options', 'herisson_backup', array(&$r, 'route'));
+	add_submenu_page('herisson_menu', __('Options', HERISSON_TD), __('Options', HERISSON_TD), 'manage_options', 'herisson_option', array(&$r, 'route'));
 		
  wp_register_style('herissonStylesheet', plugins_url().'/herisson/css/stylesheet.css' );
  wp_enqueue_style('herissonStylesheet' );

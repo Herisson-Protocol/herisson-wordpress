@@ -1,7 +1,7 @@
 <div class="wrap">
     <h2><? echo __("Edit Bookmark", HERISSON_TD); ?></h2>
 
-    <form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmarks">
+    <form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark">
 
 <?
  if ( function_exists('wp_nonce_field') ) wp_nonce_field('bookmark-edit');
@@ -14,8 +14,8 @@
             <cite> &laquo;&nbsp;<? echo $existing->title ?>&nbsp;&raquo;</cite>
         </h3>
     
-        <input type="hidden" name="action" value="submitedit" />
-        <input type="hidden" name="page" value="herisson_bookmarks" />
+        <input type="hidden" name="action" value="edit" />
+        <input type="hidden" name="page" value="herisson_bookmark" />
         <input type="hidden" name="id" value="<? echo $existing->id; ?>" />
     
         <table class="form-table" cellspacing="2" cellpadding="5">
@@ -33,10 +33,10 @@
                     <td rowspan="5" style="text-align: center; vertical-align: top">
                     <!--
                     <br/>
-                        <b><a href="/wp-admin/admin.php?page=herisson_bookmarks&action=view&id='.$existing->id.'&nomenu=1" target="_blank"><? echo __('View archive',HERISSON_TD) ?></a></b><br/><br/>
+                        <b><a href="/wp-admin/admin.php?page=herisson_bookmark&action=view&id='.$existing->id.'&nomenu=1" target="_blank"><? echo __('View archive',HERISSON_TD) ?></a></b><br/><br/>
                     <br/>
                     -->
-                    <b><a href="/wp-admin/admin.php?page=herisson_bookmarks&action=download&id=<? echo $existing->id ?>"><img src="<? echo HERISSON_PLUGIN_URL; ?>/images/ico-download.png"/><br/><? echo __('Download',HERISSON_TD); ?></a></b><br/><br/>
+                    <b><a href="/wp-admin/admin.php?page=herisson_bookmark&action=download&id=<? echo $existing->id ?>"><img src="<? echo HERISSON_PLUGIN_URL; ?>/images/ico-download.png"/><br/><? echo __('Download',HERISSON_TD); ?></a></b><br/><br/>
                         <b><a href="<? echo $existing->getDirUrl(); ?>" target="_blank"><? echo __('View archive',HERISSON_TD); ?></a></b><br/><br/>
                     <? if ($existing->id && file_exists($existing->getImage()) && filesize($existing->getImage()))  { ?>
                         <b><? echo __('Capture',HERISSON_TD); ?></b><br/>

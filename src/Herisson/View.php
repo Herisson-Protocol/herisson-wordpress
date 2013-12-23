@@ -7,12 +7,14 @@ class HerissonView {
     public $controller;
     public $action;
     public $viewFile;
+    public $options;
 
     function __construct($app, $controller, $action) {
         $this->app = $app;
         $this->controller = $controller;
         $this->action = $action;
         $this->viewFile = HERISSON_BASE_DIR."/views/".$this->app."/".$this->controller."/".$this->action.".php";
+        $this->options = get_option('HerissonOptions');
         
     }
 

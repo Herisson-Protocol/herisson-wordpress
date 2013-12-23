@@ -33,7 +33,7 @@
         </form>
 
         <form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_maintenance">
-         <input type="hidden" name="action" value="import_delicious" />
+         <input type="hidden" name="action" value="importDelicious" />
             <tr valign="top">
                 <th scope="row">
                     <? echo __('Import Delicious bookmarks', HERISSON_TD); ?>:
@@ -102,7 +102,7 @@
                     
                 </td>
                 <td>
-                    <input type="submit" value="<? echo __("Start maintenance checks", HERISSON_TD); ?>" />
+                    <input type="submit" name="submit" value="<? echo __("Start maintenance checks", HERISSON_TD); ?>" />
                 </td>
             </tr>
         </form>

@@ -75,7 +75,7 @@ require_once HERISSON_INCLUDES_DIR . 'encryption.php';
 require_once HERISSON_INCLUDES_DIR . 'network.php';
 require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
 require_once HERISSON_INCLUDES_DIR . 'maintenance.php';
-require_once HERISSON_INCLUDES_DIR . 'db.php';
+#require_once HERISSON_INCLUDES_DIR . 'db.php';
 
 /**
  * Checks if the install needs to be run by checking the `HerissonVersions` option, which stores the current installed database, options and rewrite versions.
@@ -224,6 +224,9 @@ add_action( 'send_headers', 'herisson_router');
 #add_action('admin_menu', 'remove_menus');
 
 if (param('nomenu')) {
+    $c = new HerissonRouter();
+    $c->routeRaw();
+    /*
  if (param('page') == "herisson_bookmarks") {
   herisson_bookmark_actions();
  } else if (param('page') == "herisson_friends") {
@@ -241,6 +244,7 @@ if (param('nomenu')) {
   herisson_front_actions();
 	}
 	exit;
+ */
 }
 
 

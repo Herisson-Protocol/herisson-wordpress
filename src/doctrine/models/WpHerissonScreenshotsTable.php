@@ -16,4 +16,27 @@ class WpHerissonScreenshotsTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('WpHerissonScreenshots');
     }
+ 
+    public static function getAll() {
+        $screenshots = Doctrine_Query::create()
+            ->from('WpHerissonScreenshots')
+            ->orderby("id")
+            ->execute();
+        return $screenshots;
+    }
+
+    public static function get($id) {
+        if (!is_numeric($id)) {
+            return new WpHerissonScreenshots();
+        }
+        $screenshots = Doctrine_Query::create()
+            ->from('WpHerissonScreenshots')
+            ->where("id=$id")
+            ->execute();
+        foreach ($screenshots as $screenshot) {
+            return $screenshot;
+        }
+        return new WpHerissonScreenshots();
+    }
+
 }

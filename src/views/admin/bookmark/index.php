@@ -1,7 +1,7 @@
 
 <div class="wrap">
         <h2><? echo __("All bookmarks", HERISSON_TD) ?>
-            <a href="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmarks&action=add&id=0" class="add-new-h2"><? echo __('Add',HERISSON_TD) ?></a>
+            <a href="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark&action=add&id=0" class="add-new-h2"><? echo __('Add',HERISSON_TD) ?></a>
         </h2>
 
 <? if (sizeof($bookmarks)) { ?>
@@ -22,7 +22,7 @@
             </td>
             <td>
                 <b>
-                    <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=<?=$bookmark->id?>">
+                    <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmark&action=edit&id=<?=$bookmark->id?>">
                     <? echo $bookmark->title ? $bookmark->title : "Unamed-".$bookmark->$id; ?>
                     </a>
                 </b>
@@ -34,11 +34,11 @@
             </td>
             <td>
                 <? foreach ($bookmark->getTagsArray() as $tag) { ?>
-                    <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&tag=<?=$tag?>"><?=$tag?></a>, &nbsp; 
+                    <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmark&tag=<?=$tag?>"><?=$tag?></a>, &nbsp; 
                 <? } ?>
             </td>
             <td>
-                <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmarks&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSON_TD)?>')) { return true; } return false;">
+                <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmark&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSON_TD)?>')) { return true; } return false;">
                     <?=__('Delete',HERISSON_TD)?>
                 </a>
             </td>

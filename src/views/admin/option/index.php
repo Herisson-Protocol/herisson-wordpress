@@ -3,7 +3,7 @@
 
 		<h2><? echo __("Herisson options", HERISSON_TD); ?></h2>
 
-		<form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_options">
+		<form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_option">
 
 		<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
 			<tr valign="top">
@@ -169,7 +169,7 @@
 			</tr>
 		</table>
 
-		<input type="hidden" name="action" value="submitedit" />
+		<input type="hidden" name="action" value="index" />
 
 		<p class="submit">
 			<input type="submit" value="<? echo __("Update Options", HERISSON_TD); ?>" />

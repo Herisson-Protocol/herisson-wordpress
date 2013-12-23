@@ -1,6 +1,6 @@
 <?
 
-require __DIR__."/../Admin.php";
+require_once __DIR__."/../Admin.php";
 
 class HerissonControllerAdminFriend extends HerissonControllerAdmin {
 

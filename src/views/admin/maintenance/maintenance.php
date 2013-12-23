@@ -1,3 +1,18 @@
+<? if (isset($bookmarks_errors) && sizeof($bookmarks_errors)) { ?>
+<div style="width: 1000px; height: 300px; overflow:scroll; ">
+<?
+    foreach ($bookmarks_errors as $b) {
+        $b->maintenance();
+        $b->captureFromUrl();
+        $b->save();
+    }
+    ?>
+</div>
+
+<p class="herisson-success">
+    <?=__("Maintenance has been done, here are the results after the maintenance operation. Some of the errors may not be fixable.", HERISSON_TD)?>
+</p>
+<? } ?>
 
 <h1><?=__("Maintenance", HERISSON_TD)?></h1>
 <h2><?=__("Favicon url", HERISSON_TD)?></h2>
@@ -31,6 +46,7 @@
     </b>
 </p>
 <form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
-    <input type="hidden" name="action" value="maintenance_submit" />
+    <input type="hidden" name="action" value="maintenance" />
+    <input type="hidden" name="maintenance" value="on" />
     <input type="submit" value="Correct theses errors" />
 </form>
