@@ -7,7 +7,7 @@ if ($nb_pages > 1) {
 <? for ($i_page=1; $i_page<=$nb_pages; $i_page++) {
     $_offset = intval(($i_page-1)*$limit);
     $url = get_option('siteurl').$_SERVER['REQUEST_URI'];
-    $url = preg_replace("/&offset=\d*/","",$url);
+    $url = preg_replace("/&offset=\d*/", "", $url);
     #"/wp-admin/admin.php?page=herisson_bookmark";
     #print_r($_SERVER);
     ?>

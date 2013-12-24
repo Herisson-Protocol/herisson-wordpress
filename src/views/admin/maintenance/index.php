@@ -27,7 +27,7 @@
                 <input type="file" name="import_file" />
             </td>
             <td>
-                <input type="submit" value="<? echo __("Import bookmarks", HERISSON_TD); ?>" />
+                <input type="submit" class="button" value="<? echo __("Import bookmarks", HERISSON_TD); ?>" />
             </td>
         </tr>
         </form>
@@ -44,7 +44,7 @@
                     <? echo __("Theses informations are not stored by this plugin.", HERISSON_TD); ?>
                 </td>
                 <td>
-              <input type="submit" value="<? echo __("Import bookmarks", HERISSON_TD); ?>" />
+              <input type="submit" class="button" value="<? echo __("Import bookmarks", HERISSON_TD); ?>" />
                 </td>
             </tr>
         </form>
@@ -80,7 +80,7 @@
                     <input type="radio" name="private" value="0" checked="checked" /> No
                 </td>
                 <td>
-                    <input type="submit" value="<? echo __("Export", HERISSON_TD); ?>" />
+                    <input type="submit" class="button" value="<? echo __("Export", HERISSON_TD); ?>" />
                 </td>
             </tr>
         </form>
@@ -102,7 +102,7 @@
                     
                 </td>
                 <td>
-                    <input type="submit" name="submit" value="<? echo __("Start maintenance checks", HERISSON_TD); ?>" />
+                    <input type="submit" class="button" name="submit" value="<? echo __("Start maintenance checks", HERISSON_TD); ?>" />
                 </td>
             </tr>
         </form>

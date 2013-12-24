@@ -193,8 +193,6 @@ function herisson_router() {
 
 add_action( 'send_headers', 'herisson_router');
 
-
-
 #add_filter('show_admin_bar', '__return_false');
 #add_action('admin_menu', 'remove_menus');
 

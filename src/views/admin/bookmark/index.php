@@ -1,13 +1,13 @@
 
 <div class="wrap">
     
-    <? include_partial(__DIR__."/../elements/messages.php",array()); ?>
+    <? include_partial(__DIR__."/../elements/messages.php", array()); ?>
     <span style="float: right">
         <form method="get" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark">
             <input type="hidden" name="page" value="herisson_bookmark" />
             <input type="hidden" name="action" value="search" />
             <input type="text" name="search" value="" placeholder="<? echo __("Search here", HERISSON_TD);?>" />
-            <input type="submit" value="<? echo __("Search", HERISSON_TD); ?>" />
+            <input type="submit" value="<? echo __("Search", HERISSON_TD); ?>" class="button" />
         </form>
     </span>
     <h2>
@@ -16,17 +16,17 @@
         <? } else { ?>
             <? echo __("All bookmarks", HERISSON_TD); ?>
         <? } ?>
-        <a href="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark&action=add&id=0" class="add-new-h2"><? echo __('Add',HERISSON_TD) ?></a>
+        <a href="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark&action=add&id=0" class="add-new-h2"><? echo __('Add', HERISSON_TD) ?></a>
     </h2>
 
 <? if (sizeof($bookmarks)) { ?>
     <table class="widefat post " cellspacing="0">
         <tr>
             <th></th>
-            <th><?=__('Title',HERISSON_TD)?></th>
-            <th><?=__('URL',HERISSON_TD)?></th>
-            <th><?=__('Tags',HERISSON_TD)?></th>
-            <th><?=__('Action',HERISSON_TD)?></th>
+            <th><?=__('Title', HERISSON_TD)?></th>
+            <th><?=__('URL', HERISSON_TD)?></th>
+            <th><?=__('Tags', HERISSON_TD)?></th>
+            <th><?=__('Action', HERISSON_TD)?></th>
         </tr>
 <? foreach ($bookmarks as $bookmark) { ?> 
         <tr>
@@ -44,7 +44,7 @@
             </td>
             <td>
                 <a href="<? echo $bookmark->url; ?>">
-                    <? echo strlen($bookmark->url) > 80 ? substr($bookmark->url,0,80)."&hellip;" : $bookmark->url; ?>
+                    <? echo strlen($bookmark->url) > 80 ? substr($bookmark->url, 0, 80)."&hellip;" : $bookmark->url; ?>
                 </a>
             </td>
             <td>
@@ -53,8 +53,8 @@
                 <? } ?>
             </td>
             <td>
-                <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmark&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ',HERISSON_TD)?>')) { return true; } return false;">
-                    <?=__('Delete',HERISSON_TD)?>
+                <a href="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_bookmark&action=delete&id=<?=$bookmark->id?>" onclick="if (confirm('<?=__('Are you sure ? ', HERISSON_TD)?>')) { return true; } return false;">
+                    <?=__('Delete', HERISSON_TD)?>
                 </a>
             </td>
         </tr>
@@ -68,8 +68,8 @@
         ));
         ?>
 
-    <? echo __(sizeof($bookmarks)." bookmarks.",HERISSON_TD); ?>
+    <? echo __(sizeof($bookmarks)." bookmarks.", HERISSON_TD); ?>
 </div>
 <? } else { ?>
-    <?php echo __("No bookmark",HERISSON_TD); ?>
+    <?php echo __("No bookmark", HERISSON_TD); ?>
 <? } ?>
