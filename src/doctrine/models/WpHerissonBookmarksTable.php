@@ -27,10 +27,11 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         return false;
     }
 
-    public static function createBookmark($url, $options=array()) {
+    public static function createBookmark($url, $options=array())
+    {
 
         if (self::checkDuplicate($url)) {
-           echo "Ignoring duplicate entry : $url<br>";
+            echo "Ignoring duplicate entry : $url<br>";
         }
         $bookmark = new WpHerissonBookmarks();
         $bookmark->url = $url;

@@ -1,9 +1,10 @@
-<?
+<?php
 
-require_once("View.php");
+require_once "View.php";
 
 
-class HerissonController {
+class HerissonController
+{
 
     public $action;
     public $name;
@@ -12,9 +13,10 @@ class HerissonController {
     public $app;
     public $layout;
 
-    function __construct() {
+    function __construct()
+    {
         $this->options = get_option('HerissonOptions');
-        $path =explode("/", $_SERVER['REQUEST_URI']);
+        $path = explode("/", $_SERVER['REQUEST_URI']);
         if (array_key_exists(2, $path) && strlen($path[2])) {
             $this->action = $path[2];
         } else {
@@ -24,14 +26,15 @@ class HerissonController {
         $this->setView();
     }
 
-    protected function setView($action=null, $controller=null) {
+    protected function setView($action=null, $controller=null)
+    {
         if ($action) {
             $this->action = $action;
         }
         if ($controller) {
             $this->name = $controller;
         }
-        if (!is_a($this->view,"HerissonView")) {
+        if (!is_a($this->view, "HerissonView")) {
             $this->view = new HerissonView($this->app, $this->name, $this->action);
         } else {
             $this->view->setAction($this->action);
@@ -39,11 +42,13 @@ class HerissonController {
         }
     }
 
-    private function getActionName($actionName) {
+    protected function getActionName($actionName)
+    {
         return $actionName."Action";
     }
 
-    public function route() {
+    public function route()
+    {
         if ($this->action) {
             $method = $this->getActionName($this->action);
             if (method_exists($this, $method)) {
@@ -63,7 +68,8 @@ class HerissonController {
 
     }
 
-    public function debug() {
+    public function debug()
+    {
         foreach (get_object_vars($this) as $attr=>$value) {
             if (is_string($value)) {
                 print "$attr = $value<br/>";

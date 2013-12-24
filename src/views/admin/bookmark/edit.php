@@ -1,30 +1,30 @@
 <div class="wrap">
-    <? include_partial(__DIR__."/../elements/messages.php",array()); ?>
+    <?php includePartial(__DIR__."/../elements/messages.php", array()); ?>
     <h2>
-    <? if ($id) { ?>
-        <? echo __("Edit Bookmark", HERISSON_TD); ?>
-    <? } else { ?>
-        <? echo __("Add Bookmark", HERISSON_TD); ?>
-    <? } ?>
+    <?php if ($id) { ?>
+        <?php echo __("Edit Bookmark", HERISSON_TD); ?>
+    <?php } else { ?>
+        <?php echo __("Add Bookmark", HERISSON_TD); ?>
+    <?php } ?>
     </h2>
 
-    <form method="post" action="<? echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark">
+    <form method="post" action="<?php echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark">
 
-<?
+<?php
  if ( function_exists('wp_nonce_field') ) wp_nonce_field('bookmark-edit');
  if ( function_exists('wp_referer_field') ) wp_referer_field();
 ?>
 
-        <? if ($id) { ?>
+        <?php if ($id) { ?>
         <h3>
-            <? echo __("Bookmark", HERISSON_TD); ?> <? echo $existing->id; ?>&nbsp;:
-            <cite> &laquo;&nbsp;<? echo $existing->title ?>&nbsp;&raquo;</cite>
+            <?php echo __("Bookmark", HERISSON_TD); ?> <?php echo $existing->id; ?>&nbsp;:
+            <cite> &laquo;&nbsp;<?php echo $existing->title ?>&nbsp;&raquo;</cite>
         </h3>
-        <? } ?>
+        <?php } ?>
     
         <input type="hidden" name="action" value="edit" />
         <input type="hidden" name="page" value="herisson_bookmark" />
-        <input type="hidden" name="id" value="<? echo $existing->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $existing->id; ?>" />
     
         <table class="form-table" cellspacing="2" cellpadding="5">
     
@@ -33,149 +33,150 @@
                 <!-- Title -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="title-0"><? echo __("Title", HERISSON_TD); ?>:</label>
+                        <label for="title-0"><?php echo __("Title", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <input type="text" class="main" id="title-0" name="title" value="<? echo $existing->title ?>" />
+                        <input type="text" class="main" id="title-0" name="title" value="<?php echo $existing->title ?>" />
                     </td>
                     <td rowspan="5" style="text-align: center; vertical-align: top">
                     <!--
                     <br/>
-                        <b><a href="/wp-admin/admin.php?page=herisson_bookmark&action=view&id='.$existing->id.'&nomenu=1" target="_blank"><? echo __('View archive',HERISSON_TD) ?></a></b><br/><br/>
+                        <b><a href="/wp-admin/admin.php?page=herisson_bookmark&action=view&id='.$existing->id.'&nomenu=1" target="_blank"><?php echo __('View archive', HERISSON_TD) ?></a></b><br/><br/>
                     <br/>
                     -->
-                    <? if ($id) { ?>
+                    <?php if ($id) { ?>
                     <b>
-                        <a href="/wp-admin/admin.php?page=herisson_bookmark&action=download&id=<? echo $existing->id ?>">
-                            <img src="<? echo HERISSON_PLUGIN_URL; ?>/images/ico-download.png" /><br/>
-                            <? echo __('Download',HERISSON_TD); ?>
+                        <a href="/wp-admin/admin.php?page=herisson_bookmark&action=download&id=<?php echo $existing->id ?>">
+                            <img src="<?php echo HERISSON_PLUGIN_URL; ?>/images/ico-download.png" /><br/>
+                            <?php echo __('Download', HERISSON_TD); ?>
                         </a>
                     </b>
                     <br/><br/>
                     <b>
-                        <a href="<? echo $existing->getDirUrl(); ?>" target="_blank">
-                        <? echo __('View archive',HERISSON_TD); ?>
+                        <a href="<?php echo $existing->getDirUrl(); ?>" target="_blank">
+                        <?php echo __('View archive', HERISSON_TD); ?>
                         </a>
                     </b>
                     <br/><br/>
-                        <? if (file_exists($existing->getImage()) && filesize($existing->getImage()))  { ?>
-                            <b><? echo __('Capture',HERISSON_TD); ?></b><br/>
-                            <a href="<? echo $existing->getImageUrl(); ?>">
-                                <img alt="Capture" src="<? echo $existing->getThumbUrl(); ?>" style="border:0.5px solid black" />
+                        <?php if (file_exists($existing->getImage()) && filesize($existing->getImage())) { ?>
+                            <b><?php echo __('Capture', HERISSON_TD); ?></b><br/>
+                            <a href="<?php echo $existing->getImageUrl(); ?>">
+                                <img alt="Capture" src="<?php echo $existing->getThumbUrl(); ?>" style="border:0.5px solid black" />
                             </a>
-                        <? } ?>
-                     <? } ?>
+                        <?php } ?>
+                     <?php } ?>
                     </td>
                 </tr>
             
                 <!-- URL -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="url-0"><? echo __("URL", HERISSON_TD); ?>:</label>
+                        <label for="url-0"><?php echo __("URL", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <input type="text" size="80" class="main" id="url-0" name="url" value="<? echo $existing->url; ?>" <? if ($id) { ?> readonly="readonly"<? } ?> />
-                        <br/><small><a href="<? echo $existing->url; ?>" style="text-decoration:none">Visit <? echo $existing->url; ?></a></small>
+                        <input type="text" size="80" class="main" id="url-0" name="url" value="<?php echo $existing->url; ?>" <?php if ($id) { ?> readonly="readonly"<?php } ?> />
+                        <br/><small><a href="<?php echo $existing->url; ?>" style="text-decoration:none">Visit <?php echo $existing->url; ?></a></small>
                     </td>
                 </tr>
             
                 <!-- Description -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                    <label for="description-0"><? echo __("Description", HERISSON_TD); ?>:</label>
+                    <label for="description-0"><?php echo __("Description", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                    <textarea class="main" id="description-0" name="description"><? echo $existing->description; ?></textarea>
+                    <textarea class="main" id="description-0" name="description"><?php echo $existing->description; ?></textarea>
                     </td>
                 </tr>
         
-                <?/*
+                <?php
+                /*
                 <!-- Image URL -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="image-0"><? echo __("Book Image URL", HERISSON_TD); ?>:</label>
+                        <label for="image-0"><?php echo __("Book Image URL", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <input type="text" class="main" id="image-0" name="image" value="<? echo htmlentities($existing->image); ?>" />
+                        <input type="text" class="main" id="image-0" name="image" value="<?php echo htmlentities($existing->image); ?>" />
                     </td>
                 </tr>
                 */ ?>
             
-                <? if ($id) { ?>
+                <?php if ($id) { ?>
                 <!-- Favicon -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="url-0"><? echo __("Favicon", HERISSON_TD); ?>:</label>
+                        <label for="url-0"><?php echo __("Favicon", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                    <? if ($existing->favicon_image) { ?>
-                          <img src="data:image/png;base64,<? echo $existing->favicon_image; ?>"/>
-                    <? } ?>
-                        <input type="text" size="80" class="main" id="url-0" name="url" value="<? echo $existing->favicon_url; ?>" readonly="readonly" />
+                    <?php if ($existing->favicon_image) { ?>
+                          <img src="data:image/png;base64,<?php echo $existing->favicon_image; ?>"/>
+                    <?php } ?>
+                        <input type="text" size="80" class="main" id="url-0" name="url" value="<?php echo $existing->favicon_url; ?>" readonly="readonly" />
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
         
-                <? if ($id) { ?>
+                <?php if ($id) { ?>
                 <!-- Content -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="content-0"><? echo __("Content", HERISSON_TD); ?>:</label>
+                        <label for="content-0"><?php echo __("Content", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <? echo ($existing->content ? '<span class="herisson-success"><? echo __("Yes", HERISSON_TD); ?></span>' : '<span class="herisson-errors"><? echo __("No", HERISSON_TD); ?></span>'); ?>
+                        <?php echo ($existing->content ? '<span class="herisson-success"><?php echo __("Yes", HERISSON_TD); ?></span>' : '<span class="herisson-errors"><?php echo __("No", HERISSON_TD); ?></span>'); ?>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
         
-                <? if ($id) { ?>
+                <?php if ($id) { ?>
                 <!-- Type -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="type-0"><? echo __("Type", HERISSON_TD); ?>:</label>
+                        <label for="type-0"><?php echo __("Type", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <? echo $existing->content_type; ?>
+                        <?php echo $existing->content_type; ?>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
         
-                <? if ($id) { ?>
+                <?php if ($id) { ?>
                 <!-- Archive size -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="size-0"><? echo __("Archive size", HERISSON_TD); ?>:</label>
+                        <label for="size-0"><?php echo __("Archive size", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <? echo format_size($existing->dirsize); ?>
+                        <?php echo formatSize($existing->dirsize); ?>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
         
                 <!-- Visibility -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="visibility-0"><? echo __("Visibility", HERISSON_TD); ?>:</label>
+                        <label for="visibility-0"><?php echo __("Visibility", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
                         <select name="is_public" id="visibility-0">
-                            <option value="0"<? echo (!$existing->is_public ? ' selected="selected"' : ''); ?>><? echo __("Private", HERISSON_TD); ?></option>
-                            <option value="1"<? echo ($existing->is_public ? ' selected="selected"' : ''); ?>><? echo __("Public", HERISSON_TD); ?></option>
+                            <option value="0"<?php echo (!$existing->is_public ? ' selected="selected"' : ''); ?>><?php echo __("Private", HERISSON_TD); ?></option>
+                            <option value="1"<?php echo ($existing->is_public ? ' selected="selected"' : ''); ?>><?php echo __("Public", HERISSON_TD); ?></option>
                         </select>
-                        <br/><small><? echo __("<code>Public Visibility</code> enables a bookmark to appear publicly within the herisson page.", HERISSON_TD); ?></small>
-                        <br/><small><? echo __("<code>Private Visibility</code> restricts the visibility of a book to within the administrative interface.", HERISSON_TD); ?></small>
+                        <br/><small><?php echo __("<code>Public Visibility</code> enables a bookmark to appear publicly within the herisson page.", HERISSON_TD); ?></small>
+                        <br/><small><?php echo __("<code>Private Visibility</code> restricts the visibility of a book to within the administrative interface.", HERISSON_TD); ?></small>
                     </td>
                 </tr>
         
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="visibility-0"><? echo __("Tags", HERISSON_TD); ?>:</label>
+                        <label for="visibility-0"><?php echo __("Tags", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
                         <script src="/wp-content/plugins/herisson/js/herisson.dev.js" type="text/javascript"></script>
                         <script>
                          jQuery(document).ready(function($) {
-                          $('#tagsdiv-post_tag, #categorydiv').children('h3, .handlediv').click(function(){
+                          $('#tagsdiv-post_tag, #categorydiv').children('h3, .handlediv').click(function() {
                            $(this).siblings('.inside').toggle();
                           });
                          });
@@ -185,7 +186,7 @@
             </tbody>
         </table>
         <div id="tagsdiv-post_tag" class="postbox">
-            <div class="handlediv" title="<?php esc_attr_e( 'Click to toggle' ); ?>"><br /></div>
+            <div class="handlediv" title="<?php esc_attr_e('Click to toggle'); ?>"><br /></div>
             <h3>
                 <span><?php _e('Tags'); ?></span>
             </h3>
@@ -193,7 +194,7 @@
                 <div class="tagsdiv" id="post_tag">
                     <div class="jaxtag">
                         <label class="screen-reader-text" for="newtag"><?php _e('Tags'); ?></label>
-                        <input type="hidden" name="tags" class="the-tags" id="tags" value="<? foreach ($tags as $tag) { echo $tag; echo ","; } ?>" />
+                        <input type="hidden" name="tags" class="the-tags" id="tags" value="<?php foreach ($tags as $tag) { echo $tag; echo ","; } ?>" />
                         <div class="ajaxtag">
                             <input type="text" name="newtags" class="newtag form-input-tip" size="16" autocomplete="off" value="" />
                             <input type="button" class="button tagadd" value="<?php esc_attr_e('Add'); ?>" tabindex="3" />
@@ -211,7 +212,7 @@
         </div>
     
         <p class="submit">
-            <input class="button" type="submit" value="<? echo __("Save", HERISSON_TD); ?>" />
+            <input class="button" type="submit" value="<?php echo __("Save", HERISSON_TD); ?>" />
         </p>
 
     </form>

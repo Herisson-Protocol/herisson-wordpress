@@ -1,33 +1,41 @@
-<?
+<?php
 
 require_once __DIR__."/../Admin.php";
 
-class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
+class HerissonControllerAdminBookmark extends HerissonControllerAdmin
+{
 
 
-    function __construct() {
+    function __construct()
+    {
         $this->name = "bookmark";
         parent::__construct();
     }
 
-    function addAction() {
+    function addAction()
+    {
         $this->setView('edit');
         $this->editAction();
     }
 
-    function deleteAction() {
+    function deleteAction()
+    {
         $id = intval(param('id'));
         if ($id>0) {
             $bookmark = WpHerissonBookmarksTable::get($id);
             $bookmark->delete();
         }
 
-        # Redirect to Bookmarks list
+        // Redirect to Bookmarks list
         $this->indexAction();
         $this->setView('index');
     }
 
-    function downloadAction() {
+    /**
+     *
+     */
+    function downloadAction()
+    {
         $id = intval(param('id'));
         if ($id>0) {
             $bookmark = WpHerissonBookmarksTable::get($id);
@@ -39,7 +47,8 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
         }
     }
 
-    function editAction() {
+    function editAction()
+    {
         $id = intval(param('id'));
         if (!$id) {
             $id = 0;
@@ -54,7 +63,7 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
             $bookmark->maintenance();
             $bookmark->captureFromUrl();
 
-            $tags = explode(',',post('tags'));
+            $tags = explode(',', post('tags'));
             $bookmark->setTags($tags);
         }
 
@@ -68,12 +77,13 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
         $this->view->id = $id;
     }
 
-    function indexAction() {
+    function indexAction()
+    {
         $tag = get('tag');
         if ($tag) {
             $this->view->subtitle = __("Results for tag &laquo;&nbsp;".esc_html($tag)."&nbsp;&raquo;");
             $this->view->countAll = sizeof(WpHerissonBookmarksTable::getTag($tag));
-            $this->view->bookmarks = WpHerissonBookmarksTable::getTag($tag,true);
+            $this->view->bookmarks = WpHerissonBookmarksTable::getTag($tag, true);
         } else {
             $this->view->bookmarks = WpHerissonBookmarksTable::getAll(true);
             $this->view->countAll = sizeof(WpHerissonBookmarksTable::getAll());
@@ -81,14 +91,16 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
         $this->view->pagination = HerissonPagination::i()->getVars();
     }
 
-    function tagCloudAction() {
+    function tagCloudAction()
+    {
         $this->view->tags = WpHerissonTagsTable::getAll();
         $this->layout = false;
     }
 
-    function searchAction() {
+    function searchAction()
+    {
         $search = get('search');
-        $this->view->bookmarks = WpHerissonBookmarksTable::getSearch($search,true);
+        $this->view->bookmarks = WpHerissonBookmarksTable::getSearch($search, true);
         $this->view->countAll = sizeof(WpHerissonBookmarksTable::getSearch($search));
         $this->view->subtitle = __("Search results for &laquo;&nbsp;".esc_html($search)."&nbsp;&raquo;");
         $this->view->pagination = HerissonPagination::i()->getVars();
@@ -96,17 +108,18 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin {
     }
 
 
-    function viewAction() {
+    function viewAction()
+    {
         $id = intval(get('id'));
         if (!$id) {
-            echo __("Error : Missing id\n",HERISSON_TD);
+            echo __("Error : Missing id\n", HERISSON_TD);
             exit;
         }
         $bookmark = WpHerissonBookmarksTable::get($id);
         if ($bookmark && $bookmark->content) {
             echo $bookmark->content;
         } else {
-            echo sprintf(__("Error : Missing content for bookmark %s\n",HERISSON_TD),$bookmark->id);
+            echo sprintf(__("Error : Missing content for bookmark %s\n", HERISSON_TD), $bookmark->id);
         }
         exit;
     }

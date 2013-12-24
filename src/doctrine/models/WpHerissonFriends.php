@@ -13,7 +13,8 @@
 class WpHerissonFriends extends BaseWpHerissonFriends
 {
 
-    public function getInfo() {
+    public function getInfo()
+    {
         $url = $this->url."/info";
         $network = new HerissonNetwork();
         $json_data = $network->download($url);
@@ -23,35 +24,40 @@ class WpHerissonFriends extends BaseWpHerissonFriends
             if (sizeof($data)) {
                 $this->name  = $data['sitename'];
                 $this->email = $data['adminEmail'];
-            } else { $this->is_active=0; }
+            } else {
+                $this->is_active=0;
+            }
 
         } else {
             $this->is_active=0;
-            errors_dispatch($json_data, array(
+            errorsDispatch($json_data, array(
                 404 => __("This site is not a Herisson site or is closed."),
             ));
         }
     }
 
-    public function setUrl($url) {
+    public function setUrl($url)
+    {
         parent::_set('url', rtrim($url, '/'));
         $this->reloadPublicKey();
     }
 
-    public function reloadPublicKey() {
+    public function reloadPublicKey()
+    {
         $network = new HerissonNetwork();
         $content = $network->download($this->url."/publickey");
         if (!is_wp_error($content)) {
             $this->_set('public_key', $content['data']);
         } else { 
-            errors_dispatch($content, array(
+            errorsDispatch($content, array(
                 404 => __("This site is not a Herisson site or is closed."),
             ));
         }
     }
 
 
-    public function retrieveBookmarks($params=array()) {
+    public function retrieveBookmarks($params=array())
+    {
         
         $options = get_option('HerissonOptions');
         $my_public_key = $options['publicKey'];
@@ -64,14 +70,15 @@ class WpHerissonFriends extends BaseWpHerissonFriends
                 $bookmarks = json_decode($json_data, 1);
                 return $bookmarks;
             } else { 
-            errors_dispatch($content, array(
-                404 => __("This site is not a Herisson site or is closed."),
-            ));
+                errorsDispatch($content, array(
+                    404 => __("This site is not a Herisson site or is closed."),
+                ));
             }
         }
     }
 
-    public function generateBookmarksData($params=array()) {
+    public function generateBookmarksData($params=array())
+    {
         $options = get_option('HerissonOptions');
         $my_private_key = $options['privateKey'];
         $q = Doctrine_Query::create()
@@ -98,7 +105,8 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         return json_encode($json_display);
     }
 
-    public function askForFriend() {
+    public function askForFriend()
+    {
         $options = get_option('HerissonOptions');
         $url = $this->url."/ask";
         $mysite = get_option('siteurl')."/".$options['basePath'];
@@ -111,20 +119,20 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         $content = $network->download($url, $data);
         if (!is_wp_error($content)) {
             switch ($content['code']) {
-                case 200: {
-                    # Friend need to process the request manually, you will be notified when validated.
-                    $this->b_youwant=1;
-                    break;
-                }
-                case 202: {
-                    # Friend automatically accepted the request. Adding now.
-                    $this->is_active=1;
-                    break;
-                }
+            case 200: {
+                // Friend need to process the request manually, you will be notified when validated.
+                $this->b_youwant=1;
+                break;
+            }
+            case 202: {
+                // Friend automatically accepted the request. Adding now.
+                $this->is_active=1;
+                break;
+            }
             }
             $this->save();
         } else {
-            errors_dispatch($content, array(
+            errorsDispatch($content, array(
                 403 => __("This site refuses new friends."),
                 404 => __("This site is not a Herisson site or is closed."),
                 417 => __("Friend say you dont communicate correctly (key problems?)."),
@@ -132,7 +140,8 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         }
     }
 
-    public function validateFriend() {
+    public function validateFriend()
+    {
         $options = get_option('HerissonOptions');
         $url = $this->url."/validate";
         $mysite = get_option('siteurl')."/".$options['basePath'];

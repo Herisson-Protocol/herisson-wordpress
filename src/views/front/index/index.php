@@ -1,8 +1,8 @@
-<? include(__DIR__."/../header.php"); ?>
+<?php require __DIR__."/../header.php"; ?>
 
     <div id="page">
         <h1>
-            <? echo sprintf(__("%s bookmarks", HERISSON_TD), $title); ?>
+            <?php echo sprintf(__("%s bookmarks", HERISSON_TD), $title); ?>
         </h1>
         <div id="search">
             <form action="" method="get">
@@ -10,34 +10,34 @@
             </form>
         </div>
 
-        <? if (sizeof($bookmarks)) { ?>
+        <?php if (sizeof($bookmarks)) { ?>
         <div id="mybookmarks">
-            <? foreach ($bookmarks as $bookmark) { ?> 
+            <?php foreach ($bookmarks as $bookmark) { ?> 
             <div class="bookmark">
                 <span class="title">
-                    <a href="<?=$bookmark->url; ?>"><?=$bookmark->title?></a>
+                    <a href="<?php echo $bookmark->url; ?>"><?php echo $bookmark->title?></a>
                 </span>
                 <br/>
                 <span class="tag">Tags</span> :
                 <span class="tags">
-                <? foreach ($bookmark->getTagsArray() as $tag) { ?>
-                    <a href="?tag=<?=$tag?>"><?=$tag?></a> &nbsp;
-                <? } ?>
+                <?php foreach ($bookmark->getTagsArray() as $tag) { ?>
+                    <a href="?tag=<?php echo $tag?>"><?php echo $tag?></a> &nbsp;
+                <?php } ?>
                 </span>
-                <? if ($bookmark->description) { ?>
+                <?php if ($bookmark->description) { ?>
                     <p class="description">
-                        <?=$bookmark->description?>
+                        <?php echo $bookmark->description?>
                     </p>
-                <? } ?>
+                <?php } ?>
             </div>
-            <? } ?>
+            <?php } ?>
         </div>
-        <? } else { ?>
-            <? echo __("No bookmark", HERISSON_TD); ?>
-        <? } ?>
+        <?php } else { ?>
+            <?php echo __("No bookmark", HERISSON_TD); ?>
+        <?php } ?>
 
     </div>
 
-<?
-	include("friends.php");
-	include(__DIR__."/../footer.php");
+<?php
+require "friends.php";
+require __DIR__."/../footer.php";

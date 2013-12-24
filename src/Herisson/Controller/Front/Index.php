@@ -1,44 +1,48 @@
-<?
+<?php
 
 require __DIR__."/../Front.php";
 
-class HerissonControllerFrontIndex extends HerissonControllerFront {
+class HerissonControllerFrontIndex extends HerissonControllerFront
+{
 
 
-    function __construct() {
+    function __construct()
+    {
         $this->name = "index";
         parent::__construct();
     }
 
-    function askAction() {
+    function askAction()
+    {
 
         if ($this->options['acceptFriends'] == 0) {
-            HerissonNetwork::reply(403,HERISSON_EXIT);
+            HerissonNetwork::reply(403, HERISSON_EXIT);
         }
         $signature = post('signature');
         $f = new WpHerissonFriends();
         $f->url = post('url');
         $f->reloadPublicKey();
-        if (herisson_check_short($f->url,$signature,$f->public_key)) {
+        if (herisson_check_short($f->url, $signature, $f->public_key)) {
             $f->getInfo();
             if ($this->options['acceptFriends'] == 2) {
                 HerissonNetwork::reply(202);
                 $f->is_active=1;
             } else {
-                # Friend request need to be manually processed, so it's a 202 Accepted for further process response
+                // Friend request need to be manually processed, so it's a 202 Accepted for further process response
                 HerissonNetwork::reply(200);
                 $f->b_wantsyou=1;
                 $f->is_active=0;
             }
             $f->save();
-        } else { 
-            HerissonNetwork::reply(417,HERISSON_EXIT);
+        } else {
+            HerissonNetwork::reply(417, HERISSON_EXIT);
         }
         exit;
     }
 
 
-    function friendsGetWhere($where,$data=array()) {
+    function friendsGetWhere($where, $data=array())
+    {
         $friends = Doctrine_Query::create()
             ->from('WpHerissonFriends')
             ->where("$where")
@@ -50,9 +54,12 @@ class HerissonControllerFrontIndex extends HerissonControllerFront {
 
     }
 
-    function getAction() {
+    function getAction()
+    {
 
-        if (!is_numeric($id)) { return new WpHerissonBookmarks(); }
+        if (!is_numeric($id)) {
+            return new WpHerissonBookmarks();
+        }
         $bookmarks = Doctrine_Query::create()
             ->from('WpHerissonBookmarks')
             ->where("id=$id")
@@ -64,7 +71,8 @@ class HerissonControllerFrontIndex extends HerissonControllerFront {
     }
 
 
-    function indexAction() {
+    function indexAction()
+    {
 
         $tag = get('tag');
         $search = get('search');
@@ -79,19 +87,20 @@ class HerissonControllerFrontIndex extends HerissonControllerFront {
             $search = "%$search%";
             $q = $q->leftJoin('b.WpHerissonTags t');
             $q = $q->where("t.name LIKE ? OR b.url like ? OR b.title LIKE ? OR b.description LIKE ? OR b.content LIKE ?");
-            $params = array($search,$search,$search,$search,$search);
+            $params = array($search, $search, $search, $search, $search);
         }
         $this->view->bookmarks = $q->execute($params);
-    #    $bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
-    
+        // $bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
+
         $this->view->title = $this->options['sitename'];
-    
-     
+
+
         $this->view->friends = Doctrine_Query::create()->from('WpHerissonFriends')->where("is_active=1")->execute();
 
     }
 
-    function infoAction() {
+    function infoAction()
+    {
 
         echo json_encode(array(
             'sitename'   => $this->options['sitename'],
@@ -101,11 +110,13 @@ class HerissonControllerFrontIndex extends HerissonControllerFront {
     }
 
 
-    function publicKeyAction() {
+    function publicKeyAction()
+    {
         echo $this->options['publicKey'];
     }
 
-    function retrieveAction() {
+    function retrieveAction()
+    {
         if (!sizeof($_POST)) {
             exit;
         }
@@ -116,25 +127,26 @@ class HerissonControllerFrontIndex extends HerissonControllerFront {
             ->execute(array($key));
         foreach ($friends as $friend) {
             echo $friend->generateBookmarksData($_POST);
-            # Exit au cas ou le friend est présent plusieurs fois
+            // Exit au cas ou le friend est présent plusieurs fois
             exit;
         }
     }
 
-    function validateAction() {
+    function validateAction()
+    {
 
         $signature = post('signature');
         $url = post('url');
-        $f = $this->friendsGetWhere("url=? AND b_youwant=1",array($url));
-        if (herisson_check_short($url,$signature,$f->public_key)) {
+        $f = $this->friendsGetWhere("url=? AND b_youwant=1", array($url));
+        if (herisson_check_short($url, $signature, $f->public_key)) {
             $f->b_youwant=0;
             $f->is_active=1;
             $f->save();
             HerissonNetwork::reply(200);
             echo "1";
             exit;
-        } else { 
-            HerissonNetwork::reply(417,HERISSON_EXIT);
+        } else {
+            HerissonNetwork::reply(417, HERISSON_EXIT);
         }
     }
 

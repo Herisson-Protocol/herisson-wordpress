@@ -1,15 +1,17 @@
-<?
+<?php
 
 
-class HerissonRouter {
+class HerissonRouter
+{
 
     /**
      * Handles routing in Wordpress Plugin Admin Zone
      *
      * @return void
      */
-    function route() {
-        $pageName = ucfirst(str_replace("herisson_","",get('page')));
+    function route()
+    {
+        $pageName = ucfirst(str_replace("herisson_", "", get('page')));
         $baseController = "HerissonControllerAdmin";
         $controllerName = $baseController.$pageName;
         $defaultName = "Bookmark";
@@ -31,7 +33,8 @@ class HerissonRouter {
      *
      * @return void
      */
-    function routeRaw() {
+    function routeRaw()
+    {
         $this->route();
         exit;
     }

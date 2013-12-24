@@ -13,11 +13,13 @@
 class WpHerissonTags extends BaseWpHerissonTags
 {
 
-# public function setUp()
-# {
-#  parent::setUp();
-#  $this->hasMany('WpHerissonBookmarks', array(
-#   'local' => 'bookmark_id',
-#   'foreign' => 'id'));
-# }
+    /*
+    public function setUp()
+    {
+     parent::setUp();
+     $this->hasMany('WpHerissonBookmarks', array(
+      'local' => 'bookmark_id',
+      'foreign' => 'id'));
+    }
+    */
 }

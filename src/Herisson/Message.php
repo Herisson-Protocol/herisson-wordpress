@@ -1,7 +1,8 @@
-<?
+<?php
 
 
-class HerissonMessage {
+class HerissonMessage
+{
 
     /**
      * singleton
@@ -25,11 +26,12 @@ class HerissonMessage {
 
     /**
      * Creating singleton
+     *
      * @return HerissonMessage instance
      */
     public static function i()
     {
-        if(is_null(self::$i)) {
+        if (is_null(self::$i)) {
             self::$i = new HerissonMessage();
             self::$i->errors = array();
             self::$i->success = array();
@@ -37,27 +39,33 @@ class HerissonMessage {
         return self::$i;
     }
 
-    public function getErrors() {
+    public function getErrors()
+    {
         return $this->errors;
     }
 
-    public function addError($e) {
+    public function addError($e)
+    {
         array_push($this->errors, $e);
     }
 
-    public function hasErrors() {
+    public function hasErrors()
+    {
         return sizeof($this->errors);
     }
 
-    public function getSuccess() {
+    public function getSuccess()
+    {
         return $this->success;
     }
 
-    public function addSucces($e) {
+    public function addSucces($e)
+    {
         array_push($this->success, $e);
     }
 
-    public function hasSuccess() {
+    public function hasSuccess()
+    {
         return sizeof($this->success);
     }
 

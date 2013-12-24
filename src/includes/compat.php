@@ -1,26 +1,31 @@
 <?php
 /**
  * Compatibility functions for older version of PHP and/or WordPress.
- * @package herisson
+ *
+ * @package Herisson
  */
 
 if ( !class_exists('WP_Error') ) {
-    class WP_Error {
+    class WP_Error
+    {
         var $errors = array();
 
-        function WP_Error($code = '', $message = '') {
+        function WP_Error($code = '', $message = '')
+        {
             if ( ! empty($code) )
                 $this->errors[$code][] = $message;
         }
 
-        function get_error_codes() {
+        function get_error_codes()
+        {
             if ( empty($this->errors) )
                 return array();
 
             return array_keys($this->errors);
         }
 
-        function get_error_code() {
+        function get_error_code()
+        {
             $codes = $this->get_error_codes();
 
             if ( empty($codes) )
@@ -29,8 +34,9 @@ if ( !class_exists('WP_Error') ) {
             return $codes[0];
         }
 
-        function get_error_messages($code = '') {
-        // Return all messages if no code specified.
+        function get_error_messages($code = '')
+        {
+            // Return all messages if no code specified.
             if ( empty($code) ) {
                 $all_messages = array();
                 foreach ( (array) $this->errors as $code => $messages )
@@ -45,7 +51,8 @@ if ( !class_exists('WP_Error') ) {
                 return array();
         }
 
-        function get_error_message($code = '') {
+        function get_error_message($code = '')
+        {
             if ( empty($code) )
                 $code = $this->get_error_code();
             $messages = $this->get_error_messages($code);
@@ -54,24 +61,28 @@ if ( !class_exists('WP_Error') ) {
             return $messages[0];
         }
 
-        function add($code, $message) {
+        function add($code, $message)
+        {
             $this->errors[$code][] = $message;
         }
     }
 
-    function is_wp_error($thing) {
+    function is_wp_error($thing)
+    {
         return ( is_object($thing) && is_a($thing, 'WP_Error') );
     }
 }
 
 if ( !function_exists('wp_get_referer') ) {
-    function wp_get_referer() {
+    function wp_get_referer()
+    {
         return '';
     }
 }
 
-if ( !function_exists('herisson_reset_vars') ) {
-    function herisson_reset_vars($vars) {
+if ( !function_exists('herissonResetVars') ) {
+    function herissonResetVars($vars)
+    {
         for ($i=0; $i<count($vars); $i += 1) {
             $var = $vars[$i];
             global $$var;

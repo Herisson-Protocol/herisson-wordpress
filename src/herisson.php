@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 Plugin Name: Herisson
 Version: 0.1
 Plugin URI: 
@@ -32,8 +32,8 @@ define('HERISSON_DB', 1);
 define('HERISSON_OPTIONS', 1);
 define('HERISSON_REWRITE', 1);
 define('HERISSON_TD', 'herisson');
-#define('HERISSON_BASE_DIR', dirname(__FILE__).'/');
-#define('HERISSON_BASE_DIR', "/var/www/".$_SERVER['HTTP_HOST']."/wp-content/plugins/herisson/");
+//define('HERISSON_BASE_DIR', dirname(__FILE__).'/');
+//ddefine('HERISSON_BASE_DIR', "/var/www/".$_SERVER['HTTP_HOST']."/wp-content/plugins/herisson/");
 define('HERISSON_BASE_DIR', ABSPATH."/wp-content/plugins/herisson/");
 define('HERISSON_WP_BASE_DIR', ABSPATH);
 define('HERISSON_INCLUDES_DIR', HERISSON_BASE_DIR.'includes/');
@@ -50,7 +50,7 @@ define('HERISSON_EXIT', 1);
 define('HERISSON_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 
 require_once HERISSON_WP_BASE_DIR."/wp-includes/plugin.php";
-#require_once HERISSON_WP_BASE_DIR."/wp-load.php";
+//require_once HERISSON_WP_BASE_DIR."/wp-load.php";
 require_once HERISSON_WP_BASE_DIR."/wp-includes/pluggable.php";
 require_once HERISSON_WP_BASE_DIR."/wp-includes/functions.php";
 require_once HERISSON_WP_BASE_DIR."/wp-includes/cache.php";
@@ -62,7 +62,8 @@ require_once HERISSON_WP_BASE_DIR."/wp-admin/includes/plugin.php";
  * Load our I18n domain.
  */
 add_action('init', 'herisson_init');
-function herisson_init() {
+function herisson_init()
+{
     load_plugin_textdomain(HERISSON_TD, false, HERISSON_LANG_DIR);
 }
 
@@ -97,7 +98,8 @@ add_action('plugins_loaded', 'herisson_check_versions');
 /**
  * Handler for the activation hook. Installs/upgrades the database table and adds/updates the HerissonOptions option.
  */
-function herisson_install() {
+function herisson_install()
+{
     global $wpdb, $wp_rewrite, $wp_version;
 
     if ( version_compare('3.3', $wp_version) == 1 && strpos($wp_version, 'wordpress-mu') === false ) {
@@ -113,11 +115,11 @@ function herisson_install() {
     // Until the nasty bug with duplicate indexes is fixed, we should hide dbDelta output.
     ob_start();
     $sql = file_get_contents(HERISSON_BASE_DIR.'install/init_db.sql');
-    $sql = preg_replace("/#PREFIX#/",$wpdb->prefix,$sql);
+    $sql = preg_replace("/#PREFIX#/", $wpdb->prefix, $sql);
     dbDelta($sql);
 
     $sql = file_get_contents(HERISSON_BASE_DIR.'install/init_data.sql');
-    $sql = preg_replace("/#PREFIX#/",$wpdb->prefix,$sql);
+    $sql = preg_replace("/#PREFIX#/", $wpdb->prefix, $sql);
     $wpdb->query($sql);
 
     $log = ob_get_contents();
@@ -132,18 +134,18 @@ function herisson_install() {
         }
     }
 
-    # Generate a couple of public/private key to handle encryption between this site and friends
+    // Generate a couple of public/private key to handle encryption between this site and friends
     $encryption = HerissonEncryption::i()->generateKeyPairs();
 
     $defaultOptions = array(
         'formatDate'                => 'd/m/Y',
         'sitename'                  => 'Herisson new instance',
-#        'httpLib'                   => 'snoopy',
+        //'httpLib'                   => 'snoopy',
         'useModRewrite'             => true,
         'debugMode'                 => false,
         'bookmarksPerPage'          => 50,
         'templateBase'              => 'default_templates/',
-        #'permalinkBase'             => 'bookmarks/',
+        //'permalinkBase'             => 'bookmarks/',
         'basePath'                  => 'bookmarks',
         'publicKey'                 => $encryption->public,
         'privateKey'                => $encryption->private,
@@ -165,8 +167,7 @@ function herisson_install() {
     update_option('herissonOptions', $options);
 
     // May be unset if called during plugins_loaded action.
-    if (isset($wp_rewrite))
-    {
+    if (isset($wp_rewrite)) {
         // Update our .htaccess file.
         $wp_rewrite->flush_rules();
     }
@@ -178,11 +179,12 @@ function herisson_install() {
 register_activation_hook('herisson/herisson.php', 'herisson_install');
 
 
-function herisson_router() {
-    # Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
-    global $route,$wp_query,$window_title;
+function herisson_router()
+{
+    // Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
+    global $route, $wp_query, $window_title;
     $options = get_option('HerissonOptions');
-    $path =explode("/",$_SERVER['REQUEST_URI']);
+    $path =explode("/", $_SERVER['REQUEST_URI']);
     if (sizeof($path) && $path[1] == $options['basePath']) {
         require HERISSON_BASE_DIR."/Herisson/Controller/Front/Index.php";
         $c = new HerissonControllerFrontIndex();
@@ -193,8 +195,8 @@ function herisson_router() {
 
 add_action( 'send_headers', 'herisson_router');
 
-#add_filter('show_admin_bar', '__return_false');
-#add_action('admin_menu', 'remove_menus');
+// add_filter('show_admin_bar', '__return_false');
+// add_action('admin_menu', 'remove_menus');
 
 if (param('nomenu')) {
     $c = new HerissonRouter();

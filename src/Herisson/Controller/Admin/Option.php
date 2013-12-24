@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once __DIR__."/../Admin.php";
 
@@ -13,19 +13,24 @@ if (!isset($_SERVER['REQUEST_URI'])) {
 */
 
 
-class HerissonControllerAdminOption extends HerissonControllerAdmin {
+class HerissonControllerAdminOption extends HerissonControllerAdmin
+{
 
 
-    function __construct() {
+    function __construct()
+    {
         $this->name = "option";
         parent::__construct();
     }
 
 
-/**
- * Creates the options admin page and manages the updating of options.
- */
-    function indexAction() {
+    /**
+     * Creates the options admin page and manages the updating of options.
+     * 
+     * @return void
+     */
+    function indexAction()
+    {
 
         if (post('action') == 'index') {
             $options = get_option('HerissonOptions');

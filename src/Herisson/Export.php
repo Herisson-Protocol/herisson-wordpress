@@ -1,26 +1,30 @@
-<?
+<?php
 
 
-class HerissonExport {
+class HerissonExport
+{
 
-    public static function forceDownloadContent($content,$filename) {
-        $temp = tempnam("/tmp","herisson");
-        file_put_contents($temp,$content);
-        self::forceDownloadGzip($temp,"herisson-bookmarks.json");
+    public static function forceDownloadContent($content, $filename)
+    {
+        $temp = tempnam("/tmp", "herisson");
+        file_put_contents($temp, $content);
+        self::forceDownloadGzip($temp, "herisson-bookmarks.json");
         unlink($temp);
     }
 
-    public static function forceDownloadGzip($filepath,$filename) {
+    public static function forceDownloadGzip($filepath, $filename)
+    {
         $gzip = self::gzCompressFile($filepath);
         if ($gzip) { 
-            self::forceDownload($gzip,$filename.".gz");
+            self::forceDownload($gzip, $filename.".gz");
             unlink($gzip);
         }
     }
-    public static function forceDownload($filepath,$filename) {
+    public static function forceDownload($filepath, $filename)
+    {
         $file = basename($filepath);
 
-        # Special for IE
+        // Special for IE
         header("Pragma: public");
         header("Cache-control: private");
         header("Content-Type: text/plain; charset=UTF-8");
@@ -31,18 +35,23 @@ class HerissonExport {
 
         if (file_exists($filepath)) {
             $fd = fopen($filepath, "r");
-            while(!feof($fd)) {
+            while (!feof($fd)) {
                 echo fread($fd, round(1024));
                 flush();
             }
-            fclose ($fd);
+            fclose($fd);
         }
         return;
     }
 
 
 
-    public static function exportFirefox($bookmarks) {
+
+    /**
+     *
+     */
+    public static function exportFirefox($bookmarks)
+    {
          $bookmarks = WpHerissonBookmarksTable::getAll();
          $now = time();
          $name = "Herisson bookmarks";
@@ -55,7 +64,7 @@ class HerissonExport {
     <DT><H3 ADD_DATE="'.$now.'" LAST_MODIFIED="'.$now.'">'.$name.'</H3>
     <DL><p>';
         foreach ($bookmarks as $bookmark) {
-        $content .= '<DT><A HREF="'.$bookmark->url.'" ADD_DATE="'.$now.'" LAST_MODIFIED="'.$now.'" ICON_URI="'.$bookmark->favicon_url.'" ICON="data:image/png;base64,'.$bookmark->favicon_image.'">'.$bookmark->title.'</A>
+            $content .= '<DT><A HREF="'.$bookmark->url.'" ADD_DATE="'.$now.'" LAST_MODIFIED="'.$now.'" ICON_URI="'.$bookmark->favicon_url.'" ICON="data:image/png;base64,'.$bookmark->favicon_image.'">'.$bookmark->title.'</A>
                                 <DD>'.$bookmark->description.'
                                 ';
 
@@ -64,26 +73,28 @@ class HerissonExport {
         </DL>
         ';
 
-        self::forceDownloadContent($content,"herisson-bookmarks-firefox.html");
+        self::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
     }
 
-    public static function exportJson($bookmarks) {
+    public static function exportJson($bookmarks)
+    {
         $list= array();
         foreach ($bookmarks as $bookmark) { 
             $list[] = $bookmark->toArray();
         }
-        self::forceDownloadContent(json_encode($list),"herisson-bookmarks.json");
+        self::forceDownloadContent(json_encode($list), "herisson-bookmarks.json");
         exit;
     }
 
-    public static function gzCompressFile($source,$level=false){
+    public static function gzCompressFile($source, $level=false)
+    {
         $dest=$source.'.gz';
         $mode='wb'.$level;
         $error=false;
-        if($fp_out=gzopen($dest,$mode)){
-            if($fp_in=fopen($source,'rb')){
-                while(!feof($fp_in))
-                    gzwrite($fp_out,fread($fp_in,1024*512));
+        if ($fp_out=gzopen($dest, $mode)) {
+            if ($fp_in=fopen($source, 'rb')) {
+                while (!feof($fp_in))
+                    gzwrite($fp_out, fread($fp_in, 1024*512));
                 fclose($fp_in);
             } else { 
                 $error=true;
@@ -94,8 +105,7 @@ class HerissonExport {
         }
         if ($error) {
             return false;
-        }
-        else {
+        } else {
             return $dest;
         }
     } 

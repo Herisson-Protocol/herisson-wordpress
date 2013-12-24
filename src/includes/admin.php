@@ -1,7 +1,8 @@
 <?php
 /**
  * Adds our admin menus, and some stylesheets and JavaScript to the admin head.
- * @package herisson
+ *
+ * @package Herisson
  */
 
 /**
@@ -18,7 +19,8 @@ require_once HERISSON_BASE_DIR."/Herisson/Controller/Admin/Option.php";
 /**
  * Manages the various admin pages Herisson uses.
  */
-function herisson_add_pages() {
+function herissonAddPages()
+{
 
     $update = '<span class="update-plugins count-%s" title="title"><span class="update-count">%s</span></span>';
     $friends = WpHerissonFriendsTable::getWhere('b_wantsyou=1');
@@ -36,13 +38,13 @@ function herisson_add_pages() {
     add_submenu_page('herisson_menu', __('Import/Maintenance', HERISSON_TD), __('Import/Maintenance', HERISSON_TD), 'manage_options', 'herisson_maintenance', array(&$r, 'route'));
     add_submenu_page('herisson_menu', __('Backups', HERISSON_TD), __('Backups', HERISSON_TD), 'manage_options', 'herisson_backup', array(&$r, 'route'));
     add_submenu_page('herisson_menu', __('Options', HERISSON_TD), __('Options', HERISSON_TD), 'manage_options', 'herisson_option', array(&$r, 'route'));
-		
-    wp_register_style('herissonStylesheet', plugins_url().'/herisson/css/stylesheet.css' );
-    wp_enqueue_style('herissonStylesheet' );
+
+    wp_register_style('herissonStylesheet', plugins_url().'/herisson/css/stylesheet.css');
+    wp_enqueue_style('herissonStylesheet');
 
 }
 
-add_action('admin_menu', 'herisson_add_pages');
+add_action('admin_menu', 'herissonAddPages');
 
 
 ?>

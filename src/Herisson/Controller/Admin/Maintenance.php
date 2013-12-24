@@ -1,24 +1,27 @@
-<?
+<?php
 
 require_once __DIR__."/../Admin.php";
 
-class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
+class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
+{
 
 
-    function __construct() {
+    function __construct()
+    {
         $this->name = "maintenance";
         parent::__construct();
     }
 
     /** EXPORT **/
-    function exportAction() {
+    function exportAction()
+    {
         if (!post('format')) {
             $this->indexAction();
             $this->setView('index');
             exit;
         }
 
-        require_once __DIR__."/../../Export.php";
+        include_once __DIR__."/../../Export.php";
         $bookmarks = WpHerissonBookmarksTable::getAll();
 
         switch (post('format')) {
@@ -39,7 +42,8 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
 
 
     /** IMPORTATION **/
-    function importAction() {
+    function importAction()
+    {
         if (!post('import_source')) {
             $this->indexAction();
             $this->setView('index');
@@ -64,7 +68,8 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
     /**
      * Handle the importation of Delicious bookmarks, from username/password provided by the user
      */
-    function importDeliciousAction() {
+    function importDeliciousAction()
+    {
         $username = post('username_delicious');
         $password = post('password_delicious');
         if (!$username || !$password) {
@@ -73,7 +78,7 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
             $this->setView('index');
             exit;
         }
-        require HERISSON_INCLUDES_DIR."delicious/delicious.php";
+        include HERISSON_INCLUDES_DIR."delicious/delicious.php";
         $delicious_bookmarks = herisson_delicious_posts_all($username, $password);
         $list = array();
 
@@ -97,16 +102,17 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
 
     }
 
-    function importFirefoxAction() {
+    function importFirefoxAction()
+    {
         if (!isset($_FILES['import_file'])) { 
             echo __("Bookmarks file not found.", HERISSON_TD);
             $this->indexAction();
             $this->setView('index');
             exit;
         }
-        require HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
+        include HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
         $filename = $_FILES['import_file']['tmp_name'];
-        # Parsing bookmarks file
+        // Parsing bookmarks file
         $bookmarks = new Bookmarks();
         $bookmarks->parse($filename);
         $bookmarks->bookmarksFileMd5 = md5_file($filename);
@@ -117,12 +123,12 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
 
         $i=0;
         $spacer = "&nbsp;&nbsp;&nbsp;&nbsp;";
-        while($bookmarks->hasMoreItems()) {
+        while ($bookmarks->hasMoreItems()) {
             $item = $bookmarks->getNextElement();
             $bookmark = array();
             $bookmark['title'] = $item->name;
 
-            if($item->_isFolder) { 
+            if ($item->_isFolder) { 
                 $space = str_repeat($spacer, $item->depth-1);
                 $bookmark['prefix'] = $space;
                 $bookmark['url'] = "";
@@ -146,9 +152,10 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
 
     }
 
-    function importJsonAction() {
+    function importJsonAction()
+    {
         if (!isset($_FILES['import_file'])) { 
-            echo __("Bookmarks file not found.",HERISSON_TD);
+            echo __("Bookmarks file not found.", HERISSON_TD);
             $this->indexAction();
             $this->setView('index');
             exit;
@@ -156,13 +163,13 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
         $filename = $_FILES['import_file']['tmp_name'];
         $content = file_get_contents($filename);
 
-        $bookmarks = json_decode($content,1);
+        $bookmarks = json_decode($content, 1);
 
         $page_title = __("Importation results from JSON bookmarks", HERISSON_TD);
 
         foreach ($bookmarks as $i=>$bookmark) {
             $bookmarks[$i]['is_public'] = $bookmark['public'];
-            $bookmarks[$i]['tags'] = implode(',',$bookmark['tags']);
+            $bookmarks[$i]['tags'] = implode(',', $bookmark['tags']);
             $bookmarks[$i]['favicon_image'] = "";
             $bookmarks[$i]['favicon_url'] = "";
         }
@@ -174,9 +181,10 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
     /** 
      * Display the importable bookmarks list to make the user decide which bookmarks he wants to import into Herisson
      * 
-     * @param $bookmarks the list of bookmarks to display
+     * @param array $bookmarks the list of bookmarks to display
      */
-    function importList($bookmarks) {
+    function importList($bookmarks)
+    {
         $this->view->bookmarks = $bookmarks;
         $this->setView('importList.php');
     }
@@ -184,7 +192,8 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
     /**
      * Handle the validation of bookmarks to import after the user choice of which bookmarks he wants to import
      */
-    function importValidateAction() {
+    function importValidateAction()
+    {
         $bookmarks = post('bookmarks');
         $nb = 0;
         foreach ($bookmarks as $bookmark) {
@@ -212,7 +221,8 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
     /**
      * Display import and maintenance options page
      */
-    function indexAction() {
+    function indexAction()
+    {
 
     }
 
@@ -221,7 +231,8 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
      * 
      * This allows to start maintenance checks to
      */
-    function maintenanceAction() {
+    function maintenanceAction()
+    {
 
         if (post('maintenance')) {
             $condition = "
@@ -239,8 +250,6 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin {
         $this->view->bookmarks_no_content       = WpHerissonBookmarksTable::getWhere("LENGTH(content)=0 or content is null");
         $this->view->bookmarks_no_content_image = WpHerissonBookmarksTable::getWhere("LENGTH(content_image)=0 or content_image is null");
 
-#        $options = get_option('HerissonOptions');
-        
     }
 
 }

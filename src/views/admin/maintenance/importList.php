@@ -1,21 +1,21 @@
 <div class="wrap">
     <h2>
-        <? echo $page_title; ?>
-        <?= __("Importation results from JSON bookmarks", HERISSON_TD); ?>
+        <?php echo $page_title; ?>
+        <?php echo  __("Importation results from JSON bookmarks", HERISSON_TD); ?>
     </h2>
 
-    <form method="post" action="<?=get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
+    <form method="post" action="<?php echo get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
         <input type="hidden" name="action" value="importValidate" />
         <table class="widefat post">
             <tr>
-                <th style="width: 50px"><?=__('Add', HERISSON_TD)?></th>
-                <th style="width: 50px"><?=__('Status', HERISSON_TD)?></th>
-                <th style="width: 80px"><?=__('Private', HERISSON_TD)?></th>
-                <th style="width: 50px"><?=__('Icon', HERISSON_TD)?></th>
-                <th><?=__('Title', HERISSON_TD)?></th>
+                <th style="width: 50px"><?php echo __('Add', HERISSON_TD)?></th>
+                <th style="width: 50px"><?php echo __('Status', HERISSON_TD)?></th>
+                <th style="width: 80px"><?php echo __('Private', HERISSON_TD)?></th>
+                <th style="width: 50px"><?php echo __('Icon', HERISSON_TD)?></th>
+                <th><?php echo __('Title', HERISSON_TD)?></th>
             </tr>
     
-        <? 
+        <?php 
         $i=0;
         foreach ($bookmarks as $bookmark) {
             $i++;
@@ -51,53 +51,53 @@
             ?>
             <tr>
                 <td>
-                <? if ($bookmark['url']) { ?>
-                    <input type="checkbox" name="bookmarks[<?=$i?>][import]" <? if (!$status['error']) { ?> checked="checked" <? } ?>/>
-                <? } ?>
+                <?php if ($bookmark['url']) { ?>
+                    <input type="checkbox" name="bookmarks[<?php echo $i?>][import]" <?php if (!$status['error']) { ?> checked="checked" <?php } ?>/>
+                <?php } ?>
                 </td>
       
-                <td style="background-color:<?=$status['color']?>">
-                    <span title="<?=sprintf(__('HTTP Error %s : %s', HERISSON_TD), $status['code'], $status['message'])?>" style="font-weight:bold; color:black">
-                        <?=$status['code']?>
+                <td style="background-color:<?php echo $status['color']?>">
+                    <span title="<?php echo sprintf(__('HTTP Error %s : %s', HERISSON_TD), $status['code'], $status['message'])?>" style="font-weight:bold; color:black">
+                        <?php echo $status['code']?>
                     </span>
                 </td>
     
                 <td>
-                    <input type="checkbox" name="bookmarks[<?=$i?>][private]" <? if (!$bookmark['is_public']) { ?> checked="checked" <? } ?>/>&nbsp;<?=__('Private?')?>
+                    <input type="checkbox" name="bookmarks[<?php echo $i?>][private]" <?php if (!$bookmark['is_public']) { ?> checked="checked" <?php } ?>/>&nbsp;<?php echo __('Private?')?>
                 </td>
     
                 <td>
-                    <input type="hidden" name="bookmarks[<?=$i?>][favicon_image]" value="<?=$bookmark['favicon_image']?>" />
-                    <input type="hidden" name="bookmarks[<?=$i?>][favicon_url]" value="<?=$bookmark['favicon_url']?>" />
-                    <? if ($bookmark['favicon_image']) { ?>
+                    <input type="hidden" name="bookmarks[<?php echo $i?>][favicon_image]" value="<?php echo $bookmark['favicon_image']?>" />
+                    <input type="hidden" name="bookmarks[<?php echo $i?>][favicon_url]" value="<?php echo $bookmark['favicon_url']?>" />
+                    <?php if ($bookmark['favicon_image']) { ?>
                     <!-- Favicon -->
-                    <img src="data:image/png;base64,<?=$bookmark['favicon_image']?>" alt="" />
-                    <? } else if ($bookmark['favicon_url']) { ?>
-                    <img src="<?=$bookmark['favicon_url']?>" alt="" />
-                    <? } ?>
+                    <img src="data:image/png;base64,<?php echo $bookmark['favicon_image']?>" alt="" />
+                    <?php } else if ($bookmark['favicon_url']) { ?>
+                    <img src="<?php echo $bookmark['favicon_url']?>" alt="" />
+                    <?php } ?>
                 </td>
         
                 <td>
-                    <input type="hidden" name="bookmarks[<?=$i?>][url]" value="<?=$bookmark['url']?>"/>
-                    <input type="hidden" name="bookmarks[<?=$i?>][title]" value="<?=$bookmark['title']?>"/>
-                    <input type="hidden" name="bookmarks[<?=$i?>][description]" value="<?=$bookmark['description']?>"/>
-                    <input type="hidden" name="bookmarks[<?=$i?>][tags]" value="<?=$bookmark['tags']?>"/>
-                    <? if (isset($bookmark['prefix'])) { ?>
-                    <? echo $bookmark['prefix']; ?>
-                    <? } ?>
-                    <a href="<?=$bookmark['url']?>" target="_blank">
-                        <span class="txt" title="<?=$bookmark['title']?>">
-                            <?=$bookmark['title']?>
+                    <input type="hidden" name="bookmarks[<?php echo $i?>][url]" value="<?php echo $bookmark['url']?>"/>
+                    <input type="hidden" name="bookmarks[<?php echo $i?>][title]" value="<?php echo $bookmark['title']?>"/>
+                    <input type="hidden" name="bookmarks[<?php echo $i?>][description]" value="<?php echo $bookmark['description']?>"/>
+                    <input type="hidden" name="bookmarks[<?php echo $i?>][tags]" value="<?php echo $bookmark['tags']?>"/>
+                    <?php if (isset($bookmark['prefix'])) { ?>
+                    <?php echo $bookmark['prefix']; ?>
+                    <?php } ?>
+                    <a href="<?php echo $bookmark['url']?>" target="_blank">
+                        <span class="txt" title="<?php echo $bookmark['title']?>">
+                            <?php echo $bookmark['title']?>
                         </span>
                     </a>
                 </td>
             </tr>
     
-            <? 
+            <?php 
             flush();
         }
         ?>
         </table>
-        <input type="submit" value="<?=__('Import theses bookmarks', HERISSON_TD);?>" />
+        <input type="submit" value="<?php echo __('Import theses bookmarks', HERISSON_TD);?>" />
     </form>
 </div>
