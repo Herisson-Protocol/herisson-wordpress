@@ -10,7 +10,7 @@
 
 // constants of plugin
 define( 'HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME );
-define( 'HERISSON_DOCTRINE_MODELS_DIR', dirname( __FILE__ ) . '/../vendor/doctrine/models' );
+define( 'HERISSON_DOCTRINE_MODELS_DIR', dirname( __FILE__ ) . '/Models' );
 //define( 'HERISSON_DOCTRINE_SHORTCODES_DIR', dirname( __FILE__ ) . '/../vendor/doctrine/shortcodes' );
 $GLOBALS['doctrine_models_folder_reset_processed'] = false;
 
