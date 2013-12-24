@@ -10,8 +10,8 @@
 
 // constants of plugin
 define( 'HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME );
-define( 'HERISSON_DOCTRINE_MODELS_DIR', dirname( __FILE__ ) . '/models' );
-define( 'HERISSON_DOCTRINE_SHORTCODES_DIR', dirname( __FILE__ ) . '/shortcodes' );
+define( 'HERISSON_DOCTRINE_MODELS_DIR', dirname( __FILE__ ) . '/../vendor/doctrine/models' );
+//define( 'HERISSON_DOCTRINE_SHORTCODES_DIR', dirname( __FILE__ ) . '/../vendor/doctrine/shortcodes' );
 $GLOBALS['doctrine_models_folder_reset_processed'] = false;
 
 
@@ -24,8 +24,7 @@ $GLOBALS['doctrine_models_folder_reset_processed'] = false;
  */
 function herisson_doctrine_loadlibrary() {
     // load Doctrine library
-    require_once dirname( __FILE__ ) . '/lib/Doctrine.php';
-    require_once dirname( __FILE__ ) . '/count_files_in_dir.func.php';
+    require_once dirname( __FILE__ ) . '/../vendor/doctrine/lib/Doctrine.php';
 
     // this will allow Doctrine to load Model classes automatically
     spl_autoload_register( array( 'Doctrine', 'autoload' ) );
@@ -36,6 +35,7 @@ function herisson_doctrine_loadlibrary() {
 
     // (OPTIONAL) CONFIGURATION BELOW
 
+    /*
     // load our shortcodes
     if ( is_dir( HERISSON_DOCTRINE_SHORTCODES_DIR ) ) {
         foreach ( glob( HERISSON_DOCTRINE_SHORTCODES_DIR . '/*.php' ) as $shortcode_file ) {
@@ -44,6 +44,7 @@ function herisson_doctrine_loadlibrary() {
     } else {
         mkdir( HERISSON_DOCTRINE_SHORTCODES_DIR, 0775 );
     }
+    */
 
     // this will allow us to use "mutators"
     Doctrine_Manager::getInstance()->setAttribute( Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE, true );
@@ -88,5 +89,35 @@ function herisson_doctrine_loadmodels() {
     Doctrine::loadModels( HERISSON_DOCTRINE_MODELS_DIR );
 }
 
+function count_files_in_dir( $dir ) {
+    $gdir = glob( $dir );
+    return ( $gdir != false ) ? count( $gdir ) : 0;
+}
+
+
+function deltree( $dir ) {
+    if ( !file_exists( $dir ) ) {
+        return true;
+    }
+    
+    if ( !is_dir( $dir ) || is_link( $dir ) ) {
+        return unlink( $dir );
+    }
+    
+    foreach ( scandir( $dir ) as $item ) {
+        if ( ( $item == '.' ) || ( $item == '..' ) ) {
+            continue;
+        }
+        
+        if ( !deltree( $dir . '/' . $item ) ) {
+            chmod( $dir . '/' . $item, 0777 );
+            if ( !deltree( $dir . '/' . $item ) ) {
+                return false;
+            }
+        }
+    }
+    
+    return rmdir( $dir );
+}
 herisson_doctrine_loadlibrary();
 ?>

@@ -69,7 +69,8 @@ function herisson_init()
 
 
 // Include other functionality
-require_once HERISSON_BASE_DIR . 'doctrine/doctrine.php';
+#require_once HERISSON_BASE_DIR . 'vendor/doctrine/doctrine.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Doctrine.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Pagination.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Message.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Encryption.php';
