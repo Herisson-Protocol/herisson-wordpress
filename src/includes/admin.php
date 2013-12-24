@@ -26,7 +26,7 @@ function herissonAddPages()
     $friends = WpHerissonFriendsTable::getWhere('b_wantsyou=1');
     $nb = sizeof($friends);
     $friends_waiting = sprintf($update, $nb, $nb);
-    $icon_url = plugin_dir_url("herisson")."/herisson/images/herisson_logo_mini_16x16.png";
+    $icon_url = plugin_dir_url("herisson")."/herisson/html/images/herisson_logo_mini_16x16.png";
 
     $r = new HerissonRouter();
 
@@ -39,7 +39,7 @@ function herissonAddPages()
     add_submenu_page('herisson_menu', __('Backups', HERISSON_TD), __('Backups', HERISSON_TD), 'manage_options', 'herisson_backup', array(&$r, 'route'));
     add_submenu_page('herisson_menu', __('Options', HERISSON_TD), __('Options', HERISSON_TD), 'manage_options', 'herisson_option', array(&$r, 'route'));
 
-    wp_register_style('herissonStylesheet', plugins_url().'/herisson/css/stylesheet.css');
+    wp_register_style('herissonStylesheet', plugins_url().'/herisson/html/css/stylesheet.css');
     wp_enqueue_style('herissonStylesheet');
 
 }
