@@ -19,7 +19,7 @@
                 <input type="file" name="import_file" />
             </td>
             <td>
-                <input type="submit" value="<?php echo __("Import bookmarks", HERISSON_TD); ?>" />
+                <input type="submit" class="button" value="<?php echo __("Import bookmarks", HERISSON_TD); ?>" />
             </td>
         </tr>
         <?php } ?>

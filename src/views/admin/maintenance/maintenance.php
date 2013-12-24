@@ -48,5 +48,5 @@
 <form method="post" action="<?php echo get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
     <input type="hidden" name="action" value="maintenance" />
     <input type="hidden" name="maintenance" value="on" />
-    <input type="submit" value="Correct theses errors" />
+    <input type="submit" class="button" value="Correct theses errors" />
 </form>

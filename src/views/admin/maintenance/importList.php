@@ -1,6 +1,8 @@
 <div class="wrap">
     <h2>
-        <?php echo $page_title; ?>
+        <?php if (isset($page_title)) { ?>
+            <?php echo $page_title; ?>
+        <?php } ?>
         <?php echo  __("Importation results from JSON bookmarks", HERISSON_TD); ?>
     </h2>
 
@@ -98,6 +100,6 @@
         }
         ?>
         </table>
-        <input type="submit" value="<?php echo __('Import theses bookmarks', HERISSON_TD);?>" />
+        <input type="submit" class="button" value="<?php echo __('Import theses bookmarks', HERISSON_TD);?>" />
     </form>
 </div>

@@ -170,7 +170,7 @@
         <input type="hidden" name="action" value="index" />
 
         <p class="submit">
-            <input type="submit" value="<?php echo __("Update Options", HERISSON_TD); ?>" />
+            <input type="submit" class="button" value="<?php echo __("Update Options", HERISSON_TD); ?>" />
         </p>
 
     </form>

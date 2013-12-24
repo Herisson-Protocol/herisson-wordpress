@@ -104,7 +104,7 @@ class HerissonView
         foreach (get_object_vars($this) as $attr=>$value) {
             $$attr = $value;
         }
-        // echo "viewFile : $this->viewFile<br>";
+        echo "viewFile : $this->viewFile<br>";
         if (file_exists($this->viewFile)) {
             include $this->viewFile;
         }

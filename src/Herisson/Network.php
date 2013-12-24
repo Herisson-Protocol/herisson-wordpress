@@ -1,4 +1,15 @@
 <?php
+/**
+ * HerissonNetwork
+ *
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
+
 
 /**
  * HTTP Code
@@ -90,15 +101,57 @@ $mime_types = array(
     "image/gif",
 );
 
-
+/**
+ * HerissonNetwork
+ *
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
 class HerissonNetwork
 {
+    /**
+     * Code
+     */
     public $code = 0;
+
+    /**
+     * Message
+     */
     public $message = "";
+
+    /**
+     * Content
+     */
     public $content = "";
+
+    /**
+     * Error code
+     */
     public $error = 0;
+
+    /**
+     * HTTP code
+     */
     public $http_code = 0;
+
+    /**
+     * HTTP Message
+     */
     public $http_message = "";
+
+    /**
+     * Constructor
+     *
+     * TODO : Fix this doc
+     *
+     * @param integer $code    the http code
+     * @param string  $message the message
+     * @param string  $content the content
+     */
     public function __construct($code='', $message='', $content='')
     {
         $this->code = $code;
@@ -106,6 +159,16 @@ class HerissonNetwork
         $this->content = $content;
     }
 
+    /**
+     * Get a curl object
+     *
+     * @param string $url  the URL to download
+     * @param array  $post the data to send via POST method
+     *
+     * @throws an Exception in case php-curl is missing
+     *
+     * @return the curl object
+     */
     public function getCurl($url, $post=null)
     {
         if (function_exists('curl_init')) {
@@ -125,6 +188,14 @@ class HerissonNetwork
         }
     }
 
+    /**
+     * Download an URL
+     *
+     * @param string $url  the URL to download
+     * @param array  $post the data to send via POST method
+     *
+     * @return the text content
+     */
     public function download($url, $post=array())
     {
         $curl = $this->getCurl($url, $post);
@@ -153,6 +224,13 @@ class HerissonNetwork
         return $result;
     }
 
+    /**
+     * Check an URL
+     *
+     * @param string $url the URL to download
+     *
+     * @return the HTTP status
+     */
     public function check($url)
     {
         $curl = $this->getCurl($url);
@@ -161,6 +239,13 @@ class HerissonNetwork
         return $this->httpData($httpCode);
     }
 
+    /**
+     * Create a HTTP status from the HTTP Code
+     *
+     * @param integer $code the HTTP Code
+     *
+     * @return an array with the HTTP status information
+     */
     public function httpData($code)
     {
         global $http_codes;
@@ -176,6 +261,14 @@ class HerissonNetwork
         }
     }
 
+    /**
+     * Send a header reply with a specific HTTP Code
+     *
+     * @param integer $code the HTTP code to send to the client
+     * @param boolean $exit whether it should exit after sending HTTP response
+     *
+     * @return void
+     */
     public static function reply($code, $exit=0)
     {
         global $http_codes;

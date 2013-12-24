@@ -262,7 +262,7 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
     function importList($bookmarks)
     {
         $this->view->bookmarks = $bookmarks;
-        $this->setView('importList.php');
+        $this->setView('importList');
     }
 
     /**

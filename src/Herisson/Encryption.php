@@ -1,10 +1,27 @@
 <?php
+/**
+ * HerissonEncryption
+ *
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
+
 
 /**
  * HerissonEncryption
  * 
  * Handles public/private key asymetric encryption
  * 
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
  */
 class HerissonEncryption
 {
@@ -227,6 +244,15 @@ class HerissonEncryption
         );
     }
 
+    /**
+     * Check an encrypted data
+     *
+     * @param string $data              the encrypted data
+     * @param string $signature         the signature used to encrypt
+     * @param string $friend_public_key the friend public key needed to encrypt the data
+     *
+     * @return base64 encrypted data
+     */
     function checkShort($data, $signature, $friend_public_key)
     {
         if ($this->decryptShort($signature, $friend_public_key) == $this->hash($data)) {
@@ -273,6 +299,18 @@ class HerissonEncryption
 }
 
 
+/**
+ * HerissonEncryptionException
+ * 
+ * Handles encryption errors
+ * 
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
 class HerissonEncryptionException
 {
 
