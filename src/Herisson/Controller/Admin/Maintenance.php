@@ -125,7 +125,7 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
             $this->setView('index');
             exit;
         }
-        include HERISSON_INCLUDES_DIR."delicious/DeliciousBrownies.php";
+        include HERISSON_VENDOR_DIR."delicious/DeliciousBrownies.php";
         $d = new DeliciousBrownies;
         $d->setUsername($username);
         $d->setPassword($password);
@@ -177,7 +177,7 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
             $this->setView('index');
             exit;
         }
-        include HERISSON_INCLUDES_DIR."firefox/bookmarks.class.php";
+        include HERISSON_VENDOR_DIR."firefox/bookmarks.class.php";
         $filename = $_FILES['import_file']['tmp_name'];
         // Parsing bookmarks file
         $bookmarks = new Bookmarks();

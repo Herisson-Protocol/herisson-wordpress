@@ -37,6 +37,7 @@ define('HERISSON_TD', 'herisson');
 define('HERISSON_BASE_DIR', ABSPATH."/wp-content/plugins/herisson/");
 define('HERISSON_WP_BASE_DIR', ABSPATH);
 define('HERISSON_INCLUDES_DIR', HERISSON_BASE_DIR.'includes/');
+define('HERISSON_VENDOR_DIR', HERISSON_BASE_DIR.'vendor/');
 define('HERISSON_TEMPLATES_DIR', HERISSON_BASE_DIR.'templates/');
 define('HERISSON_ADMIN_DIR', HERISSON_BASE_DIR.'admin/');
 define('HERISSON_LANG_DIR', HERISSON_BASE_DIR.'languages/');
