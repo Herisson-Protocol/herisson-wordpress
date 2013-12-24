@@ -32,7 +32,7 @@ class WpHerissonFriendsTable extends Doctrine_Table
         return new WpHerissonFriends();
     }
 
-    public static function getWhere($where)
+    public static function getWhere($where, $data=array())
     {
         $pagination = HerissonPagination::i()->getVars();
         $friends = Doctrine_Query::create()
@@ -40,7 +40,7 @@ class WpHerissonFriendsTable extends Doctrine_Table
             ->where($where)
             ->limit($pagination['limit'])
             ->offset($pagination['offset'])
-            ->execute();
+            ->execute($data);
         return $friends;
     }
 

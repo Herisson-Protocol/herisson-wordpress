@@ -1,18 +1,52 @@
 <?php
+/**
+ * Maintenance controller 
+ *
+ * @category Controller
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      HerissonControllerAdmin
+ */
 
 require_once __DIR__."/../Admin.php";
 
+/**
+ * Class: HerissonControllerAdminMaintenance
+ *
+ * @category Controller
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      HerissonControllerAdmin
+ */
 class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
 {
 
-
+    /**
+     * Constructor
+     *
+     * Sets controller's name
+     */
     function __construct()
     {
         $this->name = "maintenance";
         parent::__construct();
     }
 
-    /** EXPORT **/
+    /**
+     * Action to export this site's bookmarks to a file
+     *
+     * Redirects to indexAction() if format is not supplied
+     * Redirects to indexAction() if an unknown format is supplied
+     * Dispatch to an HerissonExport method according to given format
+     *
+     * @see HerissonExport
+     *
+     * @return void
+     */
     function exportAction()
     {
         if (!post('format')) {
@@ -41,7 +75,15 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
     }
 
 
-    /** IMPORTATION **/
+    /**
+     * Action to import bookmarks into this site
+     *
+     * Redirects to indexAction() if format is not supplied
+     * Redirects to indexAction() if an unknown format is supplied
+     * Dispatch to the right method according to given format
+     *
+     * @return void
+     */
     function importAction()
     {
         if (!post('import_source')) {
@@ -63,10 +105,15 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
         }
     }
 
-
-
     /**
      * Handle the importation of Delicious bookmarks, from username/password provided by the user
+     *
+     * Redirects to importList() to help the user decide which bookmarks to import
+     * Use external library DeliciousBrownies to talk to Delicious API
+     *
+     * @see DeliciousBrownies
+     *
+     * @return void
      */
     function importDeliciousAction()
     {
@@ -78,13 +125,23 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
             $this->setView('index');
             exit;
         }
-        include HERISSON_INCLUDES_DIR."delicious/delicious.php";
-        $delicious_bookmarks = herisson_delicious_posts_all($username, $password);
+        include HERISSON_INCLUDES_DIR."delicious/DeliciousBrownies.php";
+        $d = new DeliciousBrownies;
+        $d->setUsername($username);
+        $d->setPassword($password);
+        // Call https://api.del.icio.us/v1/posts/all
+        $deliciousBookmarks = $d->getAllPosts();
+
+        if (!$deliciousBookmarks) {
+            echo __("Someting went wrong while fetching Delicious bookmarks. (Eg. Wrong login/password, no bookmarks etc)", HERISSON_TD);
+            exit;
+        }
+
         $list = array();
 
         $page_title = __("Importation results from Delicious bookmarks", HERISSON_TD);
 
-        foreach ($delicious_bookmarks as $b) {
+        foreach ($deliciousBookmarks as $b) {
             $bookmark = array();
             $bookmark['url'] = $b['href'];
             $bookmark['title'] = $b['description'];
@@ -97,11 +154,21 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
 
             $list[] = $bookmark;
         }
-        unset($delicious_bookmarks);
+        unset($deliciousBookmarks);
         $this->importList($list);
 
     }
 
+    /**
+     * Handle the importation of Firefox bookmarks
+     *
+     * Redirects to importList() to help the user decide which bookmarks to import
+     * Use external library firefox/bookmarks.class.php to parse html files
+     *
+     * @see firefox/bookmarks.class.php
+     *
+     * @return void
+     */
     function importFirefoxAction()
     {
         if (!isset($_FILES['import_file'])) { 
@@ -152,6 +219,13 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
 
     }
 
+    /**
+     * Handle the importation of JSON Herisson bookmarks
+     *
+     * Redirects to importList() to help the user decide which bookmarks to import
+     *
+     * @return void
+     */
     function importJsonAction()
     {
         if (!isset($_FILES['import_file'])) { 
@@ -179,9 +253,11 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
 
 
     /** 
-     * Display the importable bookmarks list to make the user decide which bookmarks he wants to import into Herisson
+     * Display the imported bookmarks list to make the user decide which bookmarks he wants to import into his Herisson site
      * 
      * @param array $bookmarks the list of bookmarks to display
+     *
+     * @return void
      */
     function importList($bookmarks)
     {
@@ -190,7 +266,9 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
     }
 
     /**
-     * Handle the validation of bookmarks to import after the user choice of which bookmarks he wants to import
+     * Handle the validation of bookmarks to import after the user choose which bookmarks he wants to import
+     *
+     * @return void
      */
     function importValidateAction()
     {
@@ -220,6 +298,10 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
 
     /**
      * Display import and maintenance options page
+     *
+     * This is the default Action
+     *
+     * @return void
      */
     function indexAction()
     {
@@ -230,6 +312,8 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
      * Display maintenance statistics page
      * 
      * This allows to start maintenance checks to
+     *
+     * @return void
      */
     function maintenanceAction()
     {

@@ -1,23 +1,61 @@
 <?php
+/**
+ * Bookmark controller 
+ *
+ * @category Controller
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      HerissonControllerAdmin
+ */
 
 require_once __DIR__."/../Admin.php";
 
+/**
+ * Class: HerissonControllerAdminBookmark
+ *
+ * @category Controller
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      HerissonControllerAdmin
+ */
 class HerissonControllerAdminBookmark extends HerissonControllerAdmin
 {
 
-
+    /**
+     * Constructor
+     *
+     * Sets controller's name
+     */
     function __construct()
     {
         $this->name = "bookmark";
         parent::__construct();
     }
 
+    /**
+     * Action to add a new bookmark
+     *
+     * Redirects to editAction()
+     *
+     * @return void
+     */
     function addAction()
     {
         $this->setView('edit');
         $this->editAction();
     }
 
+    /**
+     * Action to add delete a bookmark
+     *
+     * Redirects to indexAction()
+     *
+     * @return void
+     */
     function deleteAction()
     {
         $id = intval(param('id'));
@@ -26,13 +64,17 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
             $bookmark->delete();
         }
 
-        // Redirect to Bookmarks list
+        // Redirects to Bookmarks list
         $this->indexAction();
         $this->setView('index');
     }
 
     /**
+     * Action to download a bookmark URL content
      *
+     * Redirects to editAction()
+     *
+     * @return void
      */
     function downloadAction()
     {
@@ -42,11 +84,19 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
             $bookmark->maintenance();
             $bookmark->captureFromUrl();
 
-            $this->editiAction();
+            $this->editAction();
             $this->setView('edit');
         }
     }
 
+    /**
+     * Action to edit a bookmark
+     *
+     * If POST method used, update the given bookmark with the POST parameters,
+     * otherwise just display the bookmark properties
+     *
+     * @return void
+     */
     function editAction()
     {
         $id = intval(param('id'));
@@ -77,6 +127,13 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
         $this->view->id = $id;
     }
 
+    /**
+     * Action to list bookmarks
+     *
+     * This is the default action
+     *
+     * @return void
+     */
     function indexAction()
     {
         $tag = get('tag');
@@ -91,12 +148,22 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
         $this->view->pagination = HerissonPagination::i()->getVars();
     }
 
+    /**
+     * Action to display the tags list
+     *
+     * @return void
+     */
     function tagCloudAction()
     {
         $this->view->tags = WpHerissonTagsTable::getAll();
         $this->layout = false;
     }
 
+    /**
+     * Action to search a keyword through bookmarks
+     *
+     * @return void
+     */
     function searchAction()
     {
         $search = get('search');
@@ -107,7 +174,11 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
         $this->setView('index');
     }
 
-
+    /**
+     * Action to display a bookmark content
+     *
+     * @return void
+     */
     function viewAction()
     {
         $id = intval(get('id'));

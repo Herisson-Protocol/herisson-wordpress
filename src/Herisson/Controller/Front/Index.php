@@ -1,17 +1,50 @@
 <?php
+/**
+ * Index controller 
+ *
+ * @category Controller
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      HerissonControllerFront
+ */
 
 require __DIR__."/../Front.php";
 
+/**
+ * Class: HerissonControllerAdminFront
+ *
+ * @category Controller
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      HerissonController
+ */
 class HerissonControllerFrontIndex extends HerissonControllerFront
 {
 
-
+    /**
+     * Constructor
+     *
+     * Sets controller's name
+     */
     function __construct()
     {
         $this->name = "index";
         parent::__construct();
     }
 
+    /**
+     * Action to handle the ask from another site
+     *
+     * Handled via HTTP Response code
+     *
+     * TODO: Handle HerissonNetwork replies as Exceptions
+     *
+     * @return void
+     */
     function askAction()
     {
 
@@ -41,19 +74,14 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
     }
 
 
-    function friendsGetWhere($where, $data=array())
-    {
-        $friends = Doctrine_Query::create()
-            ->from('WpHerissonFriends')
-            ->where("$where")
-            ->execute($data);
-        foreach ($friends as $friend) {
-            return $friend;
-        }
-        return new WpHerissonFriends();
-
-    }
-
+    /**
+     * Action to handle the ask from another site
+     *
+     * TODO: Handle HerissonNetwork replies as Exceptions
+     *
+     * @return void
+     */
+    /*
     function getAction()
     {
 
@@ -69,8 +97,15 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
         }
         return new WpHerissonBookmarks();
     }
+    */
 
-
+    /**
+     * Action to display homepage of Herisson site
+     *
+     * This is the default action
+     *
+     * @return void
+     */
     function indexAction()
     {
 
@@ -95,10 +130,18 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
         $this->view->title = $this->options['sitename'];
 
 
-        $this->view->friends = Doctrine_Query::create()->from('WpHerissonFriends')->where("is_active=1")->execute();
+        $this->view->friends = WpHerissonFriendsTable::getWhere("is_active=1");
 
     }
 
+    /**
+     * Action to display Herisson site informations
+     *
+     * This is mandatory for Herisson protocol
+     * Outputs JSON
+     *
+     * @return void
+     */
     function infoAction()
     {
 
@@ -109,22 +152,34 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
         ));
     }
 
-
+    /**
+     * Action to display Herisson site public key
+     *
+     * This is mandatory for Herisson protocol
+     * Outputs Text
+     *
+     * @return void
+     */
     function publicKeyAction()
     {
         echo $this->options['publicKey'];
     }
 
+    /**
+     * Action to send all the bookmarks data to a known friend
+     *
+     * This methods check the given publickey
+     * Outputs JSON
+     *
+     * @return void
+     */
     function retrieveAction()
     {
         if (!sizeof($_POST)) {
             exit;
         }
         $key = post('key');
-        $friends = Doctrine_Query::create()
-            ->from('WpHerissonFriends')
-            ->where("public_key=?")
-            ->execute(array($key));
+        $friends = WpHerissonFriendsTable::getWhere("public_key=?", array($key));
         foreach ($friends as $friend) {
             echo $friend->generateBookmarksData($_POST);
             // Exit au cas ou le friend est présent plusieurs fois
@@ -132,12 +187,19 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
         }
     }
 
+    /**
+     * Action to handle validation of a pending request for friendship.
+     *
+     * Handled via HTTP Response code
+     *
+     * @return void
+     */
     function validateAction()
     {
 
         $signature = post('signature');
         $url = post('url');
-        $f = $this->friendsGetWhere("url=? AND b_youwant=1", array($url));
+        $f = WpHerissonFriendsTable::getWhere("url=? AND b_youwant=1", array($url));
         if (herisson_check_short($url, $signature, $f->public_key)) {
             $f->b_youwant=0;
             $f->is_active=1;

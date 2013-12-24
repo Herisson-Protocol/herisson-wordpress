@@ -5,7 +5,7 @@
             <?php echo sprintf(__("%s bookmarks", HERISSON_TD), $title); ?>
         </h1>
         <div id="search">
-            <form action="" method="get">
+            <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get">
                 Recherche <input type="text" name="search" value="" /><input type="submit" value="OK"/>
             </form>
         </div>
@@ -15,7 +15,7 @@
             <?php foreach ($bookmarks as $bookmark) { ?> 
             <div class="bookmark">
                 <span class="title">
-                    <a href="<?php echo $bookmark->url; ?>"><?php echo $bookmark->title?></a>
+                    <a href="<?php echo esc_url($bookmark->url); ?>"><?php echo esc_html($bookmark->title); ?></a>
                 </span>
                 <br/>
                 <span class="tag">Tags</span> :

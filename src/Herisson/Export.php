@@ -1,17 +1,55 @@
 <?php
+/**
+ * Export tool
+ *
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
 
 
+/**
+ * Class: HerissonExport
+ *
+ * This is a tools class with static methods
+ *
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
 class HerissonExport
 {
 
+    /**
+     * Give content to be send to the browser
+     *
+     * @param string $content  the content data to download
+     * @param string $filename the filename for the downloaded file
+     *
+     * @return void
+     */
     public static function forceDownloadContent($content, $filename)
     {
         $temp = tempnam("/tmp", "herisson");
         file_put_contents($temp, $content);
-        self::forceDownloadGzip($temp, "herisson-bookmarks.json");
+        self::forceDownloadGzip($temp, $filename);
         unlink($temp);
     }
 
+    /**
+     * Send a file to gzip and send to the browser
+     *
+     * @param string $filepath the path of the file to send to the browser
+     * @param string $filename the filename for the downloaded file
+     *
+     * @return void
+     */
     public static function forceDownloadGzip($filepath, $filename)
     {
         $gzip = self::gzCompressFile($filepath);
@@ -20,6 +58,15 @@ class HerissonExport
             unlink($gzip);
         }
     }
+
+    /**
+     * Force a file to be downloaded by the browser (not displayed inline)
+     *
+     * @param string $filepath the path of the file to send to the browser
+     * @param string $filename the filename for the downloaded file
+     *
+     * @return void
+     */
     public static function forceDownload($filepath, $filename)
     {
         $file = basename($filepath);
@@ -44,11 +91,14 @@ class HerissonExport
         return;
     }
 
-
-
-
     /**
+     * Generate Firefox bookmarks file and send it to the user
      *
+     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
+     *
+     * @see WpHerissonBookmarks
+     *
+     * @return void
      */
     public static function exportFirefox($bookmarks)
     {
@@ -76,6 +126,15 @@ class HerissonExport
         self::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
     }
 
+    /**
+     * Generate JSON bookmarks file and send it to the user
+     *
+     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
+     *
+     * @see WpHerissonBookmarks
+     *
+     * @return void
+     */
     public static function exportJson($bookmarks)
     {
         $list= array();
@@ -86,22 +145,30 @@ class HerissonExport
         exit;
     }
 
+    /**
+     * Gzip a file
+     *
+     * @param string  $source filename of the source
+     * @param integer $level  the compression level (0 to 9)
+     *
+     * @return the destination filename for the gzipped file if everything went well, false otherwise
+     */
     public static function gzCompressFile($source, $level=false)
     {
-        $dest=$source.'.gz';
-        $mode='wb'.$level;
-        $error=false;
-        if ($fp_out=gzopen($dest, $mode)) {
-            if ($fp_in=fopen($source, 'rb')) {
+        $dest = $source.'.gz';
+        $mode = 'wb'.$level;
+        $error = false;
+        if ($fp_out = gzopen($dest, $mode)) {
+            if ($fp_in = fopen($source, 'rb')) {
                 while (!feof($fp_in))
                     gzwrite($fp_out, fread($fp_in, 1024*512));
                 fclose($fp_in);
             } else { 
-                $error=true;
+                $error = true;
             }
             gzclose($fp_out);
         } else { 
-            $error=true;
+            $error = true;
         }
         if ($error) {
             return false;

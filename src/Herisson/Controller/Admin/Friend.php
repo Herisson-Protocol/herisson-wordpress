@@ -1,23 +1,61 @@
 <?php
+/**
+ * Friend controller 
+ *
+ * @category Controller
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      HerissonControllerAdmin
+ */
 
 require_once __DIR__."/../Admin.php";
 
+/**
+ * Class: HerissonControllerAdminFriend
+ *
+ * @category Controller
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      HerissonControllerAdmin
+ */
 class HerissonControllerAdminFriend extends HerissonControllerAdmin
 {
 
-
+    /**
+     * Constructor
+     *
+     * Sets controller's name
+     */
     function __construct()
     {
         $this->name = "friend";
         parent::__construct();
     }
 
+    /**
+     * Action to add a new friend
+     *
+     * Redirect to editAction()
+     *
+     * @return void
+     */
     function addAction()
     {
         $this->setView('edit');
         $this->editAction();
     }
 
+    /**
+     * Action to approve a new friend
+     *
+     * Redirect to editAction()
+     *
+     * @return void
+     */
     function approveAction()
     {
         $id = intval(param('id'));
@@ -34,6 +72,13 @@ class HerissonControllerAdminFriend extends HerissonControllerAdmin
         $this->setView('index');
     }
 
+    /**
+     * Action to delete a friend
+     *
+     * Redirect to indexAction()
+     *
+     * @return void
+     */
     function deleteAction()
     {
         $id = intval(param('id'));
@@ -47,6 +92,14 @@ class HerissonControllerAdminFriend extends HerissonControllerAdmin
         $this->setView('index');
     }
 
+    /**
+     * Action to edit a friend
+     *
+     * If POST method used, update the given friend with the POST parameters,
+     * otherwise just display the friend properties
+     *
+     * @return void
+     */
     function editAction()
     {
         $id = intval(param('id'));
@@ -90,6 +143,13 @@ class HerissonControllerAdminFriend extends HerissonControllerAdmin
         $this->view->id = $id;
     }
 
+    /**
+     * Action to list friends
+     *
+     * This is the default action
+     *
+     * @return void
+     */
     function indexAction()
     {
         $this->view->actives  = WpHerissonFriendsTable::getWhere("is_active=1");
@@ -98,6 +158,13 @@ class HerissonControllerAdminFriend extends HerissonControllerAdmin
         $this->view->errors   = WpHerissonFriendsTable::getWhere("b_wantsyou!=1 and b_youwant!=1 and is_active!=1");
     }
 
+    /**
+     * Action to import friends
+     *
+     * Not implemented yet
+     *
+     * @return void
+     */
     function importAction()
     {
         if ( !empty($_POST['login']) && !empty($_POST['password'])) {
