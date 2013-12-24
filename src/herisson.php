@@ -69,13 +69,13 @@ function herisson_init() {
 
 // Include other functionality
 require_once HERISSON_BASE_DIR . 'doctrine/doctrine.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Pagination.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Message.php';
 require_once HERISSON_INCLUDES_DIR . 'admin.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
 require_once HERISSON_INCLUDES_DIR . 'encryption.php';
 require_once HERISSON_INCLUDES_DIR . 'network.php';
 require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
-require_once HERISSON_INCLUDES_DIR . 'maintenance.php';
-require_once HERISSON_INCLUDES_DIR . 'db.php';
 
 /**
  * Checks if the install needs to be run by checking the `HerissonVersions` option, which stores the current installed database, options and rewrite versions.
@@ -132,8 +132,8 @@ function herisson_install() {
         }
     }
 
-	# Generate a couple of public/private key to handle encryption between this site and friends
-	$encryption = HerissonEncryption::i()->generateKeyPairs();
+    # Generate a couple of public/private key to handle encryption between this site and friends
+    $encryption = HerissonEncryption::i()->generateKeyPairs();
 
     $defaultOptions = array(
         'formatDate'                => 'd/m/Y',
@@ -178,78 +178,28 @@ function herisson_install() {
 register_activation_hook('herisson/herisson.php', 'herisson_install');
 
 
-/**
- * Loads the given filename from The Herisson templates directory.
- * @param string $filename The filename of the template to load.
- */
-    /*
-function herisson_load_template( $filename ) {
-    $template_option = get_option('herissonOptions');
-    $template_directory = $template_option['templateBase'];
-
-    $template = HERISSON_TEMPLATES_DIR . "$template_directory" . "$filename";
-
-    if ( !file_exists($template) )
-        return new WP_Error('template-missing', sprintf(__("Oops! The template file %s could not be found in the Herisson default_template or custom_template directories.", HERISSON_TD), "<code>$filename</code>"));
-
-    load_template($template);
-}
-*/
-
 function herisson_router() {
     # Routing : http://blog.defaultroute.com/2010/11/25/custom-page-routing-in-wordpress/
     global $route,$wp_query,$window_title;
     $options = get_option('HerissonOptions');
     $path =explode("/",$_SERVER['REQUEST_URI']);
-    if (sizeof($path) && $path[1] == $options['basePath']) { # && array_key_exists(2,$path) && $path[2]) {
-        require_once HERISSON_BASE_DIR."/front/front.php";
-        herisson_front_actions();
-        die();
+    if (sizeof($path) && $path[1] == $options['basePath']) {
+        require HERISSON_BASE_DIR."/Herisson/Controller/Front/Index.php";
+        $c = new HerissonControllerFrontIndex();
+        $c->route();
+        exit;
     }
 }
 
 add_action( 'send_headers', 'herisson_router');
 
-
-
 #add_filter('show_admin_bar', '__return_false');
 #add_action('admin_menu', 'remove_menus');
 
 if (param('nomenu')) {
-    if (param('page') == "herisson_bookmarks") {
-        herisson_bookmark_actions();
-    } else if (param('page') == "herisson_friends") {
-        herisson_friend_actions();
-    } else if (param('page') == 'herisson_maintenance') {
-        herisson_maintenance_actions();
-    } else if (param('page') == 'herisson_backup') {
-        herisson_backup_actions();
-    } else if (param('page') == 'front') {
-        herisson_front_actions();
-    }
-    exit;
+    $c = new HerissonRouter();
+    $c->routeRaw();
 }
 
-
-/**
- * Hook to display the [herisson] content
- */
-/*
-require_once HERISSON_BASE_DIR."/front/front.php";
-function herisson_front_test($content) {
-    if (preg_match("#(.*)\[herisson\](.*)#mis",$content,$match)) {
-        ob_start();
-        echo $match[1];
-        herisson_front_list();
-        echo $match[2];
-        $text = ob_get_contents();
-         ob_end_clean();
-        return $text;
-    } else {
-        return $content;
-    }
-}
-add_action('the_content','herisson_front_test');
-*/
     
 ?>

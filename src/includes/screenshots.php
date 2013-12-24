@@ -40,11 +40,11 @@ function herisson_screenshots_thumb($image,$thumb) {
 function herisson_spider_fullpage($url,$directory) {
  $default = "index.html";
 	if (file_exists("$directory/$default")) { return false; }
- success_add("/usr/bin/wget --no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories -erobots=off -P $directory ".'"<a href="'.$url.'" target="_blank">'.$url.'</a>"');
+ HerissonMessage::i()->addSucces("/usr/bin/wget --no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories -erobots=off -P $directory ".'"<a href="'.$url.'" target="_blank">'.$url.'</a>"');
  exec("/usr/bin/wget --no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories -erobots=off -P $directory ".'"'.$url.'"');
 	$file = basename($url);
 	if ($file) {
-	 success_add("mv \"$directory/$file\" \"$directory/index.html\"");
+	 HerissonMessage::i()->addSucces("mv \"$directory/$file\" \"$directory/index.html\"");
 	 exec("mv \"$directory/$file\" \"$directory/index.html\"");
 	}
 }

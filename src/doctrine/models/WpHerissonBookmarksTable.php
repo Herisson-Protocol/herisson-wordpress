@@ -16,4 +16,111 @@ class WpHerissonBookmarksTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('WpHerissonBookmarks');
     }
+
+    public static function checkDuplicate($url)
+    {
+
+        $bookmarks = self::getWhere("hash='".md5($url)."'");
+        if (sizeof($bookmarks)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function createBookmark($url, $options=array()) {
+
+        if (self::checkDuplicate($url)) {
+           echo "Ignoring duplicate entry : $url<br>";
+        }
+        $bookmark = new WpHerissonBookmarks();
+        $bookmark->url = $url;
+        if (sizeof($options)) {
+            if (array_key_exists('favicon_url', $options) && $options['favicon_url']) {
+                $bookmark->favicon_url = $options['favicon_url'];
+            }
+            if (array_key_exists('favicon_image', $options) && $options['favicon_image']) {
+                $bookmark->favicon_image = $options['favicon_image'];
+            }
+            if (array_key_exists('title', $options) && $options['title']) {
+                $bookmark->title = $options['title'];
+            }
+        }
+        $bookmark->save();
+        if (array_key_exists('tags', $options) && $options['tags']) {
+            $bookmark->setTags($options['tags']);
+        }
+    }
+
+    public static function get($id)
+    {
+        if (!is_numeric($id)) {
+            return new WpHerissonBookmarks();
+        }
+        $bookmarks = Doctrine_Query::create()
+            ->from('WpHerissonBookmarks')
+            ->where("id=?")
+            ->execute(array($id));
+        foreach ($bookmarks as $bookmark) {
+            return $bookmark;
+        }
+        return new WpHerissonBookmarks();
+    }
+
+    public static function countWhere()
+    {
+        $bookmarks = Doctrine_Query::create()
+            ->select('COUNT(*)')
+            ->from('WpHerissonBookmarks')
+            ->execute(array(), Doctrine_Core::HYDRATE_NONE);
+        return $bookmarks[0][0];
+    }
+
+    public static function getAll($paginate=false)
+    {
+        return self::getWhere("1=1", $paginate);
+    }
+
+
+    public static function getSearch($search, $paginate=false)
+    {
+        $q = Doctrine_Query::create()
+         ->from('WpHerissonBookmarks b')
+         ->leftJoin('b.WpHerissonTags t')
+         ->where("t.name LIKE ? OR b.title LIKE ? OR b.url LIKE ?", array("%".$search."%", "%".$search."%", "%".$search."%"));
+        if ($paginate) {
+            $pagination = HerissonPagination::i()->getVars();
+            $q->limit($pagination['limit'])->offset($pagination['offset']);
+        }
+        $bookmarks = $q->execute();
+        return $bookmarks;
+    }
+
+    public static function getTag($tag, $paginate=false)
+    {
+        $q = Doctrine_Query::create()
+         ->from('WpHerissonBookmarks b')
+         ->leftJoin('b.WpHerissonTags t')
+         ->where("name= ?", $tag);
+        if ($paginate) {
+            $pagination = HerissonPagination::i()->getVars();
+            $q->limit($pagination['limit'])->offset($pagination['offset']);
+        }
+        $bookmarks = $q->execute();
+        return $bookmarks;
+    }
+
+
+    public static function getWhere($where, $paginate=false)
+    {
+        $q = Doctrine_Query::create()
+            ->from('WpHerissonBookmarks')
+            ->where($where);
+        if ($paginate) {
+            $pagination = HerissonPagination::i()->getVars();
+            $q->limit($pagination['limit'])->offset($pagination['offset']);
+        }
+        $bookmarks = $q->execute();
+        return $bookmarks;
+    }
+
 }
