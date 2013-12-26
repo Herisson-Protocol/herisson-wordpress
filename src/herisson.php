@@ -80,6 +80,9 @@ require_once HERISSON_INCLUDES_DIR . 'admin.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
 require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
 
+$options = get_option('HerissonOptions');
+define("HERISSON_LOCAL_URL", get_option('siteurl')."/".$options['basePath']);
+
 /**
  * Checks if the install needs to be run by checking the `HerissonVersions` option, which stores the current installed database, options and rewrite versions.
  */

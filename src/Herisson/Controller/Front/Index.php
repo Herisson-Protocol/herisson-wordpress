@@ -200,16 +200,22 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
 
         $signature = post('signature');
         $url = post('url');
+
         $f = WpHerissonFriendsTable::getOneWhere("url=? AND b_youwant=1", array($url));
-        if (HerissonEncryption::i()->publicDecrypt($signature, $f->public_key) == $url) {
-            $f->b_youwant=0;
-            $f->is_active=1;
-            $f->save();
-            HerissonNetwork::reply(200);
-            echo "1";
-            exit;
-        } else {
+        try {
+            if (HerissonEncryption::i()->publicDecrypt($signature, $f->public_key) == $url) {
+                $f->b_youwant=0;
+                $f->is_active=1;
+                $f->save();
+                HerissonNetwork::reply(200);
+                echo "1";
+                exit;
+            } else {
+                HerissonNetwork::reply(417, HERISSON_EXIT);
+            }
+        } catch (HerissonNetworkException $e) {
             HerissonNetwork::reply(417, HERISSON_EXIT);
+
         }
     }
 

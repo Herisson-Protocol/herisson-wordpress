@@ -153,7 +153,6 @@ class HerissonEncryption
             $key = $this->public;
         }
 
-        # error_log("public encryption of $data with key : $key");
         if (!openssl_public_encrypt($data, $data_crypted, $key)) {
             throw new HerissonEncryptionException(__('Error while encrypting with public key', HERISSON_TD));
         }
@@ -240,13 +239,11 @@ class HerissonEncryption
         $iv = $this->createIV();
 
         if (!openssl_public_encrypt($hash, $hash_crypted, $key)) {
-#            HerissonNetwork::reply(417);
             throw new HerissonEncryptionException(__('Error while encrypting hash with public key', HERISSON_TD));
         }
 
         $data_crypted = null;
         if (!($data_crypted = openssl_encrypt($data, self::$method, $hash, 0, $iv))) {
-#            HerissonNetwork::reply(417);
             throw new HerissonEncryptionException(__('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
@@ -267,6 +264,7 @@ class HerissonEncryption
      *
      * @param mixed $data_crypted the crypted data (crypted with the hash)
      * @param mixed $hash_crypted the crypted hash (crypted with the private key)
+     * @param mixed $iv           the initialization vector to increase cipher security
      * @param mixed $key          optional public key, if none given, the $this->public key is used
      *
      * @return the decrypted data
@@ -278,18 +276,15 @@ class HerissonEncryption
         }
 
         if (!openssl_public_decrypt(base64_decode($hash_crypted), $hash, $key)) {
-#            HerissonNetwork::reply(417);
             throw new HerissonEncryptionException(__('Error while decrypting hash with public key', HERISSON_TD));
         }
 
         if (!($data = openssl_decrypt(base64_decode($data_crypted), self::$method, $hash, 0, base64_decode($iv)))) {
-#            HerissonNetwork::reply(417);
             throw new HerissonEncryptionException(__('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
         // Check the hash
         if ($hash != $this->hash($data)) {
-#            HerissonNetwork::reply(417);
             throw new HerissonEncryptionException(__('Error while comparing checksum of decrypted data', HERISSON_TD));
         }
        
@@ -318,13 +313,11 @@ class HerissonEncryption
         $iv = $this->createIV();
 
         if (!openssl_private_encrypt($hash, $hash_crypted, $key)) {
-#            HerissonNetwork::reply(417);
             throw new HerissonEncryptionException(__('Error while encrypting hash with private key', HERISSON_TD));
         }
 
         $data_crypted = null;
         if (!($data_crypted = openssl_encrypt($data, self::$method, $hash, 0, $iv))) {
-#            HerissonNetwork::reply(417);
             throw new HerissonEncryptionException(__('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
@@ -345,6 +338,7 @@ class HerissonEncryption
      *
      * @param mixed $data_crypted the crypted data (crypted with the hash)
      * @param mixed $hash_crypted the crypted hash (crypted with the public key)
+     * @param mixed $iv           the initialization vector to increase cipher security
      * @param mixed $key          optional private key, if none given, the $this->private key is used
      *
      * @return the decrypted data

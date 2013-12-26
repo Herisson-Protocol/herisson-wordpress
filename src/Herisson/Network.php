@@ -177,6 +177,7 @@ class HerissonNetwork
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
             if (sizeof($post)) {
                 curl_setopt($curl, CURLOPT_POST, true);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
@@ -206,8 +207,7 @@ class HerissonNetwork
             global $http_codes;
             $this->error = 1;
             $this->http_message = $http_codes[$this->http_code];
-            return new WP_Error(
-                'herisson',
+            throw new HerissonNetworkException(
                 sprintf(__("The site %s returned a %s error (%s).", HERISSON_TD), $url, $this->http_code, $this->http_message),
                 $this->http_code
             );
@@ -215,9 +215,9 @@ class HerissonNetwork
 
         $content_type = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
         $result = array(
-            "data"=>$content,
-            "type" => $content_type,
-            "code" => $this->http_code
+            "data"  => $content,
+            "type"  => $content_type,
+            "code"  => $this->http_code
         );
 
         curl_close($curl);
@@ -290,3 +290,18 @@ class HerissonNetwork
 
 }
 
+
+/**
+ * HerissonNetworkException
+ *
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
+class HerissonNetworkException extends Exception
+{
+
+}
