@@ -1,14 +1,14 @@
 <?
 
 require_once __DIR__."/../../../../wp-config.php";
-require_once __DIR__."/../src/Herisson/Doctrine.php";
-require_once __DIR__."/../src/Herisson/Network.php";
-require_once __DIR__."/../src/Herisson/Message.php";
-require_once __DIR__."/../src/Herisson/Encryption.php";
-require_once __DIR__."/../src/Herisson/Pagination.php";
-require_once __DIR__."/../src/includes/functions.php";
-require_once __DIR__."/../src/Herisson/Models/WpHerissonFriends.php";
-require_once __DIR__."/../src/Herisson/Models/WpHerissonFriendsTable.php";
+require_once __DIR__."/../Herisson/Doctrine.php";
+require_once __DIR__."/../Herisson/Network.php";
+require_once __DIR__."/../Herisson/Message.php";
+require_once __DIR__."/../Herisson/Encryption.php";
+require_once __DIR__."/../Herisson/Pagination.php";
+require_once __DIR__."/../includes/functions.php";
+require_once __DIR__."/../Herisson/Models/WpHerissonFriends.php";
+require_once __DIR__."/../Herisson/Models/WpHerissonFriendsTable.php";
 
 /**
  * Dummy variable to avoid errors
