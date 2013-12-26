@@ -7,7 +7,6 @@
  * @author   Thibault Taillandier <thibault@taillandier.name>
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
  * @link     None
- * @see      None
  */
 
 
@@ -19,7 +18,6 @@
  * @author   Thibault Taillandier <thibault@taillandier.name>
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
  * @link     None
- * @see      None
  */
 class HerissonMessage
 {
@@ -62,7 +60,7 @@ class HerissonMessage
     /**
      * Get the errors array
      *
-     * @return the array of errors
+     * @return the array of error messages
      */
     public function getErrors()
     {
@@ -94,7 +92,7 @@ class HerissonMessage
     /**
      * Get the success array
      *
-     * @return the array of success
+     * @return the array of success messages
      */
     public function getSuccess()
     {

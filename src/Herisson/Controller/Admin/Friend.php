@@ -117,6 +117,7 @@ class HerissonControllerAdminFriend extends HerissonControllerAdmin
             } else {
                 $friend = WpHerissonFriendsTable::get($id);
             }
+
             $friend->alias = $alias;
             $friend->url = $url;
             if ($new) {

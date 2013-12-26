@@ -55,13 +55,14 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
         $f = new WpHerissonFriends();
         $f->url = post('url');
         $f->reloadPublicKey();
-        if (herisson_check_short($f->url, $signature, $f->public_key)) {
+        if (HerissonEncryption::i()->publicDecrypt($signature, $f->public_key) == $f->url) {
             $f->getInfo();
             if ($this->options['acceptFriends'] == 2) {
+                // Friend automatically accepted, so it's a 202 Accepted for further process response
                 HerissonNetwork::reply(202);
                 $f->is_active=1;
             } else {
-                // Friend request need to be manually processed, so it's a 202 Accepted for further process response
+                // Friend request need to be manually processed, so it's a 200 Ok response
                 HerissonNetwork::reply(200);
                 $f->b_wantsyou=1;
                 $f->is_active=0;
@@ -199,8 +200,8 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
 
         $signature = post('signature');
         $url = post('url');
-        $f = WpHerissonFriendsTable::getWhere("url=? AND b_youwant=1", array($url));
-        if (herisson_check_short($url, $signature, $f->public_key)) {
+        $f = WpHerissonFriendsTable::getOneWhere("url=? AND b_youwant=1", array($url));
+        if (HerissonEncryption::i()->publicDecrypt($signature, $f->public_key) == $url) {
             $f->b_youwant=0;
             $f->is_active=1;
             $f->save();

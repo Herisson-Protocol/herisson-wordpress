@@ -1,6 +1,5 @@
 
 <div class="wrap">
-    <?php includePartial(__DIR__."/../elements/messages.php", array()); ?>
     <h2><?php echo $title; ?></h2>
     <?php if (sizeof($friends)) { ?>
     <table class="widefat post " cellspacing="0">
