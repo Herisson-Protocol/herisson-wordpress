@@ -1,4 +1,14 @@
 <?php
+/**
+ * HerissonOrmFriendsTest
+ *
+ * @category Test
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ */
+
 
 require_once __DIR__."/Env.php";
 
@@ -8,15 +18,23 @@ require_once __DIR__."/Env.php";
  * Test WpHerissonFriends class and ORM
  * Test friends requests and validation
  *
- * @see PHPUnit_Framework_TestCase
+ * @category Test
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      PHPUnit_Framework_TestCase
  */
 class HerissonORMFriendsTest extends PHPUnit_Framework_TestCase
 {
 
-    public $me;
-
-    public $friend;
-
+    /**
+     * Configuration
+     *
+     * Create sample data, and herisson demo website
+     *
+     * @return void
+     */
     protected function setUp()
     {
         $this->sampleName   = "Webpage sample name";
@@ -30,6 +48,11 @@ class HerissonORMFriendsTest extends PHPUnit_Framework_TestCase
         $this->herisson->setUrl($this->herissonUrl);
     }
 
+    /**
+     * Test adding a new friend and delete it
+     *
+     * @return void
+     */
     public function testAddFriendAndDelete()
     {
         $f = new WpHerissonFriends();
@@ -46,6 +69,11 @@ class HerissonORMFriendsTest extends PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * Test retrieving /info of a Herisson site
+     *
+     * @return void
+     */
     public function testFriendInfo()
     {
         $this->herisson->getInfo();
@@ -54,6 +82,11 @@ class HerissonORMFriendsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("Herisson Demo Instance", $this->herisson->name);
     }
 
+    /**
+     * Test asking a new friend that is a Herisson site
+     *
+     * @return void
+     */
     public function testAskFriend()
     {
         $this->herisson->askForFriend();
@@ -66,6 +99,11 @@ class HerissonORMFriendsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, sizeof($friends));
     }
 
+    /**
+     * Test asking a new friend that is not a Herisson site
+     *
+     * @return void
+     */
     public function testAskFriendNotHerisson()
     {
         $this->herisson->setUrl($this->sampleUrl);
@@ -74,6 +112,11 @@ class HerissonORMFriendsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, sizeof($friends));
     }
 
+    /**
+     * Test inserting a new friend that need validation, and validates it.
+     *
+     * @return void
+     */
     public function testValidateFriendFront()
     {
         $f = new WpHerissonFriends();
@@ -87,8 +130,8 @@ class HerissonORMFriendsTest extends PHPUnit_Framework_TestCase
         $network = new HerissonNetwork();
         $signature = HerissonEncryption::i()->privateEncrypt($f->url, $e->private);
         $postData = array(                                                       
-            'url'=> $f->url,
-            'signature' => $signature
+            'url'       => $f->url,
+            'signature' => $signature,
         );
 
         $content = $network->download(HERISSON_LOCAL_URL."/validate", $postData);

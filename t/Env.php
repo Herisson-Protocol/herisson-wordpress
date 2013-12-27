@@ -1,4 +1,14 @@
-<?
+<?php
+/**
+ * Test environment
+ *
+ * @category Test
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ */
+
 
 require_once __DIR__."/../../../../wp-config.php";
 require_once __DIR__."/../Herisson/Doctrine.php";
@@ -14,7 +24,7 @@ require_once __DIR__."/../Herisson/Models/WpHerissonFriendsTable.php";
  * Dummy variable to avoid errors
  */
 if (! defined('HERISSON_TD')) {
-    define("HERISSON_TD","dummy");
+    define("HERISSON_TD", "dummy");
 }
 
 $options = get_option('HerissonOptions');
