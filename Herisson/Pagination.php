@@ -2,6 +2,8 @@
 /**
  * Pagination 
  *
+ * PHP Version 5.3
+ *
  * @category Tools
  * @package  Herisson
  * @author   Thibault Taillandier <thibault@taillandier.name>
@@ -47,7 +49,8 @@ class HerissonPagination
     /**
      * retrieve pagination parameters
      *
-     * @return array with 2 parameters : offset (current pagination offset), and limit (maximum items per pages)
+     * @return array with 2 parameters : offset (current pagination offset),
+     *         and limit (maximum items per pages)
      */
     public static function getVars()
     {

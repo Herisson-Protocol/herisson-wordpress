@@ -103,9 +103,9 @@ class HerissonExport
     public static function exportFirefox($bookmarks)
     {
          $bookmarks = WpHerissonBookmarksTable::getAll();
-         $now = time();
-         $name = "Herisson bookmarks";
-         $content = '
+         $now       = time();
+         $name      = "Herisson bookmarks";
+         $content   = '
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <TITLE>Bookmarks</TITLE>
 <H1>Bookmarks menu</H1>
@@ -114,10 +114,10 @@ class HerissonExport
     <DT><H3 ADD_DATE="'.$now.'" LAST_MODIFIED="'.$now.'">'.$name.'</H3>
     <DL><p>';
         foreach ($bookmarks as $bookmark) {
-            $content .= '<DT><A HREF="'.$bookmark->url.'" ADD_DATE="'.$now.'" LAST_MODIFIED="'.$now.'" ICON_URI="'.$bookmark->favicon_url.'" ICON="data:image/png;base64,'.$bookmark->favicon_image.'">'.$bookmark->title.'</A>
-                                <DD>'.$bookmark->description.'
-                                ';
-
+            $content .= '<DT><A HREF="'.$bookmark->url.'" ADD_DATE="'.$now.'"'
+                .' LAST_MODIFIED="'.$now.'" ICON_URI="'.$bookmark->favicon_url.'"'
+                .' ICON="data:image/png;base64,'.$bookmark->favicon_image.'">'.$bookmark->title.'</A>'."\n"
+                .'  <DD>'.$bookmark->description.' ';
         }
         $content .= '</DL>
         </DL>
@@ -137,7 +137,7 @@ class HerissonExport
      */
     public static function exportJson($bookmarks)
     {
-        $list= array();
+        $list = array();
         foreach ($bookmarks as $bookmark) { 
             $list[] = $bookmark->toArray();
         }
@@ -155,18 +155,19 @@ class HerissonExport
      */
     public static function gzCompressFile($source, $level=false)
     {
-        $dest = $source.'.gz';
-        $mode = 'wb'.$level;
+        $dest  = $source.'.gz';
+        $mode  = 'wb'.$level;
         $error = false;
-        if ($fp_out = gzopen($dest, $mode)) {
-            if ($fp_in = fopen($source, 'rb')) {
-                while (!feof($fp_in))
-                    gzwrite($fp_out, fread($fp_in, 1024*512));
-                fclose($fp_in);
+        if ($fpOut = gzopen($dest, $mode)) {
+            if ($fpIn = fopen($source, 'rb')) {
+                while (!feof($fpIn)) {
+                    gzwrite($fpOut, fread($fpIn, 1024*512));
+                }
+                fclose($fpIn);
             } else { 
                 $error = true;
             }
-            gzclose($fp_out);
+            gzclose($fpOut);
         } else { 
             $error = true;
         }

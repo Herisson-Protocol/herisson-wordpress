@@ -56,7 +56,11 @@
             </tr>
 
             <tr valign="top">
-                <th scope="row"><label for="acceptFriends"><?php echo __("Friend requests", HERISSON_TD); ?></label>:</th>
+                <th scope="row">
+                    <label for="acceptFriends">
+                        <?php echo __("Friend requests", HERISSON_TD); ?>
+                    </label>:
+                </th>
                 <td>
                     <select name="acceptFriends">
                         <option value="0" <?php echo ($options['acceptFriends'] == "0" ? ' selected="selected"' : '');?>><?php echo __("Never (automatically)", HERISSON_TD); ?></option>

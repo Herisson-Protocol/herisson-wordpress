@@ -20,7 +20,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
     public static function checkDuplicate($url)
     {
 
-        $bookmarks = self::getWhere("hash='".md5($url)."'");
+        $bookmarks = self::getWhere("hash=?",array(md5($url)));
         if (sizeof($bookmarks)) {
             return true;
         }
@@ -78,7 +78,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
 
     public static function getAll($paginate=false)
     {
-        return self::getWhere("1=1", $paginate);
+        return self::getWhere("1=1", null, $paginate);
     }
 
 
@@ -111,7 +111,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
     }
 
 
-    public static function getWhere($where, $paginate=false)
+    public static function getWhere($where, $values, $paginate=false)
     {
         $q = Doctrine_Query::create()
             ->from('WpHerissonBookmarks')
@@ -120,7 +120,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
             $pagination = HerissonPagination::i()->getVars();
             $q->limit($pagination['limit'])->offset($pagination['offset']);
         }
-        $bookmarks = $q->execute();
+        $bookmarks = $q->execute($values);
         return $bookmarks;
     }
 

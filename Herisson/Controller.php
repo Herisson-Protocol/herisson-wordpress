@@ -2,6 +2,8 @@
 /**
  * Controller 
  *
+ * PHP Version 5.3
+ *
  * @category Controller
  * @package  Herisson
  * @author   Thibault Taillandier <thibault@taillandier.name>
@@ -66,7 +68,7 @@ class HerissonController
     function __construct()
     {
         $this->options = get_option('HerissonOptions');
-        $path = explode("/", $_SERVER['REQUEST_URI']);
+        $path          = explode("/", $_SERVER['REQUEST_URI']);
         if (array_key_exists(2, $path) && strlen($path[2])) {
             $this->action = $path[2];
         } else {

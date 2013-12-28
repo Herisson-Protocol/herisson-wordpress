@@ -2,6 +2,8 @@
 /**
  * Routeur
  *
+ * PHP Version 5.3
+ *
  * @category Controller
  * @package  Herisson
  * @author   Thibault Taillandier <thibault@taillandier.name>
@@ -31,13 +33,13 @@ class HerissonRouter
      */
     function route()
     {
-        $pageName = ucfirst(str_replace("herisson_", "", get('page')));
+        $pageName       = ucfirst(str_replace("herisson_", "", get('page')));
         $baseController = "HerissonControllerAdmin";
         $controllerName = $baseController.$pageName;
-        $defaultName = "Bookmark";
+        $defaultName    = "Bookmark";
         if ($pageName == "Menu" || !class_exists($controllerName)) {
             $defaultController = $baseController.$defaultName;
-            $controller = new $defaultController;
+            $controller        = new $defaultController;
         } else {
             $controller = new $controllerName;
         }

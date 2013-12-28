@@ -2,6 +2,8 @@
 /**
  * HerissonEncryption
  *
+ * PHP Version 5.3
+ *
  * @category Tools
  * @package  Herisson
  * @author   Thibault Taillandier <thibault@taillandier.name>
@@ -81,16 +83,18 @@ class HerissonEncryption
     {
         global $wp_version;
         if (isset($wp_version)) {
-            $options        = get_option('HerissonOptions');
-            $this->public   = $options['publicKey'];
-            $this->private  = $options['privateKey'];
+            $options       = get_option('HerissonOptions');
+            $this->public  = $options['publicKey'];
+            $this->private = $options['privateKey'];
         } else {
             $this->generateKeyPairs();
         }
     }
 
     /**
-     * Generate a public/private keys pair, and set them in $public and $private attributes
+     * Generate a public/private keys pair
+     *
+     * It then set them in $public and $private attributes
      *
      * @return void
      */
@@ -108,7 +112,7 @@ class HerissonEncryption
         openssl_pkey_export($res, $this->private);
 
         // Get public key
-        $pubkey = openssl_pkey_get_details($res);
+        $pubkey       = openssl_pkey_get_details($res);
         $this->public = $pubkey["key"];
     }
 
@@ -136,14 +140,16 @@ class HerissonEncryption
         if (function_exists('mcrypt_create_iv')) {
             return mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
         }
-        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+        $chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return substr(str_shuffle($chars), 0, $length);
     }
 
     /**
      * Encrypt data using a public key
      *
      * @param mixed $data the data to encrypt
-     * @param mixed $key  optional public key, if none given, the $this->public key is used
+     * @param mixed $key  optional public key,
+     *        if none given, the $this->public key is used
      *
      * @return the encrypted data
      */
@@ -154,7 +160,8 @@ class HerissonEncryption
         }
 
         if (!openssl_public_encrypt($data, $data_crypted, $key)) {
-            throw new HerissonEncryptionException(__('Error while encrypting with public key', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while encrypting with public key', HERISSON_TD));
         }
         return base64_encode($data_crypted);
     }
@@ -173,7 +180,8 @@ class HerissonEncryption
             $key = $this->public;
         }
         if (!openssl_public_decrypt(base64_decode($data_crypted), $data, $key)) {
-            throw new HerissonEncryptionException(__('Error while decrypting with public key', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while decrypting with public key', HERISSON_TD));
         }
         return $data;
     }
@@ -193,7 +201,8 @@ class HerissonEncryption
         }
 
         if (!openssl_private_encrypt($data, $data_crypted, $key)) {
-            throw new HerissonEncryptionException(__('Error while encrypting with private key', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while encrypting with private key', HERISSON_TD));
         }
         return base64_encode($data_crypted);
     }
@@ -212,7 +221,8 @@ class HerissonEncryption
             $key = $this->private;
         }
         if (!openssl_private_decrypt(base64_decode($data_crypted), $data, $key)) {
-            throw new HerissonEncryptionException(__('Error while decrypting with private key', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while decrypting with private key', HERISSON_TD));
         }
         return $data;
     }
@@ -239,12 +249,14 @@ class HerissonEncryption
         $iv = $this->createIV();
 
         if (!openssl_public_encrypt($hash, $hash_crypted, $key)) {
-            throw new HerissonEncryptionException(__('Error while encrypting hash with public key', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while encrypting hash with public key', HERISSON_TD));
         }
 
         $data_crypted = null;
         if (!($data_crypted = openssl_encrypt($data, self::$method, $hash, 0, $iv))) {
-            throw new HerissonEncryptionException(__('Error while encrypting long data with encryption method', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
         return array(
@@ -276,16 +288,19 @@ class HerissonEncryption
         }
 
         if (!openssl_public_decrypt(base64_decode($hash_crypted), $hash, $key)) {
-            throw new HerissonEncryptionException(__('Error while decrypting hash with public key', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while decrypting hash with public key', HERISSON_TD));
         }
 
         if (!($data = openssl_decrypt(base64_decode($data_crypted), self::$method, $hash, 0, base64_decode($iv)))) {
-            throw new HerissonEncryptionException(__('Error while encrypting long data with encryption method', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
         // Check the hash
         if ($hash != $this->hash($data)) {
-            throw new HerissonEncryptionException(__('Error while comparing checksum of decrypted data', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while comparing checksum of decrypted data', HERISSON_TD));
         }
        
         return $data;
@@ -313,12 +328,14 @@ class HerissonEncryption
         $iv = $this->createIV();
 
         if (!openssl_private_encrypt($hash, $hash_crypted, $key)) {
-            throw new HerissonEncryptionException(__('Error while encrypting hash with private key', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while encrypting hash with private key', HERISSON_TD));
         }
 
         $data_crypted = null;
         if (!($data_crypted = openssl_encrypt($data, self::$method, $hash, 0, $iv))) {
-            throw new HerissonEncryptionException(__('Error while encrypting long data with encryption method', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
         return array(
@@ -350,16 +367,19 @@ class HerissonEncryption
         }
 
         if (!openssl_private_decrypt(base64_decode($hash_crypted), $hash, $key)) {
-            throw new HerissonEncryptionException(__('Error while decrypting hash with private key', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while decrypting hash with private key', HERISSON_TD));
         }
 
         if (!($data = openssl_decrypt(base64_decode($data_crypted), self::$method, $hash, 0, base64_decode($iv)))) {
-            throw new HerissonEncryptionException(__('Error while encrypting long data with encryption method', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
         // Check the hash
         if ($hash != $this->hash($data)) {
-            throw new HerissonEncryptionException(__('Error while comparing checksum of decrypted data', HERISSON_TD));
+            throw new HerissonEncryptionException(
+                __('Error while comparing checksum of decrypted data', HERISSON_TD));
         }
        
         return $data;

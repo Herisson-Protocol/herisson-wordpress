@@ -320,19 +320,19 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
 
         if (post('maintenance')) {
             $condition = "
-                LENGTH(favicon_url)=0 or favicon_url is null or
-                LENGTH(favicon_image)=0 or favicon_image is null or
-                LENGTH(content)=0 or content is null or
-                LENGTH(content_image)=0 or content_image is null";
+                LENGTH(favicon_url)=?   or favicon_url is null or
+                LENGTH(favicon_image)=? or favicon_image is null or
+                LENGTH(content)=?       or content is null or
+                LENGTH(content_image)=? or content_image is null";
 
-            $this->view->bookmarks_errors   = WpHerissonBookmarksTable::getWhere($condition);
+            $this->view->bookmarks_errors   = WpHerissonBookmarksTable::getWhere($condition, array(0, 0, 0, 0));
             
         }
         $this->view->bookmarks_all              = WpHerissonBookmarksTable::getAll();
-        $this->view->bookmarks_no_favicon_url   = WpHerissonBookmarksTable::getWhere("LENGTH(favicon_url)=0 or favicon_url is null");
-        $this->view->bookmarks_no_favicon_image = WpHerissonBookmarksTable::getWhere("LENGTH(favicon_image)=0 or favicon_image is null");
-        $this->view->bookmarks_no_content       = WpHerissonBookmarksTable::getWhere("LENGTH(content)=0 or content is null");
-        $this->view->bookmarks_no_content_image = WpHerissonBookmarksTable::getWhere("LENGTH(content_image)=0 or content_image is null");
+        $this->view->bookmarks_no_favicon_url   = WpHerissonBookmarksTable::getWhere("LENGTH(favicon_url)=?     or favicon_url is null", array(0));
+        $this->view->bookmarks_no_favicon_image = WpHerissonBookmarksTable::getWhere("LENGTH(favicon_image)=?   or favicon_image is null", array(0));
+        $this->view->bookmarks_no_content       = WpHerissonBookmarksTable::getWhere("LENGTH(content)=?         or content is null", array(0));
+        $this->view->bookmarks_no_content_image = WpHerissonBookmarksTable::getWhere("LENGTH(content_image)=?   or content_image is null", array(0));
 
     }
 

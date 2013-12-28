@@ -2,6 +2,8 @@
 /**
  * View
  *
+ * PHP Version 5.3
+ *
  * @category Controller
  * @package  Herisson
  * @author   Thibault Taillandier <thibault@taillandier.name>
@@ -60,10 +62,10 @@ class HerissonView
      */
     function __construct($app, $controller, $action)
     {
-        $this->app = $app;
+        $this->app        = $app;
         $this->controller = $controller ? $controller : "index";
-        $this->action = $action ? $action : "index";
-        $this->options = get_option('HerissonOptions');
+        $this->action     = $action ? $action : "index";
+        $this->options    = get_option('HerissonOptions');
     }
 
     /**
@@ -100,7 +102,8 @@ class HerissonView
      */
     function display()
     {
-        $this->viewFile = HERISSON_BASE_DIR."views/".$this->app."/".$this->controller."/".$this->action.".php";
+        $this->viewFile = HERISSON_BASE_DIR."views/".$this->app."/"
+            .$this->controller."/".$this->action.".php";
         foreach (get_object_vars($this) as $attr=>$value) {
             $$attr = $value;
         }
