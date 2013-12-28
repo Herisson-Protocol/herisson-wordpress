@@ -365,6 +365,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
 
         // request our installation to validate sample site
         $content = $network->download(HERISSON_LOCAL_URL."/validate", $postData);
+        $this->assertEquals(200, $content['code']);
 
         // check it's not pending anymore
         $friends = WpHerissonFriendsTable::getWhere('url=? and b_youwant=? and is_active=?', array($f->url, 0, 1));
@@ -376,6 +377,85 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         }
         $friends = WpHerissonFriendsTable::getWhere('url=? and b_youwant=?', array($f->url, 0));
         $this->assertEquals(0, sizeof($friends));
+    }
+
+    /**
+     * Test inserting a new friend that need validation, and try to validate it with the wrong private key for cipher
+     *
+     * @return void
+     */
+    public function testValidateFriendFrontErrorEncoding()
+    {
+        // create a fake request from sample site
+        $f = new WpHerissonFriends();
+        $e = HerissonEncryption::i();
+        $e->generateKeyPairs();
+        $f->public_key = $e->public;
+        $f->url        = $this->sampleUrl;
+        $f->b_youwant  = 1;
+        $f->save();
+
+        // Change the key pairs, to create a cipher error
+        $e->generateKeyPairs();
+
+        // Check the request is pending
+        $friends = WpHerissonFriendsTable::getWhere('url=? and b_youwant=? and is_active=?', array($f->url, 1, 0));
+        $this->assertEquals(1, sizeof($friends));
+
+        // encrypt sample url, with sample private key
+        $network   = new HerissonNetwork();
+        $signature = HerissonEncryption::i()->privateEncrypt($f->url, $e->private);
+        $postData  = array(                                                       
+            'url'       => $f->url,
+            'signature' => $signature,
+        );
+
+        // request our installation to validate sample site
+        try {
+           $content = $network->download(HERISSON_LOCAL_URL."/validate", $postData);
+        } catch (HerissonNetworkException $e) {
+            $this->assertEquals(417, $e->getCode());
+        }
+
+        // check it's not pending anymore
+        $friends = WpHerissonFriendsTable::getWhere('url=? and b_youwant=? and is_active=?', array($f->url, 1, 0));
+        $this->assertEquals(1, sizeof($friends));
+
+        // Delete it and check it's not here anymore
+        foreach ($friends as $f) {
+            $f->delete();
+        }
+        $friends = WpHerissonFriendsTable::getWhere('url=? and b_youwant=?', array($f->url, 1));
+        $this->assertEquals(0, sizeof($friends));
+    }
+
+    /**
+     * Test validating a friend with the wrong key
+     *
+     * @return void
+     */
+    public function testValidateFriendWaitingError()
+    {
+        // create a fake request from sample site
+        $f = new WpHerissonFriends();
+        $e = HerissonEncryption::i();
+        $e->generateKeyPairs();
+        $f->public_key = $e->public;
+        $f->url        = $this->herissonUrl;
+        #$f->setUrl($this->herissonUrl);
+        $f->b_wantsyou = 1;
+        $f->save();
+
+        // Check the request is pending
+        $friends = WpHerissonFriendsTable::getWhere('url=? and b_wantsyou=? and is_active=?', array($f->url, 1, 0));
+        $this->assertEquals(1, sizeof($friends));
+
+        $friend = $friends[0];
+        $friend->validateFriend();
+        $msgs = HerissonMessage::i()->getErrors();
+        $msgs = array_reverse($msgs);
+        $this->assertEquals(1, preg_match("/417/", $msgs[0]));
+
     }
 
 }

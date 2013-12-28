@@ -213,7 +213,7 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
             } else {
                 HerissonNetwork::reply(417, HERISSON_EXIT);
             }
-        } catch (HerissonNetworkException $e) {
+        } catch (HerissonEncryptionException $e) {
             HerissonNetwork::reply(417, HERISSON_EXIT);
 
         }
