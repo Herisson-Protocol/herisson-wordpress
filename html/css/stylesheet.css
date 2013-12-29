@@ -12,12 +12,17 @@ p.herisson-errors {
 
 p.herisson-warnings {
  background-color: #eccc83;
-	border: 1px solid orange;
 	padding: 3px 10px;
+	display: inline-block;
 }
 
 span.herisson-success {
  color: #63a94b;
+	font-weight: bold;
+}
+
+span.herisson-warnings {
+ color: #ccac63;
 	font-weight: bold;
 }
 
@@ -60,3 +65,7 @@ div.pagination span.active {
 }
 
 
+#maintenance th {
+    text-align: center;
+
+}

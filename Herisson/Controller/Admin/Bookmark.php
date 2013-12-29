@@ -82,7 +82,6 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
         if ($id>0) {
             $bookmark = WpHerissonBookmarksTable::get($id);
             $bookmark->maintenance();
-            $bookmark->captureFromUrl();
 
             $this->editAction();
             $this->setView('edit');
@@ -110,6 +109,7 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
             $bookmark->description = post('description');
             $bookmark->is_public = post('is_public');
             $bookmark->save();
+            $id = $bookmark->id;
             $bookmark->maintenance();
             $bookmark->captureFromUrl();
 

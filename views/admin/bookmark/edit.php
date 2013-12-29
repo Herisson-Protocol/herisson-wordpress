@@ -45,12 +45,11 @@
                     <br/>
                     -->
                     <?php if ($id) { ?>
-                    <b>
-                        <a href="/wp-admin/admin.php?page=herisson_bookmark&action=download&id=<?php echo $existing->id ?>">
-                            <img src="<?php echo HERISSON_PLUGIN_URL; ?>/images/ico-download.png" /><br/>
-                            <?php echo __('Download', HERISSON_TD); ?>
+                    <?php if (file_exists($existing->getImage()) && filesize($existing->getImage())) { ?>
+                        <a href="<?php echo $existing->getImageUrl(); ?>">
+                            <img alt="Capture" src="<?php echo $existing->getThumbUrl(); ?>" style="border:0.5px solid black" />
                         </a>
-                    </b>
+                    <?php } ?>
                     <br/><br/>
                     <b>
                         <a href="<?php echo $existing->getDirUrl(); ?>" target="_blank">
@@ -58,12 +57,12 @@
                         </a>
                     </b>
                     <br/><br/>
-                        <?php if (file_exists($existing->getImage()) && filesize($existing->getImage())) { ?>
-                            <b><?php echo __('Capture', HERISSON_TD); ?></b><br/>
-                            <a href="<?php echo $existing->getImageUrl(); ?>">
-                                <img alt="Capture" src="<?php echo $existing->getThumbUrl(); ?>" style="border:0.5px solid black" />
-                            </a>
-                        <?php } ?>
+                    <b>
+                        <a href="/wp-admin/admin.php?page=herisson_bookmark&action=download&id=<?php echo $existing->id ?>">
+                            <img src="<?php echo HERISSON_PLUGIN_URL; ?>/images/ico-download.png" /><br/>
+                            <?php echo __('Download', HERISSON_TD); ?>
+                        </a>
+                    </b>
                      <?php } ?>
                     </td>
                 </tr>
@@ -74,8 +73,13 @@
                         <label for="url-0"><?php echo __("URL", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
+                        <?php if ($existing->favicon_image) { ?>
+                              <img src="data:image/png;base64,<?php echo $existing->favicon_image; ?>"/>
+                        <?php } ?>
                         <input type="text" size="80" class="main" id="url-0" name="url" value="<?php echo $existing->url; ?>" <?php if ($id) { ?> readonly="readonly"<?php } ?> />
+                        <?php if ($id) { ?>
                         <br/><small><a href="<?php echo $existing->url; ?>" style="text-decoration:none">Visit <?php echo $existing->url; ?></a></small>
+                        <?php } ?>
                     </td>
                 </tr>
             
@@ -101,7 +105,8 @@
                     </td>
                 </tr>
                 */ ?>
-            
+
+                <?php /*
                 <?php if ($id) { ?>
                 <!-- Favicon -->
                 <tr class="form-field">
@@ -109,22 +114,40 @@
                         <label for="url-0"><?php echo __("Favicon", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                    <?php if ($existing->favicon_image) { ?>
-                          <img src="data:image/png;base64,<?php echo $existing->favicon_image; ?>"/>
-                    <?php } ?>
-                        <input type="text" size="80" class="main" id="url-0" name="url" value="<?php echo $existing->favicon_url; ?>" readonly="readonly" />
+                        <input type="text" size="80" class="main" id="url-0" name="favicon_url" value="<?php echo $existing->favicon_url; ?>" readonly="readonly" />
                     </td>
                 </tr>
                 <?php } ?>
+                 */ ?>
         
                 <?php if ($id) { ?>
                 <!-- Content -->
                 <tr class="form-field">
                     <th valign="top" scope="row">
-                        <label for="content-0"><?php echo __("Content", HERISSON_TD); ?>:</label>
+                        <label for="content-0"><?php echo __("HTML Content", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <?php echo ($existing->content ? '<span class="herisson-success"><?php echo __("Yes", HERISSON_TD); ?></span>' : '<span class="herisson-errors"><?php echo __("No", HERISSON_TD); ?></span>'); ?>
+                        <?php if ($existing->content) { ?>
+                        <span class="herisson-success"><?php echo __("Yes", HERISSON_TD); ?></span>
+                        <?php } else { ?>
+                        <span class="herisson-errors"><?php echo __("No", HERISSON_TD); ?></span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <?php } ?>
+        
+                <?php if ($id) { ?>
+                <!-- Full content -->
+                <tr class="form-field">
+                    <th valign="top" scope="row">
+                        <label for="content-0"><?php echo __("Full content", HERISSON_TD); ?>:</label>
+                    </th>
+                    <td>
+                        <?php if ($existing->hasFullContent()) { ?>
+                        <span class="herisson-success"><?php echo __("Yes", HERISSON_TD); ?></span>
+                        <?php } else { ?>
+                        <span class="herisson-errors"><?php echo __("No", HERISSON_TD); ?></span>
+                        <?php } ?>
                     </td>
                 </tr>
                 <?php } ?>

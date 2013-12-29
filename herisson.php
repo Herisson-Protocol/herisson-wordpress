@@ -75,6 +75,7 @@ require_once HERISSON_BASE_DIR . 'Herisson/Doctrine.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Pagination.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Message.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Encryption.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Shell.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Network.php';
 require_once HERISSON_INCLUDES_DIR . 'admin.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
@@ -162,6 +163,7 @@ function herisson_install()
         'acceptFriends'             => '1',
         'spiderOptionTextOnly'      => '1',
         'spiderOptionFullPage'      => '1',
+        'spiderOptionFaivon'        => '1',
         'spiderOptionScreenshot'    => '0',
     );
     add_option('HerissonOptions', $defaultOptions);

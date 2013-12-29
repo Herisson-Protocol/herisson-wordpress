@@ -70,6 +70,7 @@ class HerissonControllerAdminOption extends HerissonControllerAdmin
                 'screenshotTool',
                 'search',
                 'sitename',
+                'spiderOptionFavicon',
                 'spiderOptionFullPage',
                 'spiderOptionScreenshot',
                 'spiderOptionTextOnly',

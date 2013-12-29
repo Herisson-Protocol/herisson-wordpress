@@ -1,7 +1,7 @@
 
 <div class="wrap">
 
-    <h2><?php echo __("Herisson options", HERISSON_TD); ?></h2>
+    <h2><?php echo __("Herisson configuration", HERISSON_TD); ?></h2>
 
     <form method="post" action="<?php echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_option">
 
@@ -19,21 +19,6 @@
                 </td>
             </tr>
             <tr valign="top">
-                <th scope="row"><label for="search"><?php echo __("Search depth", HERISSON_TD); ?></label>:</th>
-                <td>
-                    <select name="search">
-                        <option value="0" <?php echo ($options['search'] == "0" ? ' selected="selected"' : ''); ?>><?php echo __("No public search", HERISSON_TD); ?></option>
-                        <option value="1" <?php echo ($options['search'] == "1" ? ' selected="selected"' : ''); ?>><?php echo __("Public search", HERISSON_TD); ?></option>
-                        <option value="2" <?php echo ($options['search'] == "2" ? ' selected="selected"' : ''); ?>><?php echo __("Recursive search", HERISSON_TD); ?></option>
-                    </select>
-                    <p>
-                        <?php echo __("<code>No public search</code> : Your public and private bookmarks are not available for you friends (for search and view).", HERISSON_TD); ?><br/>
-                        <?php echo __("<code>Public search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private.", HERISSON_TD); ?><br/>
-                        <?php echo __("<code>Recursive search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, when friends search for bookmarks, you forward their search to all your friends.", HERISSON_TD); ?><br/>
-                    </p>
-                </td>
-            </tr>
-            <tr valign="top">
                 <th scope="row"><label for="bookmarksPerPage"><?php echo __("Bookmarks per page", HERISSON_TD); ?></label>:</th>
                 <td>
                     <input type="text" name="bookmarksPerPage" id="books_per_page" style="width:4em;" value="<?php echo intval($options['bookmarksPerPage']); ?>" />
@@ -43,18 +28,23 @@
                 </td>
             </tr>
             <tr valign="top">
-                <th scope="row"><label for="search"><?php echo __("Check urls at import", HERISSON_TD); ?></label>:</th>
+                <th scope="row"><label for="basePath"><?php echo __("Base Path", HERISSON_TD); ?></label>:</th>
                 <td>
-                    <select name="checkHttpImport">
-                        <option value="0" <?php echo ($options['checkHttpImport'] == "0" ? ' selected="selected"' : '');?>><?php echo __("No (faster)", HERISSON_TD); ?></option>
-                        <option value="1" <?php echo ($options['checkHttpImport'] == "1" ? ' selected="selected"' : '');?>><?php echo __("Yes (slower)", HERISSON_TD); ?></option>
-                    </select>
+                    <input type="text" name="basePath" id="basePath" style="width:30em;" value="<?php echo $options['basePath']; ?>" />
                     <p>
-                        <?php echo __("If you don't check the urls when importing bookmarks, you might import obsolete bookmarks with 404 errors or non existing domains. We recommend to check urls, but if you have more more than 200 bookmarks to import, it might be too long to wait.", HERISSON_TD); ?><br/>
+                        <?php echo sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSON_TD), get_option('siteurl'), $options['basePath'], get_option('siteurl'), $options['basePath']); ?><br/>
+                        <?php echo __("Be careful this path doesn't override an already existing path from your blog.", HERISSON_TD); ?>
                     </p>
                 </td>
             </tr>
 
+
+
+            <tr valign="top">
+                <th scope="row" colspan="2">
+                    <h2><?php echo __("Handling friends", HERISSON_TD); ?></h2>
+                </th>
+            </tr>
             <tr valign="top">
                 <th scope="row">
                     <label for="acceptFriends">
@@ -72,17 +62,43 @@
                     </p>
                 </td>
             </tr>
-
             <tr valign="top">
-                <th scope="row"><label for="basePath"><?php echo __("Base Path", HERISSON_TD); ?></label>:</th>
+                <th scope="row"><label for="search"><?php echo __("Search depth", HERISSON_TD); ?></label>:</th>
                 <td>
-                    <input type="text" name="basePath" id="basePath" style="width:30em;" value="<?php echo $options['basePath']; ?>" />
+                    <select name="search">
+                        <option value="0" <?php echo ($options['search'] == "0" ? ' selected="selected"' : ''); ?>><?php echo __("No public search", HERISSON_TD); ?></option>
+                        <option value="1" <?php echo ($options['search'] == "1" ? ' selected="selected"' : ''); ?>><?php echo __("Public search", HERISSON_TD); ?></option>
+                        <option value="2" <?php echo ($options['search'] == "2" ? ' selected="selected"' : ''); ?>><?php echo __("Recursive search", HERISSON_TD); ?></option>
+                    </select>
                     <p>
-                        <?php echo sprintf(__("This is the path where you want your bookmarks page to display publicly on your blog. Visit: <a href=\"%s/%s\">%s/%s</a>", HERISSON_TD), get_option('siteurl'), $options['basePath'], get_option('siteurl'), $options['basePath']); ?><br/>
-                        <?php echo __("Be careful this path doesn't override an already existing path from your blog.", HERISSON_TD); ?>
+                        <?php echo __("<code>No public search</code> : Your public and private bookmarks are not available for you friends (for search and view).", HERISSON_TD); ?><br/>
+                        <?php echo __("<code>Public search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private.", HERISSON_TD); ?><br/>
+                        <?php echo __("<code>Recursive search</code> : Your public bookmarks are available for your friends (for search and view), your private bookmarks always stay private. Moreover, when friends search for bookmarks, you forward their search to all your friends.", HERISSON_TD); ?><br/>
                     </p>
                 </td>
             </tr>
+
+
+            <tr valign="top">
+                <th scope="row" colspan="2">
+                    <h2><?php echo __("Handling bookmarks", HERISSON_TD); ?></h2>
+                </th>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="search"><?php echo __("Check urls at import", HERISSON_TD); ?></label>:
+                </th>
+                <td>
+                    <select name="checkHttpImport">
+                        <option value="0" <?php echo ($options['checkHttpImport'] == "0" ? ' selected="selected"' : '');?>><?php echo __("No (faster)", HERISSON_TD); ?></option>
+                        <option value="1" <?php echo ($options['checkHttpImport'] == "1" ? ' selected="selected"' : '');?>><?php echo __("Yes (slower)", HERISSON_TD); ?></option>
+                    </select>
+                    <p>
+                        <?php echo __("If you don't check the urls when importing bookmarks, you might import obsolete bookmarks with 404 errors or non existing domains. We recommend to check urls, but if you have more more than 200 bookmarks to import, it might be too long to wait.", HERISSON_TD); ?><br/>
+                    </p>
+                </td>
+            </tr>
+
 
             <tr valign="top">
                 <th scope="row"><label for="basePath"><?php echo __("Screenshot generator", HERISSON_TD); ?></label>:</th>
@@ -151,6 +167,10 @@
                     <p>
                         <input type="checkbox" name="spiderOptionFullPage" id="spiderOptionFullPage"<?php echo ($options['spiderOptionFullPage'] ? ' checked="checked"' : ''); ?> /> 
                         <?php echo __("Save the full HTML page <br/><code>Recommanded to make sure you have a backup of your bookmarks (includes css, images, javascript etc)</code>", HERISSON_TD); ?>
+                    </p>
+                    <p>
+                        <input type="checkbox" name="spiderOptionFavicon" id="spiderOptionFavicon"<?php echo ($options['spiderOptionFavicon'] ? ' checked="checked"' : ''); ?> /> 
+                        <?php echo __("Save the favicon<br/><code>For pretty presentation</code>", HERISSON_TD); ?>
                     </p>
                     <p>
                         <input type="checkbox" name="spiderOptionScreenshot" id="spiderOptionScreenshot"<?php echo ($options['spiderOptionScreenshot'] ? ' checked="checked"' : ''); ?> />
