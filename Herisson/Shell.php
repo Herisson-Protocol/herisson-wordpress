@@ -46,7 +46,10 @@ class HerissonShell
         }
         // echo "$binary -> $fullBinary<br>";
         if (file_exists($fullBinary) && is_executable($fullBinary)) {
-            HerissonMessage::i()->addSucces($fullBinary." ".$options);
+            $herissonOptions = get_option('HerissonOptions');
+            if ($herissonOptions['debugMode']) {
+                HerissonMessage::i()->addSucces($fullBinary." ".$options);
+            }
             exec($fullBinary." ".$options, $output);
             return implode("\n", $output);
         }
@@ -70,4 +73,20 @@ class HerissonShell
 
 }
 
+
+
+/**
+ * HerissonShellException
+ * 
+ * @category Tools
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
+class HerissonShellException extends Exception
+{
+
+}
 

@@ -1,5 +1,6 @@
 
 <div class="wrap">
+    <?php includePartial(__DIR__."/../elements/messages.php", array()); ?>
 
     <h2><?php echo __("Herisson configuration", HERISSON_TD); ?></h2>
 
@@ -105,7 +106,6 @@
                 <td>
 
                     <?php
-                        $uname = exec('uname -a');
                         $selected = null;
                     ?>
                     <select name="screenshotTool">
@@ -120,8 +120,8 @@
                     </select>
                     <?php
                         if (
-                            (preg_match("/(amd64|_64)/", $uname) && preg_match("/amd64/", $selected))
-                            || (preg_match("/386/", $uname) && preg_match("/i386/", $selected))
+                            (preg_match("/(amd64|_64)/", $platform) && preg_match("/amd64/", $selected))
+                            || (preg_match("/386/", $platform) && preg_match("/i386/", $selected))
                         ) {
                         ?>
                         <p class="herisson-success"><?php echo sprintf(__("It seems <code>%s</code> is the correct tool for you.", HERISSON_TD), $selected); ?></p>
@@ -140,17 +140,19 @@
             </tr>
 
             <tr valign="top">
-                <th scope="row"><label for="convertPath"><?php echo __("Thumbnail generator", HERISSON_TD); ?></label>:</th>
+                <th scope="row"><label for="binaryTools"><?php echo __("Binary tools", HERISSON_TD); ?></label>:</th>
                 <td>
-                    <input type="text" name="convertPath" id="convertPath" style="width:30em;" value="<?php echo $options['convertPath']; ?>" />
-                    <?php if (file_exists($options['convertPath'])) { ?>  
+                    <?php foreach ($binaries as $binary => $path) { ?>
+                        <?php if ($path) { ?>
                         <p class="herisson-success">
-                            <?php echo sprintf(__("Path <code>%s</code> exists", HERISSON_TD), $options['convertPath']); ?>
+                            <?php echo sprintf(__("Path <code>%s</code> exists", HERISSON_TD), $path); ?>
                         </p>
-                    <?php } else { ?>
+                        <?php } else { ?>
                         <p class="herisson-errors">
-                            <?php echo sprintf(__("Path <code>%s</code> doesn't exist", HERISSON_TD), $options['convertPath']); ?>
+                            <?php echo sprintf(__("Binary <code>%s</code> doesn't exist", HERISSON_TD), $binary); ?>
                         </p>
+                        <?php } ?>
+                        <br/>
                     <?php } ?>
                 </td>
             </tr>
@@ -186,7 +188,7 @@
             <tr valign="top">
                 <th scope="row"><?php echo __("Debug Mode", HERISSON_TD); ?>:</th>
                 <td>
-                    <input type="checkbox" name="debug_mode" id="debug_mode"<?php if ($options['debugMode']) { ?> checked="checked"<?php } ?> />
+                    <input type="checkbox" name="debugMode" id="debug_mode" value="1" <?php if ($options['debugMode']) { ?> checked="checked"<?php } ?> />
                 </td>
             </tr>
         </table>

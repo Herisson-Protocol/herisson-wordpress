@@ -92,60 +92,6 @@ class HerissonExport
     }
 
     /**
-     * Generate Firefox bookmarks file and send it to the user
-     *
-     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
-     *
-     * @see WpHerissonBookmarks
-     *
-     * @return void
-     */
-    public static function exportFirefox($bookmarks)
-    {
-         $bookmarks = WpHerissonBookmarksTable::getAll();
-         $now       = time();
-         $name      = "Herisson bookmarks";
-         $content   = '
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<TITLE>Bookmarks</TITLE>
-<H1>Bookmarks menu</H1>
-
-<DL><p>
-    <DT><H3 ADD_DATE="'.$now.'" LAST_MODIFIED="'.$now.'">'.$name.'</H3>
-    <DL><p>';
-        foreach ($bookmarks as $bookmark) {
-            $content .= '<DT><A HREF="'.$bookmark->url.'" ADD_DATE="'.$now.'"'
-                .' LAST_MODIFIED="'.$now.'" ICON_URI="'.$bookmark->favicon_url.'"'
-                .' ICON="data:image/png;base64,'.$bookmark->favicon_image.'">'.$bookmark->title.'</A>'."\n"
-                .'  <DD>'.$bookmark->description.' ';
-        }
-        $content .= '</DL>
-        </DL>
-        ';
-
-        self::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
-    }
-
-    /**
-     * Generate JSON bookmarks file and send it to the user
-     *
-     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
-     *
-     * @see WpHerissonBookmarks
-     *
-     * @return void
-     */
-    public static function exportJson($bookmarks)
-    {
-        $list = array();
-        foreach ($bookmarks as $bookmark) { 
-            $list[] = $bookmark->toArray();
-        }
-        self::forceDownloadContent(json_encode($list), "herisson-bookmarks.json");
-        exit;
-    }
-
-    /**
      * Gzip a file
      *
      * @param string  $source filename of the source

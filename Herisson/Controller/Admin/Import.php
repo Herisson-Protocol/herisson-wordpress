@@ -43,35 +43,32 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
      * Redirects to indexAction() if an unknown format is supplied
      * Dispatch to an HerissonExport method according to given format
      *
-     * @see HerissonExport
+     * @see HerissonFormat
+     *
+     * @throws HerissonFormatException if given export_format is unknown
      *
      * @return void
      */
     function exportAction()
     {
-        if (!post('format')) {
+        $export_format = strtolower(post('export_format'));
+        if (!$export_format) {
             $this->indexAction();
             $this->setView('index');
-            exit;
+            return;
         }
 
-        include_once __DIR__."/../../Export.php";
-        $bookmarks = WpHerissonBookmarksTable::getAll();
-
-        switch (post('format')) {
-        case 'firefox':
-            HerissonExport::exportFirefox($bookmarks);
-            break;
-        case 'json':
-            HerissonExport::exportJson($bookmarks);
-            break;
-        case 'csv':
-            HerissonExport::exportCsv($bookmarks);
-            break;
-        default:
+        try {
+            include_once __DIR__."/../../Export.php";
+            $bookmarks = WpHerissonBookmarksTable::getAll();
+            $format = HerissonFormat::getFormatByKey($export_format);
+            $format->export($bookmarks);
+        } catch(HerissonFormatException $e) {
+            HerissonMessage::i()->addError($e->getMessage());
             $this->indexAction();
             $this->setView('index');
         }
+
     }
 
 
@@ -82,175 +79,30 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
      * Redirects to indexAction() if an unknown format is supplied
      * Dispatch to the right method according to given format
      *
+     * @throws HerissonFormatException if given export_format is unknown
+     *
      * @return void
      */
     function importAction()
     {
-        if (!post('import_source')) {
+        $import_format = strtolower(post('import_format'));
+        if (!$import_format) {
             $this->indexAction();
             $this->setView('index');
-            exit; 
+            return;
         }
 
-        switch (post('import_source')) {
-        case 'firefox':
-            $this->importFirefoxAction();
-            break;
-        case 'json':
-            $this->importJsonAction();
-            break;
-        default:
+        $format = HerissonFormat::getFormatByKey($import_format);
+        try {
+            $bookmarks = $format->import();
+            $this->view->format = $format;
+            $this->importList($bookmarks);
+        } catch(HerissonFormatException $e) {
+            HerissonMessage::i()->addError($e->getMessage());
             $this->indexAction();
             $this->setView('index');
         }
     }
-
-    /**
-     * Handle the importation of Delicious bookmarks, from username/password provided by the user
-     *
-     * Redirects to importList() to help the user decide which bookmarks to import
-     * Use external library DeliciousBrownies to talk to Delicious API
-     *
-     * @see DeliciousBrownies
-     *
-     * @return void
-     */
-    function importDeliciousAction()
-    {
-        $username = post('username_delicious');
-        $password = post('password_delicious');
-        if (!$username || !$password) {
-            echo __("Delicious login and password not complete.", HERISSON_TD);
-            $this->indexAction();
-            $this->setView('index');
-            exit;
-        }
-        include HERISSON_VENDOR_DIR."delicious/DeliciousBrownies.php";
-        $d = new DeliciousBrownies;
-        $d->setUsername($username);
-        $d->setPassword($password);
-        // Call https://api.del.icio.us/v1/posts/all
-        $deliciousBookmarks = $d->getAllPosts();
-
-        if (!$deliciousBookmarks) {
-            echo __("Someting went wrong while fetching Delicious bookmarks. (Eg. Wrong login/password, no bookmarks etc)", HERISSON_TD);
-            exit;
-        }
-
-        $list = array();
-
-        $page_title = __("Importation results from Delicious bookmarks", HERISSON_TD);
-
-        foreach ($deliciousBookmarks as $b) {
-            $bookmark = array();
-            $bookmark['url'] = $b['href'];
-            $bookmark['title'] = $b['description'];
-            $bookmark['description'] = $b['extended'];
-            $bookmark['is_public'] = $b['private'] == 'yes' ? 0 : 1;
-            $bookmark['tags'] = preg_replace("/ +/", ",", $b['tag']);
-            $bookmark['prefix'] = false;
-            $bookmark['favicon_url'] = "";
-            $bookmark['favicon_image'] = "";
-
-            $list[] = $bookmark;
-        }
-        unset($deliciousBookmarks);
-        $this->importList($list);
-
-    }
-
-    /**
-     * Handle the importation of Firefox bookmarks
-     *
-     * Redirects to importList() to help the user decide which bookmarks to import
-     * Use external library firefox/bookmarks.class.php to parse html files
-     *
-     * @see firefox/bookmarks.class.php
-     *
-     * @return void
-     */
-    function importFirefoxAction()
-    {
-        if (!isset($_FILES['import_file'])) { 
-            echo __("Bookmarks file not found.", HERISSON_TD);
-            $this->indexAction();
-            $this->setView('index');
-            exit;
-        }
-        include HERISSON_VENDOR_DIR."firefox/bookmarks.class.php";
-        $filename = $_FILES['import_file']['tmp_name'];
-        // Parsing bookmarks file
-        $bookmarks = new Bookmarks();
-        $bookmarks->parse($filename);
-        $bookmarks->bookmarksFileMd5 = md5_file($filename);
-
-        $list = array();
-
-        $page_title = __("Importation results from Firefox bookmarks", HERISSON_TD);
-
-        $i=0;
-        $spacer = "&nbsp;&nbsp;&nbsp;&nbsp;";
-        while ($bookmarks->hasMoreItems()) {
-            $item = $bookmarks->getNextElement();
-            $bookmark = array();
-            $bookmark['title'] = $item->name;
-
-            if ($item->_isFolder) { 
-                $space = str_repeat($spacer, $item->depth-1);
-                $bookmark['prefix'] = $space;
-                $bookmark['url'] = "";
-                $bookmark['description'] = "";
-                $bookmark['is_public'] = 1;
-                $bookmark['favicon_image'] = "";
-                $bookmark['favicon_url'] = "";
-                $bookmark['tags'] = "";
-            } else {
-                $bookmark['url'] = $item->HREF;
-                $bookmark['description'] = "";
-                $bookmark['is_public'] = 1;
-                $bookmark['favicon_image'] = $item->ICON_DATA;
-                $bookmark['favicon_url'] = $item->ICON_URI;
-                $bookmark['tags'] = "";
-            }
-            $list[] = $bookmark;
-        }
-        unset($bookmarks);
-        $this->importList($list);
-
-    }
-
-    /**
-     * Handle the importation of JSON Herisson bookmarks
-     *
-     * Redirects to importList() to help the user decide which bookmarks to import
-     *
-     * @return void
-     */
-    function importJsonAction()
-    {
-        if (!isset($_FILES['import_file'])) { 
-            echo __("Bookmarks file not found.", HERISSON_TD);
-            $this->indexAction();
-            $this->setView('index');
-            exit;
-        }
-        $filename = $_FILES['import_file']['tmp_name'];
-        $content = file_get_contents($filename);
-
-        $bookmarks = json_decode($content, 1);
-
-        $page_title = __("Importation results from JSON bookmarks", HERISSON_TD);
-
-        foreach ($bookmarks as $i=>$bookmark) {
-            $bookmarks[$i]['is_public'] = $bookmark['public'];
-            $bookmarks[$i]['tags'] = implode(',', $bookmark['tags']);
-            $bookmarks[$i]['favicon_image'] = "";
-            $bookmarks[$i]['favicon_url'] = "";
-        }
-        $this->importList($bookmarks);
-
-    }
-
 
     /** 
      * Display the imported bookmarks list to make the user decide which bookmarks he wants to import into his Herisson site
@@ -273,7 +125,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
     function importValidateAction()
     {
         $bookmarks = post('bookmarks');
-        $nb = 0;
+        $nb        = 0;
         foreach ($bookmarks as $bookmark) {
             if (array_key_exists('import', $bookmark) && $bookmark['import']) { 
                 $nb++;
@@ -305,6 +157,21 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
      */
     function indexAction()
     {
+
+        $correctFormats = array();
+        $formats = HerissonFormat::getList();
+
+        // Check for problems in format list
+        foreach ($formats as $format) {
+            try {
+                $format->check();
+                $correctFormats[] = $format;
+            } catch (HerissonFormatException $e) {
+                HerissonMessage::i()->addError($e->getMessage());
+            }
+        }
+
+        $this->view->formatList = $correctFormats;
 
     }
 

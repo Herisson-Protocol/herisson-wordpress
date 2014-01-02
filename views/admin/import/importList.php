@@ -1,9 +1,6 @@
 <div class="wrap">
     <h2>
-        <?php if (isset($page_title)) { ?>
-            <?php echo $page_title; ?>
-        <?php } ?>
-        <?php echo  __("Importation results from JSON bookmarks", HERISSON_TD); ?>
+        <?php echo  sprintf(__("Importation results from : %", HERISSON_TD), $format->name); ?>
     </h2>
 
     <form method="post" action="<?php echo get_option('siteurl')?>/wp-admin/admin.php?page=herisson_maintenance">
@@ -96,7 +93,9 @@
             </tr>
     
             <?php 
-            flush();
+            if ($i % 10 == 0) {
+                flush();
+            }
         }
         ?>
         </table>

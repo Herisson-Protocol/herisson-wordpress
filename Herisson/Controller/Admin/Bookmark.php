@@ -102,6 +102,7 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
         if (!$id) {
             $id = 0;
         }
+
         if (sizeof($_POST)) {
             $bookmark = WpHerissonBookmarksTable::get($id);
             $bookmark->title = post('title');
@@ -111,7 +112,6 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
             $bookmark->save();
             $id = $bookmark->id;
             $bookmark->maintenance();
-            $bookmark->captureFromUrl();
 
             $tags = explode(',', post('tags'));
             $bookmark->setTags($tags);

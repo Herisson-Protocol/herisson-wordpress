@@ -76,6 +76,13 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         return $bookmarks[0][0];
     }
 
+    /**
+     * Retrieve all bookmarks
+     *
+     * @param boolean $paginate wether we should paginate this select
+     * 
+     * @return a list of all WpHerissonBookmarks objects
+     */
     public static function getAll($paginate=false)
     {
         return self::getWhere("1=1", null, $paginate);

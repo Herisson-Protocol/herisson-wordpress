@@ -87,6 +87,23 @@ class HerissonControllerAdminOption extends HerissonControllerAdmin
             }
             update_option('HerissonOptions', $complete_options);
         }
+
+        // Check binaries paths
+        $binaryTools = array(
+            'convert',
+            'wget',
+            'du',
+            'mv',
+            'uname',
+        );
+        sort($binaryTools);
+        $this->view->binaries = array();
+        foreach ($binaryTools as $binary) {
+            $this->view->binaries[$binary] = HerissonShell::getPath($binary);
+        }
+
+        $this->view->platform = HerissonShell::shellExec('uname', '-a');
+
         $this->view->screenshots = WpHerissonScreenshotsTable::getAll();
         $this->view->options = get_option('HerissonOptions');
 

@@ -58,7 +58,7 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
             $bookmarks_errors   = WpHerissonBookmarksTable::getWhere($condition, array(0, 0, 0, 0));
             foreach ($bookmarks_errors as $b) {
                 $b->maintenance(false);
-#                $b->captureFromUrl();
+                //$b->captureFromUrl();
                 $b->save();
             }
         }
@@ -70,7 +70,7 @@ class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
         $full_content      = WpHerissonBookmarksTable::getWhere("LENGTH(content)=?         or content is null", array(0));
         $screenshot        = WpHerissonBookmarksTable::getWhere("LENGTH(content_image)=?   or content_image is null", array(0));
         $this->view->stats = array(
-//            'favicon_url'       => WpHerissonBookmarksTable::getWhere("LENGTH(favicon_url)=?     or favicon_url is null", array(0)),
+            //            'favicon_url'       => WpHerissonBookmarksTable::getWhere("LENGTH(favicon_url)=?     or favicon_url is null", array(0)),
             'favicon'           => sizeof($favicon),
             'html_content'      => sizeof($html_content),
             'full_content'      => sizeof($full_content),

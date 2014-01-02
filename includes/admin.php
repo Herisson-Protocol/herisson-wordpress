@@ -27,7 +27,9 @@ function herissonAddPages()
     $friends = WpHerissonFriendsTable::getWhere('b_wantsyou=1');
     $nb = sizeof($friends);
     $friends_waiting = sprintf($update, $nb, $nb);
-    $icon_url = plugin_dir_url("herisson")."/herisson/html/images/herisson_logo_mini_16x16.png";
+    $icon_url = plugin_dir_url("herisson")."/herisson/html/images/herisson_logo-16.png";
+
+    unescapeGlobals();
 
     $r = new HerissonRouter();
 

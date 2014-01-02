@@ -1,5 +1,6 @@
 <?php
-$nb_pages = ceil($all/$limit);
+
+$nb_pages = $limit ? ceil($all/$limit) : 1;
 
 if ($nb_pages > 1) {
 ?>

@@ -76,6 +76,7 @@ function formatSize($size)
     return round($size, 2).$units[$i];
 }
 
+
 function includePartial($view, $data)
 {
     foreach ($data as $var=>$value) {
@@ -85,4 +86,18 @@ function includePartial($view, $data)
 }
 
 
+/**
+ * Unescape globals variables $_POST, $_GET, $_REQUEST and $_COOKIE
+ *
+ * We have to do this because of Wordpress automatic escaping
+ * @link http://stackoverflow.com/questions/8949768/with-magic-quotes-disabled-why-does-php-wordpress-continue-to-auto-escape-my
+ *
+ * @return void
+ */
+function unescapeGlobals() {
+    $_POST      = array_map('stripslashes_deep', $_POST);
+    $_GET       = array_map('stripslashes_deep', $_GET);
+    $_COOKIE    = array_map('stripslashes_deep', $_COOKIE);
+    $_REQUEST   = array_map('stripslashes_deep', $_REQUEST);
+}
 

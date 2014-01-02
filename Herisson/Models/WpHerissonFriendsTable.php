@@ -57,6 +57,30 @@ class WpHerissonFriendsTable extends Doctrine_Table
         return new WpHerissonFriends();
     }
 
+    /**
+     * Retrieve all friends
+     *
+     * @param boolean $paginate wether we should paginate this select
+     * 
+     * @return a list of all WpHerissonFriends objects
+     */
+    public static function getAll($paginate=false)
+    {
+        return self::getWhere("1=1", null, $paginate);
+    }
+
+    /**
+     * Retrieve all actives friends
+     *
+     * @param boolean $paginate wether we should paginate this select
+     * 
+     * @return a list of all active WpHerissonFriends objects
+     */
+    public static function getActives($paginate=false)
+    {
+        return self::getWhere("is_active=?", array(1), $paginate);
+    }
+
 
     /**
      * Get a WpHerissonFriends list with where condition

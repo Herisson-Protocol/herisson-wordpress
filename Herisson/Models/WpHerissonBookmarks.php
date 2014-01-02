@@ -319,7 +319,6 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
      */
     public function captureFromUrl()
     {
-        echo "capture from url 1<br>";
         if (!$this->id
             || $this->error
             || !$this->hash
@@ -329,6 +328,11 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
         $options = get_option('HerissonOptions');
         if (! $options['spiderOptionScreenshot']) {
+            return false;
+        }
+
+        // return false if screenshot already exists
+        if ($this->hasImage()) {
             return false;
         }
         $image = $this->getImage();
@@ -447,11 +451,14 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
      */
     public function getTags()
     {
+        if (!$this->id) {
+            return array();
+        }
         return Doctrine_Query::create()
             ->from('WpHerissonTags')
-            ->where("bookmark_id=".$this->id)
+            ->where("bookmark_id=?")
             ->orderby("name")
-            ->execute();
+            ->execute(array($this->id));
     }
 
 

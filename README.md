@@ -34,20 +34,28 @@ If you install it manually, you should be careful that the following directories
 * data/
 * screenshots/
 
-Demo site
----------
 
-http://herisson.wilkins.fr/herisson/
+Official website
+---------
+http://herisson.wilkins.fr/
 
 Friendly demo sites :
-* <your site here>
+* http://herisson.wilkins.fr/bookmarks/
 
 
 Changelog
 ---------
 
-
 v0.1
 ----
+* First public version
+* Protocol implementation for friends requests, and friend listing
+* Handling friends and bookmarks in backoffice
+* Front office list, and friends list (basic)
+
+
+License
+-------
+Herisson plugin for Wordpress is distributed under the terms of [General Public License v3.0](http://www.gnu.org/licenses/quick-guide-gplv3.en.html).
 
 
