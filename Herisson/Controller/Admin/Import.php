@@ -165,7 +165,14 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
         foreach ($formats as $format) {
             try {
                 $format->check();
-                $correctFormats[] = $format;
+                if (!array_key_exists($format->keyword, $correctFormats)) {
+                    $correctFormats[$format->keyword] = $format;
+                } else {
+                    $format1 = $correctFormats[$format->keyword];
+                    HerissonMessage::i()->addError(sprintf(
+                        __('Format « %s » defined in « %s » already exists in format « %s ». It will be ignored.', HERISSON_TD),
+                        $format->keyword, $format->name, $format1->name));
+                }
             } catch (HerissonFormatException $e) {
                 HerissonMessage::i()->addError($e->getMessage());
             }

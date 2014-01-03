@@ -8,8 +8,6 @@ Maintenance
 * Export firefox / csv / json
 * Optionaly export private bookmarks
 * Optionaly export tags / search
-* Use pretty sliders for import results
-* Add the feature to import bookmarks from a friend
 
 Backups
 -------

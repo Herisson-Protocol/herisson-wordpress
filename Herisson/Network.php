@@ -250,14 +250,13 @@ class HerissonNetwork
     {
         global $http_codes;
         if (array_key_exists($code, $http_codes)) {
-            $color = "green";
             $error = 0;
             if (intval($code)>=400) {
-                $color = "red"; $error = 1;
+                $error = 1;
             }
-            return array("code" => $code, "message" =>  $http_codes[$code], "color" => $color, "error" => $error);
+            return array("code" => $code, "message" =>  $http_codes[$code], "error" => $error);
         } else {
-            return array("code" => $code, "message" => __("HTTP code not found", HERISSON_TD), "color" => "red", "error" => 1);
+            return array("code" => $code, "message" => __("HTTP code not found", HERISSON_TD), "error" => 1);
         }
     }
 

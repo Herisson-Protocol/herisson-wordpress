@@ -1,0 +1,120 @@
+/**
+ * On-off Switch common pour CIS
+ * http://proto.io/freebies/onoff/
+ */
+.switch {
+    position: relative; width: 96px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.switch-checkbox {
+    display: none !important;
+}
+.switch-label {
+    display: block;
+    overflow: hidden; cursor: pointer;
+    border: 2px solid #999999;
+    /*
+    border-radius: 15px;
+    */
+    border-radius : 0px;
+}
+.switch-inner {
+    width: 200%; margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+.switch-inner:before, .switch-inner:after {
+    float: left; width: 50%; height: 20px; padding: 0; line-height: 20px;
+    font-size: 15px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+.switch-inner:before {
+    padding-left: 10px;
+    background-color: green; color: #333333;
+    text-align: left;
+}
+.switch-inner:after {
+    padding-right: 10px;
+    background-color: red; color: #333333;
+    text-align: right;
+}
+
+.switch-switch {
+    width: 11px; margin: 4.5px;
+    background: #FFFFFF;
+    border: 2px solid #999999; border-radius: 15px;
+    position: absolute; top: 0; bottom: 0; right: 71px;
+    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+}
+.switch-checkbox:checked + .switch-label .switch-inner {
+    margin-left: 0;
+}
+.switch-checkbox:checked + .switch-label .switch-switch {
+    right: 0px;
+}
+
+
+
+/**
+ * On-off Switch pour les options d'import
+ */
+.switch-block {
+}
+.switch-block .switch-label {
+    border : 1px solid white;
+}
+.switch-block .switch-switch {
+    display: none;
+}
+.switch-block .switch-inner:before,
+.switch-block .switch-inner:after {
+    height: 20px;
+    line-height: 20px;
+}
+.switch-block .switch-inner:before {
+    font-size: 12px;
+    background-color: #63a94b;
+    color: white;
+}
+.switch-block .switch-inner:after {
+    font-weight: normal;
+    font-size: 12px;
+}
+
+/**
+ * On-off Switch for import/ignore button
+ */
+.switch-add {
+     width: 60px;
+}
+.switch-add .switch-inner:before {
+    content: "Import";
+}
+.switch-add .switch-inner:after {
+    content: "Ignore";
+    background-color: #cccccc;
+}
+.switch-add .switch-switch {
+    right: 0px;
+}
+
+/**
+ * On-off Switch for public/private button
+ */
+.switch-privacy {
+     width: 60px;
+}
+.switch-privacy .switch-inner:before {
+    content: "Public";
+}
+.switch-privacy .switch-inner:after {
+    content: "Private";
+    font-weight: bold;
+    color: white;
+    background-color: #d97b7b;
+}
+.switch-privacy .switch-switch {
+    right: 0px;
+}
+

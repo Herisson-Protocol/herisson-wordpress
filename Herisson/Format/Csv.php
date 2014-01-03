@@ -54,8 +54,8 @@ class HerissonFormatCsv extends HerissonFormat
      */
     public function export($bookmarks)
     {
-        $fname = tempnam('/tmp/', 'csv');
-        $fcsv  = fopen($fname, 'w+');
+        $filename = tempnam('/tmp/', 'csv');
+        $fcsv  = fopen($filename, 'w+');
 
         //headers
         $line = array();
@@ -73,8 +73,8 @@ class HerissonFormatCsv extends HerissonFormat
             fputcsv($fcsv, $line, $this->delimiter);
         }
         fclose($fcsv);
-        HerissonExport::forceDownloadGzip($fname, "herisson-bookmarks.csv");
-        unlink($fname);
+        HerissonExport::forceDownloadGzip($filename, "herisson-bookmarks.csv");
+        unlink($filename);
     }
 
 
@@ -92,7 +92,7 @@ class HerissonFormatCsv extends HerissonFormat
         $headers   = fgetcsv($fh, 0, $this->delimiter);
         $bookmarks = array();
 
-        while (($line = fgetcsv($fh, 0, $this->delimiter)) !== FALSE) {
+        while (($line = fgetcsv($fh, 0, $this->delimiter)) !== false) {
             $bookmark = new WpHerissonBookmarks();
             print_r($bookmark->toArray());
             foreach ($headers as $fieldNum => $header) {

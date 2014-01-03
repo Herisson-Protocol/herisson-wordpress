@@ -45,6 +45,8 @@ function herissonAddPages()
 
     wp_register_style('herissonStylesheet', plugins_url().'/herisson/html/css/stylesheet.css');
     wp_enqueue_style('herissonStylesheet');
+    wp_register_style('herissonSwitches', plugins_url().'/herisson/html/css/switches.css');
+    wp_enqueue_style('herissonSwitches');
 
 }
 

@@ -69,3 +69,19 @@ div.pagination span.active {
     text-align: center;
 
 }
+/*
+.toplevel_page_herisson_menu div.wp-menu-image:before {
+    content: "\f104";
+}
+*/
+
+
+table#importList th {
+    font-weight: bold;
+}
+
+table#importList th:nth-child(-n+3),
+table#importList tr td:nth-child(-n+3) {
+    text-align: center
+}
+

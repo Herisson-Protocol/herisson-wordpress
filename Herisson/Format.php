@@ -43,6 +43,7 @@ class HerissonFormat
      */
     public $type;
 
+
     /**
      * Check method to verify if everything in the Format class is correctly defined
      *
@@ -59,6 +60,51 @@ class HerissonFormat
                 __('Format « '.$this->name.' » in '.get_class($this).' has « type = file ».'
                .' It should not redefine a <code>getForm()</code> method', HERISSON_TD));
         }
+    }
+
+
+    /**
+     * Check method to verify if the format class has a given method
+     *
+     * @param string $methodName the name of the method to check
+     *
+     * @return true if the format has the method, false otherwise
+     */
+    protected function checkMethod($methodName)
+    {
+        if (! method_exists($this, $methodName)) {
+            return false;
+        }
+        // Check that import method is not in a parent class
+        $c = new ReflectionMethod($this, $methodName);
+        if ($c->getDeclaringClass()->getName() == get_class($this)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Check method to verify if the format class has an import method
+     *
+     * @throws HerissonFormatException
+     * @return true if the format can import, false otherwise
+     */
+    public function doImport()
+    {
+        return $this->checkMethod('import');
+    }
+
+
+    /**
+     * Check method to verify if the format class has an export method
+     *
+     * @throws HerissonFormatException
+     * @return true if the format can export, false otherwise
+     */
+    public function doExport()
+    {
+        return $this->checkMethod('export');
     }
 
 
