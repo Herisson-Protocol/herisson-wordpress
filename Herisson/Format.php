@@ -72,11 +72,13 @@ class HerissonFormat
      */
     protected function checkMethod($methodName)
     {
+        //echo get_class($this)."::".$methodName."<br>";
         if (! method_exists($this, $methodName)) {
             return false;
         }
         // Check that import method is not in a parent class
         $c = new ReflectionMethod($this, $methodName);
+        //echo $c->getDeclaringClass()->getName()." == ".get_class($this)."<br>";
         if ($c->getDeclaringClass()->getName() == get_class($this)) {
             return true;
         }

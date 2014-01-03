@@ -15,7 +15,7 @@
                     <?php echo __('Source', HERISSON_TD); ?> : 
                     <select name="import_format">
                         <?php foreach ($formatList as $format) { ?>
-                            <?php if ($format->type == 'file') { ?>
+                            <?php if ($format->type == 'file' && $format->doImport()) { ?>
                             <option value="<?php echo $format->keyword; ?>"><?php echo $format->name; ?></option>
                             <?php } ?>
                         <?php } ?>
@@ -25,13 +25,13 @@
                     <input type="file" name="import_file" />
                 </td>
                 <td>
-                    <input type="submit" class="button" value="<?php echo __("Import bookmarks", HERISSON_TD); ?>" />
+                    <input type="submit" class="button" value="<?php echo __("Import", HERISSON_TD); ?>" />
                 </td>
             </tr>
         </form>
 
         <?php foreach ($formatList as $format) { ?>
-            <?php if ($format->type != 'file') { ?>
+            <?php if ($format->type != 'file' && $format->doImport()) { ?>
         <form method="post" action="<?php echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_import">
          <input type="hidden" name="action" value="import" />
          <input type="hidden" name="import_format" value="<?php echo $format->keyword; ?>" />
@@ -43,7 +43,7 @@
                     <?php echo $format->getForm(); ?>
                 </td>
                 <td>
-              <input type="submit" class="button" value="<?php echo __("Import bookmarks", HERISSON_TD); ?>" />
+              <input type="submit" class="button" value="<?php echo __("Import", HERISSON_TD); ?>" />
                 </td>
             </tr>
         </form>
@@ -78,7 +78,7 @@
                 <td>
                     <select name="export_format">
                         <?php foreach ($formatList as $format) { ?>
-                            <?php if ($format->type == 'file') { ?>
+                            <?php if ($format->type == 'file'  && $format->doExport()) { ?>
                             <option value="<?php echo $format->keyword; ?>"><?php echo $format->name; ?></option>
                             <?php } ?>
                         <?php } ?>
@@ -90,5 +90,26 @@
                 </td>
             </tr>
         </form>
+
+        <?php foreach ($formatList as $format) { ?>
+            <?php if ($format->type != 'file' && $format->doExport()) { ?>
+        <form method="post" action="<?php echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_import">
+         <input type="hidden" name="action" value="export" />
+         <input type="hidden" name="import_format" value="<?php echo $format->keyword; ?>" />
+            <tr valign="top">
+                <th scope="row">
+                    <?php echo $format->name; ?>:
+                </th>
+                <td>
+                    <?php echo $format->getForm(); ?>
+                </td>
+                <td>
+              <input type="submit" class="button" value="<?php echo __("Export", HERISSON_TD); ?>" />
+                </td>
+            </tr>
+        </form>
+            <?php } ?>
+        <?php } ?>
+
     </table>
 </div>

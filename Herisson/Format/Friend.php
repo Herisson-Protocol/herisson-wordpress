@@ -36,24 +36,6 @@ class HerissonFormatFriend extends HerissonFormat
         $this->keyword = "friend";
     }
 
-    /**
-     * Generate JSON bookmarks file and send it to the user
-     *
-     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
-     *
-     * @see WpHerissonBookmarks
-     *
-     * @return void
-     */
-    public function export($bookmarks)
-    {
-        $list = array();
-        foreach ($bookmarks as $bookmark) { 
-            $list[] = $bookmark->toArray();
-        }
-        HerissonExport::forceDownloadContent(json_encode($list), "herisson-bookmarks.json");
-    }
-
 
     /**
      * Print the form to select friend and tags
@@ -66,7 +48,7 @@ class HerissonFormatFriend extends HerissonFormat
         $friends = WpHerissonFriendsTable::getActives();
         ?>
         <select name="friendId">
-        <option value=""><?php echo __('Choose one of your active friend', HERISSON_TD); ?></option>
+            <option value=""><?php echo __('Choose one of your active friend', HERISSON_TD); ?></option>
         <?php
         foreach ($friends as $friend) { ?>
             <option value="<?php echo $friend->id; ?>"><?php echo $friend->name ?> (<?php echo $friend->alias ?>)</option>

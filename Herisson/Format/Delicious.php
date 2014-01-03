@@ -62,7 +62,7 @@ class HerissonFormatDelicious extends HerissonFormat
 
         <?php echo __('Login', HERISSON_TD); ?> :<input type="text" name="username_delicious" /><br/>
         <?php echo __('Password', HERISSON_TD); ?> :<input type="password" name="password_delicious" /><br/>
-        <?php echo __("Theses informations are not stored by this plugin.", HERISSON_TD); ?>
+        <?php echo __("These credentials are not stored.", HERISSON_TD); ?>
 
         <?php
     }
