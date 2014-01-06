@@ -91,37 +91,36 @@ class WpHerissonBookmarksTable extends Doctrine_Table
 
     public static function getSearch($search, $paginate=false)
     {
-        $q = Doctrine_Query::create()
-         ->from('WpHerissonBookmarks b')
-         ->leftJoin('b.WpHerissonTags t')
-         ->where("t.name LIKE ? OR b.title LIKE ? OR b.url LIKE ?", array("%".$search."%", "%".$search."%", "%".$search."%"));
-        if ($paginate) {
-            $pagination = HerissonPagination::i()->getVars();
-            $q->limit($pagination['limit'])->offset($pagination['offset']);
-        }
-        $bookmarks = $q->execute();
-        return $bookmarks;
+        $where = array(
+            't.name LIKE ?',
+            'b.title LIKE ?',
+            'b.url LIKE ?',
+            'b.description LIKE ?',
+//            'b.content LIKE ?',
+        );
+        
+        $params = array(
+            "%".$search."%",
+            "%".$search."%",
+            "%".$search."%",
+            "%".$search."%",
+//            "%".$search."%",
+        );
+        return self::getWhere(implode(' OR ',$where), $params, $paginate);
     }
 
     public static function getTag($tag, $paginate=false)
     {
-        $q = Doctrine_Query::create()
-         ->from('WpHerissonBookmarks b')
-         ->leftJoin('b.WpHerissonTags t')
-         ->where("name= ?", $tag);
-        if ($paginate) {
-            $pagination = HerissonPagination::i()->getVars();
-            $q->limit($pagination['limit'])->offset($pagination['offset']);
-        }
-        $bookmarks = $q->execute();
-        return $bookmarks;
+        return self::getWhere("t.name = ?", $tag, $paginate);
     }
 
 
     public static function getWhere($where, $values, $paginate=false)
     {
+        //print_r($where);
         $q = Doctrine_Query::create()
-            ->from('WpHerissonBookmarks')
+            ->from('WpHerissonBookmarks b')
+            ->leftJoin('b.WpHerissonTags t')
             ->where($where);
         if ($paginate) {
             $pagination = HerissonPagination::i()->getVars();

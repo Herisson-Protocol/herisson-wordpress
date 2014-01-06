@@ -32,17 +32,6 @@ function herisson_screenshots_wkhtmltoimage($type, $url, $image)
 
 function herisson_screenshots_thumb($image, $thumb)
 {
-        /*
-        # $convert = $options['convertPath'];
-        if (!file_exists($thumb) || filesize($thumb) == 0) {
-         exec("$convert -resize 200x \"$image\" \"$thumb\"", $output);
-        #         echo implode("\n", $output);
-        }
-        */
-
-#    $options = get_option('HerissonOptions');
-#    $convert = $options['convertPath'];
-
     if (!file_exists($thumb) || filesize($thumb) == 0) {
         $output = HerissonShell::shellExec("convert", "-resize 200x -crop 200x150 \"$image\" \"$thumb\"");
         // echo implode("\n", $output);

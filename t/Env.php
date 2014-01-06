@@ -10,15 +10,23 @@
  */
 
 
-require_once __DIR__."/../../../../wp-config.php";
+#require_once __DIR__."/../../../../wp-config.php";
+require_once __DIR__."/../../../../../herisson.wilkins.fr/wp-config.php";
 require_once __DIR__."/../Herisson/Doctrine.php";
 require_once __DIR__."/../Herisson/Network.php";
 require_once __DIR__."/../Herisson/Message.php";
 require_once __DIR__."/../Herisson/Encryption.php";
 require_once __DIR__."/../Herisson/Pagination.php";
 require_once __DIR__."/../includes/functions.php";
+
+define('HERISSON_DOCTRINE_DSN_TEST', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/herisson_wilkins_fr' );
+$dsn = HERISSON_DOCTRINE_DSN_TEST;
+#$dsn = "sqlite::memory:";
+herissonDoctrineLoadlibrary($dsn);
+require_once __DIR__."/HerissonORMTest.php";
 require_once __DIR__."/../Herisson/Models/WpHerissonFriends.php";
 require_once __DIR__."/../Herisson/Models/WpHerissonFriendsTable.php";
+
 
 /**
  * Dummy variable to avoid errors

@@ -40,4 +40,5 @@ Documentation
 Install
 -------
 * Set chmod 755 to directories: log, data, screenshots, Herisson/Models/generated/
+* Check that WpHerisson* Models class are correctly named if DB prefix != wp_
 

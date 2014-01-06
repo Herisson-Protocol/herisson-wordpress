@@ -21,8 +21,8 @@
             if ($bookmark['url']) { 
                 if (WpHerissonBookmarksTable::checkDuplicate($bookmark['url'])) { 
                     $status = array(
-                        "code" => __("Duplicate", HERISSON_TD),
-                        "message" => __('This bookmark already exist'),
+                        "message" => __("Duplicate", HERISSON_TD),
+                        "title" => __('This bookmark already exists'),
                         "color" => "#d97b7b",
                         "error"=>1
                     );
@@ -36,8 +36,8 @@
                     }
                 } else {
                     $status = array(
-                        "code" => "No&nbsp;check",
-                        "message" => "No check has been processed. See options for more information",
+                        "message" => "No&nbsp;check",
+                        "title" => "No check has been processed. See options for more information",
                         "color" => "#ffb73d",
                         "error"=>0
                     );
@@ -69,7 +69,7 @@
                 </td>
       
                 <td style="text-align: center">
-                    <span title="<?php echo sprintf(__('HTTP Code %s : %s', HERISSON_TD), $status['code'], $status['message'])?>" style="font-weight:bold; color:white; background-color:<?php echo $status['color']?>; padding: 3px; font-size: 12px; white-space: nowrap">
+                    <span title="<?php echo sprintf(__('HTTP Code %s : %s', HERISSON_TD), $status['code'], $status['title'])?>" style="font-weight:bold; color:white; background-color:<?php echo $status['color']?>; padding: 3px; font-size: 12px; white-space: nowrap">
                         <?php echo $status['message']?>
                     </span>
                 </td>

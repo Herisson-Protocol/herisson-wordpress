@@ -16,7 +16,7 @@
  */
 
 // constants of plugin
-define('HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME);
+// define('HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME);
 define('HERISSON_DOCTRINE_MODELS_DIR', dirname(__FILE__) . '/Models');
 //define('HERISSON_DOCTRINE_SHORTCODES_DIR', dirname(__FILE__) . '/../vendor/doctrine/shortcodes');
 $GLOBALS['doctrine_models_folder_reset_processed'] = false;
@@ -27,7 +27,7 @@ $GLOBALS['doctrine_models_folder_reset_processed'] = false;
  *
  * @return void
  */
-function herissonDoctrineLoadlibrary()
+function herissonDoctrineLoadlibrary($dsn)
 {
     // load Doctrine library
     include_once dirname(__FILE__) . '/../vendor/doctrine/lib/Doctrine.php';
@@ -35,7 +35,7 @@ function herissonDoctrineLoadlibrary()
     // this will allow Doctrine to load Model classes automatically
     spl_autoload_register(array('Doctrine', 'autoload'));
 
-    Doctrine_Manager::connection(HERISSON_DOCTRINE_DSN, 'default');
+    Doctrine_Manager::connection($dsn, 'default');
 
     herissonDoctrineLoadmodels();
 
@@ -144,5 +144,6 @@ function deltree($dir)
     
     return rmdir($dir);
 }
-herissonDoctrineLoadlibrary();
-?>
+
+
+

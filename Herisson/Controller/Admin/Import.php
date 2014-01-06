@@ -60,7 +60,21 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
 
         try {
             include_once __DIR__."/../../Export.php";
-            $bookmarks = WpHerissonBookmarksTable::getAll();
+            $options = post('exportOptions');
+            $where = array();
+            $params = array();
+            if (isset($options['private']) && !$options['private']) {
+                $where[] = "is_public=?";
+                $params[] = 1;
+            }
+            if (isset($options['keyword']) && $options['keyword']) {
+                $where[] = '(t.name LIKE ? OR b.title LIKE ? OR b.url LIKE ?)';
+                $params[] = "%".$options['keyword']."%";
+                $params[] = "%".$options['keyword']."%";
+                $params[] = "%".$options['keyword']."%";
+            }
+            $where = implode(' AND ', $where);
+            $bookmarks = WpHerissonBookmarksTable::getWhere($where, $params);
             $format = HerissonFormat::getFormatByKey($export_format);
             $format->export($bookmarks);
         } catch(HerissonFormatException $e) {
@@ -169,8 +183,8 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
                     $correctFormats[$format->keyword] = $format;
                 } else {
                     $format1 = $correctFormats[$format->keyword];
-                    HerissonMessage::i()->addError(sprintf(
-                        __('Format « %s » defined in « %s » already exists in format « %s ». It will be ignored.', HERISSON_TD),
+                    HerissonMessage::i()
+                        ->addError(sprintf(__('Format « %s » defined in « %s » already exists in format « %s ». It will be ignored.', HERISSON_TD),
                         $format->keyword, $format->name, $format1->name));
                 }
             } catch (HerissonFormatException $e) {

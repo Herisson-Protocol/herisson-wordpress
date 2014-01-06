@@ -56,12 +56,13 @@ class HerissonFormatFriend extends HerissonFormat
         } ?>
         </select>
         <br/><br/>
-    
+        <!--
         <label>
             <?php echo __('Keyword (optional)', HERISSON_TD); ?>:<br/>
             <input type="text" name="keyword" placeholder="add a keyword to be more specific" style="width: 300px" />
         </label>
         <br/>
+        -->
 
         <?php
     }

@@ -38,7 +38,7 @@ class HerissonExport
     {
         $temp = tempnam("/tmp", "herisson");
         file_put_contents($temp, $content);
-        self::forceDownloadGzip($temp, $filename);
+        self::forceDownload($temp, $filename);
         unlink($temp);
     }
 

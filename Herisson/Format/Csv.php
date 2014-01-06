@@ -68,12 +68,12 @@ class HerissonFormatCsv extends HerissonFormat
         foreach ($bookmarks as $bookmark) {
             $line = array();
             foreach ($this->columns as $col) {
-                $line[] = $this->{$col};
+                $line[] = $bookmark->{$col};
             }
             fputcsv($fcsv, $line, $this->delimiter);
         }
         fclose($fcsv);
-        HerissonExport::forceDownloadGzip($filename, "herisson-bookmarks.csv");
+        HerissonExport::forceDownload($filename, "herisson-bookmarks.csv");
         unlink($filename);
     }
 
@@ -94,7 +94,7 @@ class HerissonFormatCsv extends HerissonFormat
 
         while (($line = fgetcsv($fh, 0, $this->delimiter)) !== false) {
             $bookmark = new WpHerissonBookmarks();
-            print_r($bookmark->toArray());
+            //print_r($bookmark->toArray());
             foreach ($headers as $fieldNum => $header) {
                 if (isset($bookmark->$header) && array_key_exists($fieldNum, $line)) {
                     $bookmark->$header = $line[$fieldNum];
