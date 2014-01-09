@@ -67,12 +67,30 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         return new WpHerissonBookmarks();
     }
 
-    public static function countWhere()
+    /**
+     * Count all the bookmarks in the table
+     *
+     * @return integer the number of total bookmarks
+     */
+    public static function countAll()
+    {
+        return self::countWhere("1=1");
+    }
+
+    /**
+     * Count the bookmarks with a specific condition
+     *
+     * @param string $where the condition
+     *
+     * @param integer the number of bookmarks matching the condition
+     */
+    public static function countWhere($where, $params=array())
     {
         $bookmarks = Doctrine_Query::create()
             ->select('COUNT(*)')
             ->from('WpHerissonBookmarks')
-            ->execute(array(), Doctrine_Core::HYDRATE_NONE);
+            ->where($where)
+            ->execute($params, Doctrine_Core::HYDRATE_NONE);
         return $bookmarks[0][0];
     }
 
