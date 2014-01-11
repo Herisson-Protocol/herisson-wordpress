@@ -1,6 +1,6 @@
 <?php
 /**
- * HerissonORMBookmarksTest
+ * HerissonBookmarksTest
  *
  * PHP Version 5.3
  *
@@ -14,7 +14,7 @@
 require_once __DIR__."/Env.php";
 
 /**
- * Class: HerissonORMBookmarksTest
+ * Class: HerissonBookmarksTest
  * 
  * Test WpHerissonBookmarks class and ORM
  * Test bookmarks requests and validation
@@ -26,7 +26,7 @@ require_once __DIR__."/Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonORMBookmarksTest extends HerissonORMTest
+class HerissonBookmarksTest extends HerissonORMTest
 {
 
     /**
@@ -44,65 +44,6 @@ class HerissonORMBookmarksTest extends HerissonORMTest
 
     }
 
-
-    /**
-     * Test counting all bookmarks
-     *
-     * @return void
-     */
-    public function testCountList()
-    {
-        $list = WpHerissonBookmarksTable::getAll();
-        $this->assertSame(get_class($list), 'Doctrine_Collection');
-        $this->assertCount(20, $list->toArray());
-    }
-
-
-    /**
-     * Test counting all bookmarks
-     *
-     * @return void
-     */
-    public function testCountAll()
-    {
-        $nb = WpHerissonBookmarksTable::countAll();
-        $this->assertEquals(20, $nb);
-    }
-
-
-    /**
-     * Test counting bookmarks with an Url condition
-     *
-     * @return void
-     */
-    public function testCountWhereUrl()
-    {
-        // No bookmark with sample URL
-        $nb = WpHerissonBookmarksTable::countWhere("url=?", array($this->sampleUrl));
-        $this->assertEquals(0, $nb);
-
-        // Adding one
-        $f = new WpHerissonBookmarks();
-        $f->setUrl($this->sampleUrl);
-        $f->save();
-
-        // Count should be 1
-        $nb = WpHerissonBookmarksTable::countWhere("url=?", array($this->sampleUrl));
-        $this->assertEquals(1, $nb);
-
-        // Adding another one
-        $f = new WpHerissonBookmarks();
-        $f->setUrl($this->sampleUrl);
-        $f->save();
-
-        // List should contains 2 elements, with the sampleUrl
-        $bookmarks = WpHerissonBookmarksTable::getWhere("url=?", array($this->sampleUrl));
-        $this->assertSame(get_class($bookmarks), 'Doctrine_Collection');
-        $this->assertCount(2, $bookmarks->toArray());
-        foreach ($bookmarks as $bookmark) {
-            $this->assertSame($bookmark->url, $this->sampleUrl);
-        }
-    }
 
 
     /**
@@ -157,6 +98,32 @@ class HerissonORMBookmarksTest extends HerissonORMTest
      */
     public function testCreateSaveAndRetrieve()
     {
+        $id = $b->id;
+
+        // Check it's saved in the DB, with all parameters
+        $bookmarks = WpHerissonBookmarksTable::getWhere(implode(' AND ', $sql),
+            array_values($datas));
+        $this->assertEquals(1, sizeof($bookmarks));
+
+        // Retrieve the id
+        $g = WpHerissonBookmarksTable::get($id);
+        foreach ($datas as $key => $value) {
+            $this->assertEquals($value, $g->$key);
+        }
+
+        // Cleanup
+        $g->delete();
+
+    }
+
+
+    /**
+     * Create a sample bookmark
+     *
+     * @return a bookmark object
+     */
+    private function _getBookmark()
+    {
         // Create a sample bookmark
         $b     = new WpHerissonBookmarks();
         $datas = array(
@@ -185,63 +152,77 @@ class HerissonORMBookmarksTest extends HerissonORMTest
             $sql[] = "$key=?";
         }
         $b->save();
-        $id = $b->id;
 
-        // Check it's saved in the DB, with all parameters
-        $bookmarks = WpHerissonBookmarksTable::getWhere(implode(' AND ', $sql),
-            array_values($datas));
-        $this->assertEquals(1, sizeof($bookmarks));
-
-        // Retrieve the id
-        $g = WpHerissonBookmarksTable::get($id);
-        foreach ($datas as $key => $value) {
-            $this->assertEquals($value, $g->$key);
-        }
-
-        // Cleanup
-        $g->delete();
+        return $b;
 
     }
 
 
     /**
-     * Test adding a new bookmark and delete it
+     * Test the md5 hashing of the URL
      *
      * @return void
      */
-    public function testSearch()
+    public function testHashMD5()
     {
-        // Check it's saved in the DB
-        $bookmarks = WpHerissonBookmarksTable::getSearch('example');
-        $this->assertEquals(0, sizeof($bookmarks));
-
-        // Create a sample bookmark
-        $f              = new WpHerissonBookmarks();
-        $f->url         = $this->sampleUrl;
-        $f->save();
-
-        $f              = new WpHerissonBookmarks();
-        $f->title       = $this->sampleName;
-        $f->save();
-
-        $f              = new WpHerissonBookmarks();
-        $f->description = $this->sampleDescription;
-        $f->save();
-
-        // Check it's saved in the DB
-        $bookmarks = WpHerissonBookmarksTable::getSearch('example');
-        $this->assertEquals(3, sizeof($bookmarks));
-
-        // Delete it and verify it's not there anymore
-        foreach ($bookmarks as $f) {
-            $f->delete();
-        }
-        $bookmarks = WpHerissonBookmarksTable::getSearch('example');
-        $this->assertEquals(0, sizeof($bookmarks));
+        $b = $this->_getBookmark();
+        $b->setHashFromUrl();
+        $this->assertEquals(md5($b->url), $b->hash);
     }
 
 
+    /**
+     * Test the md5 hashing of the URL
+     *
+     * @return void
+     */
+    public function testHashUrl()
+    {
+        $b = $this->_getBookmark();
+        $b->setUrl($this->sampleUrl);
+        $this->assertEquals($b->url, $this->sampleUrl);
+        $this->assertEquals(md5($b->url), $b->hash);
+    }
 
+    /**
+     *
+     * @return void
+     */
+    public function testBookmark2()
+    {
+    }
+
+    /**
+     *
+     * @return void
+     */
+    public function testBookmark3()
+    {
+    }
+
+    /**
+     *
+     * @return void
+     */
+    public function testBookmark4()
+    {
+    }
+
+    /**
+     *
+     * @return void
+     */
+    public function testBookmark5()
+    {
+    }
+
+    /**
+     *
+     * @return void
+     */
+    public function testBookmark6()
+    {
+    }
 
 
 }
