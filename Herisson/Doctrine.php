@@ -16,7 +16,6 @@
  */
 
 // constants of plugin
-// define('HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME);
 define('HERISSON_DOCTRINE_MODELS_DIR', dirname(__FILE__) . '/Models');
 //define('HERISSON_DOCTRINE_SHORTCODES_DIR', dirname(__FILE__) . '/../vendor/doctrine/shortcodes');
 $GLOBALS['doctrine_models_folder_reset_processed'] = false;
@@ -88,10 +87,13 @@ function herissonDoctrineLoadmodels()
     }
 
     // detect if models exists and generate if not
+    // Must be uncommented to initiate Models
+    /*
     if (countFilesInDir(HERISSON_DOCTRINE_MODELS_DIR) . '/generated/*.php') {
         Doctrine_Core::generateModelsFromDb(HERISSON_DOCTRINE_MODELS_DIR, array('default'),
             array('generateTableClasses' => true));
     }
+     */
 
     // telling Doctrine where our models are located
     Doctrine::loadModels(HERISSON_DOCTRINE_MODELS_DIR . '/generated');
