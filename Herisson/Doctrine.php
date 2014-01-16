@@ -24,6 +24,8 @@ $GLOBALS['doctrine_models_folder_reset_processed'] = false;
 /**
  * Load Doctrine library
  *
+ * @param string $dsn the $dsn connection string to connect to the database (ie mysql://user:pass@host:port/db)
+ *
  * @return void
  */
 function herissonDoctrineLoadlibrary($dsn)

@@ -87,6 +87,8 @@ class HerissonModelTest extends PHPUnit_Extensions_Database_TestCase
     }
  
     /**
+     * Get the Doctrine connection
+     *
      * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection()
@@ -96,6 +98,8 @@ class HerissonModelTest extends PHPUnit_Extensions_Database_TestCase
     }
  
     /**
+     * Dummy method to create the dataset, but this method is not used
+     *
      * @return PHPUnit_Extensions_Database_DataSet_IDataSet
      */
     public function getDataSet()

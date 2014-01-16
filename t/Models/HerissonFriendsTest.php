@@ -412,7 +412,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
 
         // request our installation to validate sample site
         try {
-           $content = $network->download(HERISSON_LOCAL_URL."/validate", $postData);
+            $content = $network->download(HERISSON_LOCAL_URL."/validate", $postData);
         } catch (HerissonNetworkException $e) {
             $this->assertEquals(417, $e->getCode());
         }
@@ -442,7 +442,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         $e->generateKeyPairs();
         $f->public_key = $e->public;
         $f->url        = $this->herissonUrl;
-        #$f->setUrl($this->herissonUrl);
+        //$f->setUrl($this->herissonUrl);
         $f->b_wantsyou = 1;
         $f->save();
 

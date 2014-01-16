@@ -25,10 +25,17 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
     public $prefix = null;
     public $tags = null;
-    public $SCREENSHOT = "_screenshot.png";
-    public $SCREENSHOT_SMALL  = "_screenshot_small.png";
-    public $SCREENSHOT_SMALL0 = "_screenshot_small-0.png";
+    public $screenshot = "_screenshot.png";
+    public $screenshotSmall  = "_screenshot_small.png";
+    public $screenshotSmall0 = "_screenshot_small-0.png";
 
+    /**
+     * Setup method to initiate tables relations.
+     *
+     * @author Doctrine
+     *
+     * @return void
+     */
     public function setUp()
     {
         parent::setUp();
@@ -40,6 +47,13 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
 
     /** Properties **/
+    /**
+     * Set the URL and create the url hash
+     *
+     * @param string $url the url of the bookmark
+     *
+     * @return void
+     */
     public function setUrl($url)
     {
         parent::_set('url', $url);
@@ -50,6 +64,8 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
     /**
      * Check the bookmark url, and set the error attribute it the bookmark doesn't exists anymore
+     *
+     * @param array $properties a list of properties to set for the bookmark
      *
      * @return void
      */
@@ -179,39 +195,39 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
         $network = new HerissonNetwork();
 
         preg_match_all('#<link[^>]*href="([^"]*)"#', $this->content, $match);
-        $parsed_url = parse_url($this->url);
+        $parsedUrl = parse_url($this->url);
 
-        $possible_favicons = array();
+        $possibleFavicons = array();
 
         // We try to get it from the <link> tag
         foreach ($match[0] as $i=>$m) {
             if (preg_match("#(favicon|shortcut)#", $m)) {
-                $favicon_url = $match[1][$i];
+                $faviconUrl = $match[1][$i];
                 // Absolute path
-                if (preg_match("#^/#", $favicon_url)) {
-                    $favicon_url = $parsed_url['scheme'].'://'.$parsed_url['host'].$favicon_url;
-                } else if (preg_match("#https?://#", $favicon_url)) {
+                if (preg_match("#^/#", $faviconUrl)) {
+                    $faviconUrl = $parsedUrl['scheme'].'://'.$parsedUrl['host'].$faviconUrl;
+                } else if (preg_match("#https?://#", $faviconUrl)) {
                     // Full path
                 } else {
                     // Relative path
-                    $favicon_url = dirname($this->url)."/".$favicon_url;
+                    $faviconUrl = dirname($this->url)."/".$faviconUrl;
                 }
-                $possible_favicons[] = $favicon_url;
+                $possibleFavicons[] = $faviconUrl;
             }
         }
 
         // We try to guess and get /favicon.ico
-        $possible_favicons[] = $parsed_url['scheme'].'://'.$parsed_url['host']."/favicon.ico";
+        $possibleFavicons[] = $parsedUrl['scheme'].'://'.$parsedUrl['host']."/favicon.ico";
         // We try to use google caching system.
-        $possible_favicons[] = "http://www.google.com/s2/favicons?domain=".$parsed_url['host'];
+        $possibleFavicons[] = "http://www.google.com/s2/favicons?domain=".$parsedUrl['host'];
 
-        foreach ($possible_favicons as $favicon_url) {
+        foreach ($possibleFavicons as $faviconUrl) {
             if (!$this->favicon_url) {
-                $status = $network->check($favicon_url);
+                $status = $network->check($faviconUrl);
                 if (!$status['error']) {
-                    $this->_set('favicon_url', $favicon_url);
+                    $this->_set('favicon_url', $faviconUrl);
                     if ($verbose) {
-                        HerissonMessage::i()->addSucces(sprintf(__("Setting favicon url : %s", HERISSON_TD), $favicon_url));
+                        HerissonMessage::i()->addSucces(sprintf(__("Setting favicon url : %s", HERISSON_TD), $faviconUrl));
                     }
                     return true;
                 }
@@ -317,13 +333,16 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             return false;
         }
         if ($this->createDir()) {
-            HerissonShell::shellExec("wget", "--no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories -erobots=off -P $directory ".'"'.$this->url.'"');
+            HerissonShell::shellExec("wget",
+                "--no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories ".
+                "-erobots=off -P $directory ".'"'.$this->url.'"');
             $this->calculateDirSize();
             $file = basename($this->url);
             if ($file) {
                 HerissonShell::shellExec("mv", "\"$directory/$file\" \"".$this->getFullContentFile()."\"");
                 if ($verbose) {
-                    HerissonMessage::i()->addSucces(sprintf(__('<b>Downloading bookmark : <a href="%s">%s</a></b>', HERISSON_TD), "/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=".$this->id, $this->title));
+                    HerissonMessage::i()->addSucces(sprintf(__('<b>Downloading bookmark : <a href="%s">%s</a></b>', HERISSON_TD),
+                        "/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=".$this->id, $this->title));
                 }
             }
         }
@@ -407,6 +426,12 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
     /**************
      *   Export   *
      **************/
+
+    /**
+     * Export the bookmark as an array with all fields
+     *
+     * @return array the bookmark as an array
+     */
     public function toArray()
     {
         return array(
@@ -418,6 +443,11 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
         );
     }
 
+    /**
+     * Export the bookmark as a json string with toArray() structure
+     *
+     * @return string the JSON string for the bookmark datas
+     */
     public function toJSON()
     {
         return json_encode($this->toArray());
@@ -430,8 +460,6 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
 
     /**
      * Get the complete list of tags
-     *
-     * @param mixed $new the new tag to add
      *
      * @return void
      */
@@ -529,26 +557,51 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
      * Directories methods *
      ***********************/
 
+    /**
+     * Get the Web Url to view the bookmark
+     *
+     * @return string the full URL
+     */
     public function getDirUrl()
     {
         return get_option('siteurl')."/wp-content/plugins/herisson/data/".$this->getHashDir();
     }
 
+    /**
+     * Get the URL of the thumbnail screenshot of the bookmark
+     *
+     * @return string the full URL of the thumbnail
+     */
     public function getThumbUrl()
     {
         return $this->getDirUrl()."/".$this->getThumbName();
     }
 
+    /**
+     * Get the URL of the screenshot of the bookmark
+     *
+     * @return string the full URL of the screenshot
+     */
     public function getImageUrl()
     {
-        return $this->getDirUrl()."/".$this->SCREENSHOT;
+        return $this->getDirUrl()."/".$this->screenshot;
     }
 
+    /**
+     * Get the dirname of bookmark files
+     *
+     * @return string the dirname
+     */
     public function getDir()
     {
         return HERISSON_DATA_DIR.$this->getHashDir();
     }
 
+    /**
+     * Create the bookmark dir of the bookmark files
+     *
+     * @return boolean true if the directory was succesfully created, false otherwise
+     */
     public function createDir()
     {
         if (!file_exists($this->getDir())) {
@@ -579,27 +632,47 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
         return substr($this->hash, 0, 1)."/".substr($this->hash, 0, 2)."/".$this->hash;
     }
 
+    /**
+     * Get the thumbnail filename (in case the screenshot was to big and was splitted
+     *
+     * @return string the thumbnail name
+     */
     public function getThumbName()
     {
-        $thumb  = $this->getDir()."/".$this->SCREENSHOT_SMALL;
-        $thumb0 = $this->getDir()."/".$this->SCREENSHOT_SMALL0;
+        $thumb  = $this->getDir()."/".$this->screenshotSmall;
+        $thumb0 = $this->getDir()."/".$this->screenshotSmall0;
         if (file_exists($thumb)) {
-            return $this->SCREENSHOT_SMALL;
+            return $this->screenshotSmall;
         } else if (file_exists($thumb0)) {
-            return $this->SCREENSHOT_SMALL0;
+            return $this->screenshotSmall0;
         }
     }
 
+    /**
+     * Get full name of the thumbnail filename
+     *
+     * @return string the full thumbnail filename
+     */
     public function getThumb()
     {
         return $this->getDir()."/".$this->getThumbName();
     }
 
+    /**
+     * Get full name of the screenshot filename
+     *
+     * @return string the full screenshot filename
+     */
     public function getImage()
     {
-        return $this->getDir()."/".$this->SCREENSHOT;
+        return $this->getDir()."/".$this->screenshot;
     }
 
+    /**
+     * Check if a screenshot exists for the bookmark
+     *
+     * @return boolean true if the screenshot exists, false otherwise
+     */
     public function hasImage()
     {
         return file_exists($this->getImage());

@@ -126,10 +126,8 @@ class HerissonBookmarksTest extends HerissonModelTest
             $sql[] = "$key=?";
         }
         // Check it's saved in the DB, with all parameters
-        $bookmarks = WpHerissonBookmarksTable::getWhere(
-            implode(' AND ', $sql),
-            array_values($datas)
-        );
+        $bookmarks = WpHerissonBookmarksTable::getWhere(implode(' AND ', $sql),
+            array_values($datas));
         $this->assertEquals(1, sizeof($bookmarks));
 
         // Retrieve the id
@@ -146,6 +144,8 @@ class HerissonBookmarksTest extends HerissonModelTest
 
     /**
      * Create a sample bookmark
+     *
+     * @param array $fields an array of fields/values to feed the bookmark with fake data
      *
      * @return a bookmark object
      */
@@ -222,6 +222,7 @@ class HerissonBookmarksTest extends HerissonModelTest
     }
 
     /**
+     * Dummy test TODO
      *
      * @return void
      */
@@ -230,6 +231,7 @@ class HerissonBookmarksTest extends HerissonModelTest
     }
 
     /**
+     * Dummy test TODO
      *
      * @return void
      */
@@ -238,6 +240,7 @@ class HerissonBookmarksTest extends HerissonModelTest
     }
 
     /**
+     * Dummy test TODO
      *
      * @return void
      */

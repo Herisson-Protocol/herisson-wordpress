@@ -339,7 +339,6 @@ class HerissonBookmarksTableTest extends HerissonModelTest
     /**
      * Test checkDuplicate method
      *
-     *
      * @return void
      */
     public function testCreateBookmarkDuplicate()

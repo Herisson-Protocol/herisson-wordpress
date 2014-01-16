@@ -18,7 +18,7 @@ require_once __DIR__."/../Herisson/Encryption.php";
 require_once __DIR__."/../Herisson/Pagination.php";
 require_once __DIR__."/../includes/functions.php";
 
-define("HERISSON_TEST_DB","herisson_test");
+define("HERISSON_TEST_DB", "herisson_test");
 define('HERISSON_DOCTRINE_DSN_TEST', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/'. HERISSON_TEST_DB);
 
 herissonDoctrineLoadlibrary(HERISSON_DOCTRINE_DSN_TEST);
