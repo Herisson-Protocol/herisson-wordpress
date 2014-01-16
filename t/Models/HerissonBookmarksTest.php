@@ -11,7 +11,7 @@
  * @link     None
  */
 
-require_once __DIR__."/Env.php";
+require_once __DIR__."/../Env.php";
 
 /**
  * Class: HerissonBookmarksTest
@@ -26,7 +26,7 @@ require_once __DIR__."/Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonBookmarksTest extends HerissonORMTest
+class HerissonBookmarksTest extends HerissonModelTest
 {
 
     /**
@@ -41,6 +41,26 @@ class HerissonBookmarksTest extends HerissonORMTest
     {
         $this->table = 'wp_herisson_bookmarks';
         parent::setUp();
+
+        $this->fakeFields = array(
+            'url'           => 'url',
+            'hash'          => 'hash',
+            'title'         => 'title',
+            'description'   => 'description',
+            'content'       => 'content',
+            'favicon_url'   => 'favicon_url',
+            'favicon_image' => 'favicon_image',
+            'is_public'     => 12,
+            'is_binary'     => 34,
+            'content_image' => 'content_image',
+            'error'         => 56,
+            'expires_at'    => '2012-12-12 12:12:12',
+            'created'       => '2011-11-11 11:11:11',
+            'updated'       => '2010-10-10 10:10:10',
+            'type_id'       => 78,
+            'content_type'  => 'content_type',
+            'dirsize'       => 90,
+        );
 
     }
 
@@ -98,15 +118,22 @@ class HerissonBookmarksTest extends HerissonORMTest
      */
     public function testCreateSaveAndRetrieve()
     {
-        $id = $b->id;
+        $datas = $this->fakeFields;
+        $b = $this->_getBookmark($datas);
 
+        $sql = array();
+        foreach ($datas as $key => $value) {
+            $sql[] = "$key=?";
+        }
         // Check it's saved in the DB, with all parameters
-        $bookmarks = WpHerissonBookmarksTable::getWhere(implode(' AND ', $sql),
-            array_values($datas));
+        $bookmarks = WpHerissonBookmarksTable::getWhere(
+            implode(' AND ', $sql),
+            array_values($datas)
+        );
         $this->assertEquals(1, sizeof($bookmarks));
 
         // Retrieve the id
-        $g = WpHerissonBookmarksTable::get($id);
+        $g = WpHerissonBookmarksTable::get($b->id);
         foreach ($datas as $key => $value) {
             $this->assertEquals($value, $g->$key);
         }
@@ -122,39 +149,17 @@ class HerissonBookmarksTest extends HerissonORMTest
      *
      * @return a bookmark object
      */
-    private function _getBookmark()
+    private function _getBookmark($fields=array())
     {
         // Create a sample bookmark
         $b     = new WpHerissonBookmarks();
-        $datas = array(
-            'url'           => 'url',
-            'hash'          => 'hash',
-            'title'         => 'title',
-            'description'   => 'description',
-            'content'       => 'content',
-            'favicon_url'   => 'favicon_url',
-            'favicon_image' => 'favicon_image',
-            'is_public'     => 12,
-            'is_binary'     => 34,
-            'content_image' => 'content_image',
-            'error'         => 56,
-            'expires_at'    => '2012-12-12 12:12:12',
-            'created'       => '2011-11-11 11:11:11',
-            'updated'       => '2010-10-10 10:10:10',
-            'type_id'       => 78,
-            'content_type'  => 'content_type',
-            'dirsize'       => 90,
-        );
-
-        $sql = array();
-        foreach ($datas as $key => $value) {
-            $b->$key = $value;
-            $sql[] = "$key=?";
+        if (sizeof($fields)) {
+            foreach ($fields  as $key => $value) {
+                $b->$key = $value;
+            }
         }
         $b->save();
-
         return $b;
-
     }
 
 
@@ -185,19 +190,35 @@ class HerissonBookmarksTest extends HerissonORMTest
     }
 
     /**
+     * Testing setProperties method with getFakeFields() method
      *
      * @return void
      */
-    public function testBookmark2()
+    public function testSetProperties()
     {
+        $properties = $this->fakeFields;
+        $b = $this->_getBookmark();
+        $b->setProperties($properties);
+        $b->save();
+        foreach ($properties as $property => $value) {
+            $this->assertEquals($b->$property, $value);
+        }
     }
 
     /**
+     * Test that our fake fields is complete
      *
      * @return void
      */
-    public function testBookmark3()
+    public function testThatFakeFieldsIsComplete()
     {
+        $b = new WpHerissonBookmarks();
+        $datas = $b->_data;
+        // Except that id is not in the fake fields
+        unset($datas['id']);
+        $objectsProperties = array_keys($datas);
+        $fakeProperties = array_keys($this->fakeFields);
+        $this->assertEquals($objectsProperties, $fakeProperties);
     }
 
     /**

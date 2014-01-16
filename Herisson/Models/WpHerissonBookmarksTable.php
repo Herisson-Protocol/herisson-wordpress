@@ -58,31 +58,24 @@ class WpHerissonBookmarksTable extends Doctrine_Table
      * @param string $url     the bookmark url
      * @param array  $options the options parameters
      *
-     * @return void
+     * @throws HerissonModelException if bookmark is duplicate
+     *
+     * @return the id of the bookmark created
      */
     public static function createBookmark($url, $options=array())
     {
 
         if (self::checkDuplicate($url)) {
-            echo "Ignoring duplicate entry : $url<br>";
+            throw new HerissonModelException("Ignoring duplicate entry : $url");
         }
         $bookmark = new WpHerissonBookmarks();
         $bookmark->url = $url;
-        if (sizeof($options)) {
-            if (array_key_exists('favicon_url', $options) && $options['favicon_url']) {
-                $bookmark->favicon_url = $options['favicon_url'];
-            }
-            if (array_key_exists('favicon_image', $options) && $options['favicon_image']) {
-                $bookmark->favicon_image = $options['favicon_image'];
-            }
-            if (array_key_exists('title', $options) && $options['title']) {
-                $bookmark->title = $options['title'];
-            }
-        }
+        $bookmark->setProperties($options);
         $bookmark->save();
         if (array_key_exists('tags', $options) && $options['tags']) {
             $bookmark->setTags($options['tags']);
         }
+        return $bookmark->id;
     }
 
     /**

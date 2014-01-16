@@ -11,7 +11,7 @@
  * @link     None
  */
 
-require_once __DIR__."/Env.php";
+require_once __DIR__."/../Env.php";
 
 /**
  * Class: HerissonORMFriendsTest

@@ -84,7 +84,7 @@ require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
 
 
 define('HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME);
-#herissonDoctrineLoadlibrary(HERISSON_DOCTRINE_DSN);
+herissonDoctrineLoadlibrary(HERISSON_DOCTRINE_DSN);
 
 
 $options = get_option('HerissonOptions');

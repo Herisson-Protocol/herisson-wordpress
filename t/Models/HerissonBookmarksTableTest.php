@@ -11,7 +11,7 @@
  * @link     None
  */
 
-require_once __DIR__."/Env.php";
+require_once __DIR__."/../Env.php";
 
 /**
  * Class: HerissonBookmarksTableTest
@@ -26,7 +26,7 @@ require_once __DIR__."/Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonBookmarksTableTest extends HerissonORMTest
+class HerissonBookmarksTableTest extends HerissonModelTest
 {
 
 
@@ -310,6 +310,7 @@ class HerissonBookmarksTableTest extends HerissonORMTest
      */
     public function testGetTag()
     {
+        // TODO
     }
 
 
@@ -318,8 +319,41 @@ class HerissonBookmarksTableTest extends HerissonORMTest
      *
      * @return void
      */
-    public function testCheckDuplicate5()
+    public function testCreateBookmark()
     {
+
+        $data = array(
+            'title'   => $this->sampleName,
+            'content' => $this->sampleDescription,
+        );
+        $id = WpHerissonBookmarksTable::createBookmark($this->sampleUrl, $data);
+        $this->assertGreaterThanOrEqual(1, $id);
+        $bookmark = WpHerissonBookmarksTable::get($id);
+        $this->assertEquals($bookmark->url, $this->sampleUrl);
+        $this->assertEquals($bookmark->title, $this->sampleName);
+        $this->assertEquals($bookmark->content, $this->sampleDescription);
+
+
+    }
+
+    /**
+     * Test checkDuplicate method
+     *
+     *
+     * @return void
+     */
+    public function testCreateBookmarkDuplicate()
+    {
+        $data = array(
+            'title'   => $this->sampleName,
+            'content' => $this->sampleDescription,
+        );
+        $id = WpHerissonBookmarksTable::createBookmark($this->sampleUrl, $data);
+        $this->setExpectedException("HerissonModelException");
+
+        $id = WpHerissonBookmarksTable::createBookmark($this->sampleUrl, $data);
+
+
     }
 
 

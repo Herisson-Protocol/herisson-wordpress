@@ -47,6 +47,30 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
         // $this->checkUrl();
     }
 
+
+    /**
+     * Check the bookmark url, and set the error attribute it the bookmark doesn't exists anymore
+     *
+     * @return void
+     */
+    public function setProperties($properties)
+    {
+        $fields = array_keys($this->_data);
+        foreach ($properties as $property => $value) {
+            if (in_array($property, $fields)) {
+                $this->$property = $value;
+            } else {
+                error_log("Unknown property $property => $value");
+            }
+        }
+    }
+
+
+
+    /*******************
+     *   Maintenance   *
+     *******************/
+
     /**
      * Check the bookmark url, and set the error attribute it the bookmark doesn't exists anymore
      *
@@ -60,7 +84,6 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             $this->error = 1;
         }
     }
-
 
     /**
      * Start maintenance for this bookmark

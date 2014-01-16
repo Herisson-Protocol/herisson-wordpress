@@ -1,6 +1,6 @@
 <?php
 /**
- * HerissonORMTest
+ * HerissonModelTest
  *
  * PHP Version 5.3
  *
@@ -11,10 +11,10 @@
  * @link     None
  */
 
-require_once __DIR__."/Env.php";
+require_once __DIR__."/../Env.php";
 
 /**
- * Class: HerissonORMTest
+ * Class: HerissonModelTest
  *
  * @category Test
  * @package  Herisson
@@ -23,7 +23,7 @@ require_once __DIR__."/Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonORMTest extends PHPUnit_Extensions_Database_TestCase
+class HerissonModelTest extends PHPUnit_Extensions_Database_TestCase
 {
 
     /**
@@ -83,7 +83,7 @@ class HerissonORMTest extends PHPUnit_Extensions_Database_TestCase
      */
     protected function getFixtures()
     {
-        return __DIR__."/fixtures/".$this->table.".sql";
+        return __DIR__."/../fixtures/".$this->table.".sql";
     }
  
     /**
