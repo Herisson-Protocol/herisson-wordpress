@@ -333,13 +333,13 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             return false;
         }
         if ($this->createDir()) {
-            HerissonShell::shellExec("wget",
+            Herisson\Shell::shellExec("wget",
                 "--no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories ".
                 "-erobots=off -P $directory ".'"'.$this->url.'"');
             $this->calculateDirSize();
             $file = basename($this->url);
             if ($file) {
-                HerissonShell::shellExec("mv", "\"$directory/$file\" \"".$this->getFullContentFile()."\"");
+                Herisson\Shell::shellExec("mv", "\"$directory/$file\" \"".$this->getFullContentFile()."\"");
                 if ($verbose) {
                     HerissonMessage::i()->addSucces(sprintf(__('<b>Downloading bookmark : <a href="%s">%s</a></b>', HERISSON_TD),
                         "/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=".$this->id, $this->title));
@@ -397,7 +397,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
      */
     public function calculateDirSize()
     {
-        $size = HerissonShell::shellExec("du", " -b ".$this->getDir());
+        $size = Herisson\Shell::shellExec("du", " -b ".$this->getDir());
         $this->_set('dirsize', $size);
         $this->save();
     }

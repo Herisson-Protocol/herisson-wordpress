@@ -19,13 +19,13 @@ function herisson_screenshots_wkhtmltoimage($type, $url, $image)
     $options_quality50 = " --quality 50 ";
     if (!file_exists($image) || filesize($image) == 0) {
         // echo "$wkhtmltoimage $options_quality50 \"$url\" $image<br>";
-        $output = HerissonShell::shellExec($wkhtmltoimage, "$options $options_quality50 \"$url\" $image");
+        $output = Herisson\Shell::shellExec($wkhtmltoimage, "$options $options_quality50 \"$url\" $image");
         // echo implode("\n", $output);
     }
 
     if (!file_exists($image) || filesize($image) == 0) {
         // echo "$wkhtmltoimage $options_nojs $options_quality50 \"$url\" $image";
-        $output = HerissonShell::shellExec($wkhtmltoimage, "$options $options_nojs $options_quality50 \"$url\" $image");
+        $output = Herisson\Shell::shellExec($wkhtmltoimage, "$options $options_nojs $options_quality50 \"$url\" $image");
         // echo implode("\n", $output);
     }
 }
@@ -33,7 +33,7 @@ function herisson_screenshots_wkhtmltoimage($type, $url, $image)
 function herisson_screenshots_thumb($image, $thumb)
 {
     if (!file_exists($thumb) || filesize($thumb) == 0) {
-        $output = HerissonShell::shellExec("convert", "-resize 200x -crop 200x150 \"$image\" \"$thumb\"");
+        $output = Herisson\Shell::shellExec("convert", "-resize 200x -crop 200x150 \"$image\" \"$thumb\"");
         // echo implode("\n", $output);
     }
 }

@@ -99,10 +99,10 @@ class HerissonControllerAdminOption extends HerissonControllerAdmin
         sort($binaryTools);
         $this->view->binaries = array();
         foreach ($binaryTools as $binary) {
-            $this->view->binaries[$binary] = HerissonShell::getPath($binary);
+            $this->view->binaries[$binary] = Herisson\Shell::getPath($binary);
         }
 
-        $this->view->platform = HerissonShell::shellExec('uname', '-a');
+        $this->view->platform = Herisson\Shell::shellExec('uname', '-a');
 
         $this->view->screenshots = WpHerissonScreenshotsTable::getAll();
         $this->view->options = get_option('HerissonOptions');

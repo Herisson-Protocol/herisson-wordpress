@@ -1,6 +1,6 @@
 <?php
 /**
- * HerissonShell
+ * Herisson\Shell
  *
  * PHP Version 5.3
  *
@@ -12,9 +12,10 @@
  * @see      None
  */
 
+namespace Herisson;
 
 /**
- * HerissonShell
+ * Herisson\Shell
  * 
  * Library for shell tools using static methods
  * 
@@ -25,7 +26,7 @@
  * @link     None
  * @see      None
  */
-class HerissonShell
+class Shell
 {
 
     /**
@@ -70,23 +71,6 @@ class HerissonShell
         exec("which $binary", $output);
         return implode("\n", $output);
     }
-
-}
-
-
-
-/**
- * HerissonShellException
- * 
- * @category Tools
- * @package  Herisson
- * @author   Thibault Taillandier <thibault@taillandier.name>
- * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
- * @link     None
- * @see      None
- */
-class HerissonShellException extends Exception
-{
 
 }
 

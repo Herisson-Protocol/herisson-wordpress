@@ -75,6 +75,7 @@ require_once HERISSON_BASE_DIR . 'Herisson/Message.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Encryption.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Encryption/Exception.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Shell.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Shell/Exception.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Network.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Network/Exception.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Format.php';
