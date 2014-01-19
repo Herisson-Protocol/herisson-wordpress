@@ -11,7 +11,9 @@
  * @link     None
  */
 
-require_once __DIR__."/../Env.php";
+namespace Herisson\Format;
+
+require_once __DIR__."/../../Env.php";
 
 /**
  * Class: CsvTest
@@ -25,7 +27,7 @@ require_once __DIR__."/../Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class CsvTest extends HerissonFormatTest
+class CsvTest extends Base
 {
 
 
@@ -38,7 +40,7 @@ class CsvTest extends HerissonFormatTest
      */
     protected function setUp()
     {
-        $this->format = new Herisson\Format\Csv();
+        $this->format = new Csv();
     }
 
     /**

@@ -11,7 +11,9 @@
  * @link     None
  */
 
-require_once __DIR__."/../Env.php";
+namespace Herisson\Models;
+
+require_once __DIR__."/../../Env.php";
 
 /**
  * Class: HerissonModelTest
@@ -23,7 +25,7 @@ require_once __DIR__."/../Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonModelTest extends PHPUnit_Extensions_Database_TestCase
+class BaseTest extends \PHPUnit_Extensions_Database_TestCase
 {
 
     /**

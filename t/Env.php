@@ -24,13 +24,13 @@ define('HERISSON_DOCTRINE_DSN_TEST', 'mysql://' . DB_USER . ':' . DB_PASSWORD . 
 $doctrine = new Herisson\Doctrine(HERISSON_DOCTRINE_DSN_TEST);
 $doctrine->loadlibrary();
 
-require_once __DIR__."/Models/HerissonModelTest.php";
+#require_once __DIR__."/Herisson/Models/HerissonModelTest.php";
 require_once __DIR__."/../Herisson/Models/Exception.php";
 require_once __DIR__."/../Herisson/Models/WpHerissonFriends.php";
 require_once __DIR__."/../Herisson/Models/WpHerissonFriendsTable.php";
 
 // Format files
-require_once __DIR__."/FormatTest.php";
+require_once __DIR__."/Herisson/Format/Base.php";
 require_once __DIR__."/../Herisson/Export.php";
 require_once __DIR__."/../Herisson/Format.php";
 require_once __DIR__."/../Herisson/Format/Csv.php";

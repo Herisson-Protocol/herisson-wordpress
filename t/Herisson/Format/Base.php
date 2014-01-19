@@ -11,7 +11,9 @@
  * @link     None
  */
 
-require_once __DIR__."/Env.php";
+namespace Herisson\Format;
+
+require_once __DIR__."/../../Env.php";
 
 /**
  * Format
@@ -25,7 +27,7 @@ require_once __DIR__."/Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonFormatTest extends PHPUnit_Framework_TestCase
+class Base extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -64,7 +66,7 @@ class HerissonFormatTest extends PHPUnit_Framework_TestCase
      */
     public function _getBookmarks()
     {
-        $bookmarks = WpHerissonBookmarksTable::getAll(true);
+        $bookmarks = \WpHerissonBookmarksTable::getAll(true);
         $this->assertTrue(is_array($bookmarks->toArray()));
         $this->assertCount(20, $bookmarks);
         return $bookmarks;
