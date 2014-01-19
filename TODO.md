@@ -33,6 +33,10 @@ Graphism
 * Add Herisson Logo for Wordpress Admin
 * Beautiful website with CSS transforms
 
+Search 
+------
+* Maybe cleanup the content of the bookmark and only keep <hX> tags content to quick-search in this short content
+
 Documentation
 -------------
 * Generate PHPDoc
