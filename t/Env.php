@@ -28,6 +28,12 @@ require_once __DIR__."/../Herisson/Models/Exception.php";
 require_once __DIR__."/../Herisson/Models/WpHerissonFriends.php";
 require_once __DIR__."/../Herisson/Models/WpHerissonFriendsTable.php";
 
+// Format files
+require_once __DIR__."/FormatTest.php";
+require_once __DIR__."/../Herisson/Export.php";
+require_once __DIR__."/../Herisson/Format.php";
+require_once __DIR__."/../Herisson/Format/Csv.php";
+
 
 /**
  * Dummy variable to avoid errors
