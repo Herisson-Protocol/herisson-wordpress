@@ -1,22 +1,11 @@
 <?php
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) )
-	exit();
+    exit();
 
-function herisson_delete_plugin() {
-	global $wpdb;
+require_once __DIR__."/Herisson.php";
 
-	delete_option( 'HerissonOptions' );
-	delete_option( 'HerissonVersions' );
-	delete_option( 'HerissonWidget' );
 
- $tables = array('bookmarks', 'bookmarks_tags', 'friends', 'tags', 'types');
- $table_name = $wpdb->prefix . "herisson";
- foreach ($tables as $table) {
-	 $wpdb->query( "DROP TABLE IF EXISTS ${table_name}_$table" );
-	};
-}
+Herisson::uninstall();
 
-herisson_delete_plugin();
 
-?>

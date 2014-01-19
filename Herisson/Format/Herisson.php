@@ -51,7 +51,7 @@ class HerissonFormatHerisson extends HerissonFormat
         foreach ($bookmarks as $bookmark) { 
             $list[] = $bookmark->toArray();
         }
-        HerissonExport::forceDownloadContent(json_encode($list), "herisson-bookmarks.json");
+        Herisson\Export::forceDownloadContent(json_encode($list), "herisson-bookmarks.json");
     }
 
 

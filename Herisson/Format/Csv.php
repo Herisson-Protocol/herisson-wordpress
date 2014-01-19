@@ -73,7 +73,7 @@ class HerissonFormatCsv extends HerissonFormat
             fputcsv($fcsv, $line, $this->delimiter);
         }
         fclose($fcsv);
-        HerissonExport::forceDownload($filename, "herisson-bookmarks.csv");
+        Herisson\Export::forceDownload($filename, "herisson-bookmarks.csv");
         unlink($filename);
     }
 

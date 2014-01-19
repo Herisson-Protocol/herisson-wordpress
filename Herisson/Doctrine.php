@@ -27,7 +27,8 @@ namespace Herisson;
  * @link     None
  * @see      None
  */
-class Doctrine {
+class Doctrine
+{
 
     /**
      * DSN

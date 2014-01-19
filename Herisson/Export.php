@@ -10,9 +10,10 @@
  * @see      None
  */
 
+namespace Herisson;
 
 /**
- * Class: HerissonExport
+ * Class: Herisson\Export
  *
  * This is a tools class with static methods
  *
@@ -23,7 +24,7 @@
  * @link     None
  * @see      None
  */
-class HerissonExport
+class Export
 {
 
     /**

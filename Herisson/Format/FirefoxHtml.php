@@ -70,7 +70,7 @@ class HerissonFormatFirefoxHtml extends HerissonFormat
         </dl>
         ';
 
-        HerissonExport::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
+        Herisson\Export::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
     }
 
 

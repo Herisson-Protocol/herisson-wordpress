@@ -43,7 +43,7 @@ File import
                 // feed it
             }
             // force file download
-            HerissonExport::forceDownloadGzip($filename, "herisson-bookmarks.extension");
+            Herisson\Export::forceDownloadGzip($filename, "herisson-bookmarks.extension");
             // delete file
             unlink($filename);
 

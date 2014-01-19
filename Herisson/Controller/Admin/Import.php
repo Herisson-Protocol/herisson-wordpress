@@ -41,7 +41,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
      *
      * Redirects to indexAction() if format is not supplied
      * Redirects to indexAction() if an unknown format is supplied
-     * Dispatch to an HerissonExport method according to given format
+     * Dispatch to an Herisson\Export method according to given format
      *
      * @see HerissonFormat
      *

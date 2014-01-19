@@ -62,7 +62,7 @@ class HerissonFormatFirefoxJson extends HerissonFormat
                 'type'  => 'text/x-moz-place',
                 );
         }
-        HerissonExport::forceDownloadContent(json_encode($root), "herisson-bookmarks.json");
+        Herisson\Export::forceDownloadContent(json_encode($root), "herisson-bookmarks.json");
     }
 
     /**
