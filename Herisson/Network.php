@@ -1,6 +1,6 @@
 <?php
 /**
- * HerissonNetwork
+ * Herisson\Network
  *
  * @category Tools
  * @package  Herisson
@@ -10,6 +10,7 @@
  * @see      None
  */
 
+namespace Herisson;
 
 /**
  * HTTP Code
@@ -102,7 +103,7 @@ $mime_types = array(
 );
 
 /**
- * HerissonNetwork
+ * Herisson\Network
  *
  * @category Tools
  * @package  Herisson
@@ -111,7 +112,7 @@ $mime_types = array(
  * @link     None
  * @see      None
  */
-class HerissonNetwork
+class Network
 {
     /**
      * Code
@@ -207,7 +208,7 @@ class HerissonNetwork
             global $http_codes;
             $this->error = 1;
             $this->http_message = $http_codes[$this->http_code];
-            throw new HerissonNetworkException(
+            throw new Network\Exception(
                 sprintf(__("The site %s returned a %s error (%s).", HERISSON_TD), $url, $this->http_code, $this->http_message),
                 $this->http_code
             );
@@ -289,18 +290,3 @@ class HerissonNetwork
 
 }
 
-
-/**
- * HerissonNetworkException
- *
- * @category Tools
- * @package  Herisson
- * @author   Thibault Taillandier <thibault@taillandier.name>
- * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
- * @link     None
- * @see      None
- */
-class HerissonNetworkException extends Exception
-{
-
-}

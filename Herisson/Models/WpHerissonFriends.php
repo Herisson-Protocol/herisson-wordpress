@@ -26,7 +26,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
     public function getInfo()
     {
         $url = $this->url."/info";
-        $network = new HerissonNetwork();
+        $network = new Herisson\Network();
         try  {
             $json_data = $network->download($url);
             $data = json_decode($json_data['data'], 1);
@@ -38,7 +38,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
                 $this->is_active=0;
             }
 
-        } catch (HerissonNetworkException $e) {
+        } catch (Herisson\Network\Exception $e) {
             $this->is_active=0;
             switch ($e->getCode()) {
             case 404:
@@ -56,13 +56,13 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
     public function reloadPublicKey()
     {
-        $network = new HerissonNetwork();
+        $network = new Herisson\Network();
         try {
 
             $content = $network->download($this->url."/publickey");
             $this->_set('public_key', $content['data']);
 
-        } catch (HerissonNetworkException $e) {
+        } catch (Herisson\Network\Exception $e) {
             switch ($e->getCode()) {
             case 404:
                 HerissonMessage::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
@@ -78,7 +78,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         $options = get_option('HerissonOptions');
         $my_public_key = $options['publicKey'];
         if (function_exists('curl_init')) {
-            $network = new HerissonNetwork();
+            $network = new Herisson\Network();
             $params['key'] = $my_public_key;
             try {
 
@@ -88,7 +88,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
                 $bookmarks = json_decode($json_data, 1);
                 return $bookmarks;
 
-            } catch (HerissonNetworkException $e) {
+            } catch (Herissoni\Network\Exception $e) {
                 switch ($e->getCode()) {
                 case 404:
                     HerissonMessage::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
@@ -126,7 +126,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         try {
             $json_display = Herisson\Encryption::i()->publicEncryptLongData($json_data, $this->public_key);
         } catch (Herisson\Encryption\Exception $e) {
-            HerissonNetwork::reply(417);
+            Herisson\Network::reply(417);
             echo $e->getMessage();
         }
         return json_encode($json_display);
@@ -142,7 +142,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
             'url'       => $mysite,
             'signature' => $signature
         );
-        $network = new HerissonNetwork();
+        $network = new Herisson\Network();
         try {
             $content = $network->download($url, $postData);
             switch ($content['code']) {
@@ -157,7 +157,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
                 $this->save();
                 break;
             }
-        } catch (HerissonNetworkException $e) {
+        } catch (Herisson\Network\Exception $e) {
             switch ($e->getCode()) {
             case 403:
                 HerissonMessage::i()->addError(__("This site refuses new friends.", HERISSON_TD));
@@ -180,7 +180,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
             'url'       => HERISSON_LOCAL_URL,
             'signature' => $signature
         );
-        $network = new HerissonNetwork();
+        $network = new Herisson\Network();
         try {
             $content = $network->download($this->url."/validate", $postData);
             if ($content['data'] === "1") {
@@ -191,7 +191,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
             } else {
                 return false;
             }
-        } catch (HerissonNetworkException $e) {
+        } catch (Herisson\Network\Exception $e) {
             HerissonMessage::i()->addError($e->getMessage());
             return false;
         }

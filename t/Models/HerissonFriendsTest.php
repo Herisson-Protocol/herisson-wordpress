@@ -230,7 +230,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         $this->options['acceptFriends'] = 1;
         update_option('HerissonOptions', $this->options);
 
-        $network   = new HerissonNetwork();
+        $network   = new Herisson\Network();
         $signature = Herisson\Encryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
         $postData  = array(                                                       
             'url'       => $this->herissonUrl,
@@ -270,7 +270,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         $this->options['acceptFriends'] = 0;
         update_option('HerissonOptions', $this->options);
 
-        $network   = new HerissonNetwork();
+        $network   = new Herisson\Network();
         $signature = Herisson\Encryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
         $postData  = array(                                                       
             'url'       => $this->herissonUrl,
@@ -280,7 +280,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         // ask our installation to add this site
         try {
             $content = $network->download(HERISSON_LOCAL_URL."/ask", $postData);
-        } catch (HerissonNetworkException $e) {
+        } catch (Herisson\Network\Exception $e) {
             $this->assertEquals(403, $e->getCode());
         }
 
@@ -304,7 +304,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         $this->options['acceptFriends'] = 2;
         update_option('HerissonOptions', $this->options);
 
-        $network   = new HerissonNetwork();
+        $network   = new Herisson\Network();
         $signature = Herisson\Encryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
         $postData  = array(                                                       
             'url'       => $this->herissonUrl,
@@ -314,7 +314,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         // ask our installation to add this site
         try {
             $content = $network->download(HERISSON_LOCAL_URL."/ask", $postData);
-        } catch (HerissonNetworkException $e) {
+        } catch (Herisson\Network\Exception $e) {
             $this->assertEquals(202, $e->getCode());
         }
 
@@ -356,7 +356,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         $this->assertEquals(1, sizeof($friends));
 
         // encrypt sample url, with sample private key
-        $network   = new HerissonNetwork();
+        $network   = new Herisson\Network();
         $signature = Herisson\Encryption::i()->privateEncrypt($f->url, $e->private);
         $postData  = array(                                                       
             'url'       => $f->url,
@@ -403,7 +403,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         $this->assertEquals(1, sizeof($friends));
 
         // encrypt sample url, with sample private key
-        $network   = new HerissonNetwork();
+        $network   = new Herisson\Network();
         $signature = Herisson\Encryption::i()->privateEncrypt($f->url, $e->private);
         $postData  = array(                                                       
             'url'       => $f->url,
@@ -413,7 +413,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         // request our installation to validate sample site
         try {
             $content = $network->download(HERISSON_LOCAL_URL."/validate", $postData);
-        } catch (HerissonNetworkException $e) {
+        } catch (Herisson\Network\Exception $e) {
             $this->assertEquals(417, $e->getCode());
         }
 

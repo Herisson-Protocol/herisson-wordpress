@@ -94,7 +94,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
      */
     public function checkUrl()
     {
-        $network = new HerissonNetwork();
+        $network = new Herisson\Network();
         $status = $network->check($this->url);
         if ($status['error']) {
             $this->error = 1;
@@ -192,7 +192,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
         if ($this->is_binary) {
             return false;
         }
-        $network = new HerissonNetwork();
+        $network = new Herisson\Network();
 
         preg_match_all('#<link[^>]*href="([^"]*)"#', $this->content, $match);
         $parsedUrl = parse_url($this->url);
@@ -257,7 +257,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             || $this->is_binary) {
             return false;
         }
-        $network = new HerissonNetwork();
+        $network = new Herisson\Network();
         try {
             $content = $network->download($this->favicon_url);
             $this->_set('favicon_image', base64_encode($content['data']));
@@ -265,7 +265,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
                 HerissonMessage::i()->addSucces(__("Retrieving favicon image URL", HERISSON_TD));
             }
             return true;
-        } catch (HerissonNetworkException $e) {
+        } catch (Herisson\Network\Exception $e) {
             HerissonMessage::i()->addError($e->getMessage());
         }
         return false;
@@ -292,7 +292,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             return false;
         }
         if (!$this->content) {
-            $network = new HerissonNetwork();
+            $network = new Herisson\Network();
             try {
                 $content = $network->download($this->url);
                 $this->_set('content_type', $content['type']);
@@ -306,7 +306,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
                 }
                 return true;
                 //$this->save();
-            } catch (HerissonNetworkException $e) {
+            } catch (Herisson\Network\Exception $e) {
                 HerissonMessage::i()->addError($e->getMessage());
                 return false;
             }

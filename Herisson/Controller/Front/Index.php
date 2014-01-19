@@ -41,7 +41,7 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
      *
      * Handled via HTTP Response code
      *
-     * TODO: Handle HerissonNetwork replies as Exceptions
+     * TODO: Handle Herisson\Network replies as Exceptions
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
     {
 
         if ($this->options['acceptFriends'] == 0) {
-            HerissonNetwork::reply(403, HERISSON_EXIT);
+            Herisson\Network::reply(403, HERISSON_EXIT);
         }
         $signature = post('signature');
         $f = new WpHerissonFriends();
@@ -59,17 +59,17 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
             $f->getInfo();
             if ($this->options['acceptFriends'] == 2) {
                 // Friend automatically accepted, so it's a 202 Accepted for further process response
-                HerissonNetwork::reply(202);
+                Herisson\Network::reply(202);
                 $f->is_active=1;
             } else {
                 // Friend request need to be manually processed, so it's a 200 Ok response
-                HerissonNetwork::reply(200);
+                Herisson\Network::reply(200);
                 $f->b_wantsyou=1;
                 $f->is_active=0;
             }
             $f->save();
         } else {
-            HerissonNetwork::reply(417, HERISSON_EXIT);
+            Herisson\Network::reply(417, HERISSON_EXIT);
         }
         exit;
     }
@@ -78,7 +78,7 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
     /**
      * Action to handle the ask from another site
      *
-     * TODO: Handle HerissonNetwork replies as Exceptions
+     * TODO: Handle Herisson\Network replies as Exceptions
      *
      * @return void
      */
@@ -207,14 +207,14 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
                 $f->b_youwant=0;
                 $f->is_active=1;
                 $f->save();
-                HerissonNetwork::reply(200);
+                Herisson\Network::reply(200);
                 echo "1";
                 exit;
             } else {
-                HerissonNetwork::reply(417, HERISSON_EXIT);
+                Herisson\Network::reply(417, HERISSON_EXIT);
             }
         } catch (Herisson\Encryption\Exception $e) {
-            HerissonNetwork::reply(417, HERISSON_EXIT);
+            Herisson\Network::reply(417, HERISSON_EXIT);
 
         }
     }
