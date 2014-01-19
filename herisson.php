@@ -23,8 +23,6 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?php
 
 
 define('HERISSON_VERSION', '0.1');
@@ -75,6 +73,7 @@ require_once HERISSON_BASE_DIR . 'Herisson/Doctrine.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Pagination.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Message.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Encryption.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Encryption/Exception.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Shell.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Network.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Format.php';
@@ -84,7 +83,8 @@ require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
 
 
 define('HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME);
-herissonDoctrineLoadlibrary(HERISSON_DOCTRINE_DSN);
+$doctrine = new Herisson\Doctrine(HERISSON_DOCTRINE_DSN);
+$doctrine->loadlibrary();
 
 
 $options = get_option('HerissonOptions');
@@ -147,7 +147,7 @@ function herisson_install()
     }
 
     // Generate a couple of public/private key to handle encryption between this site and friends
-    $encryption = HerissonEncryption::i()->generateKeyPairs();
+    $encryption = Herisson\Encryption::i()->generateKeyPairs();
 
     $defaultOptions = array(
         'formatDate'                => 'd/m/Y',

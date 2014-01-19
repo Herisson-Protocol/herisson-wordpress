@@ -231,7 +231,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         update_option('HerissonOptions', $this->options);
 
         $network   = new HerissonNetwork();
-        $signature = HerissonEncryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
+        $signature = Herisson\Encryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
         $postData  = array(                                                       
             'url'       => $this->herissonUrl,
             'signature' => $signature,
@@ -271,7 +271,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         update_option('HerissonOptions', $this->options);
 
         $network   = new HerissonNetwork();
-        $signature = HerissonEncryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
+        $signature = Herisson\Encryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
         $postData  = array(                                                       
             'url'       => $this->herissonUrl,
             'signature' => $signature,
@@ -305,7 +305,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
         update_option('HerissonOptions', $this->options);
 
         $network   = new HerissonNetwork();
-        $signature = HerissonEncryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
+        $signature = Herisson\Encryption::i()->privateEncrypt($this->herissonUrl, $this->herissonPrivate);
         $postData  = array(                                                       
             'url'       => $this->herissonUrl,
             'signature' => $signature,
@@ -344,7 +344,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
     {
         // create a fake request from sample site
         $f = new WpHerissonFriends();
-        $e = HerissonEncryption::i();
+        $e = Herisson\Encryption::i();
         $e->generateKeyPairs();
         $f->public_key = $e->public;
         $f->url        = $this->sampleUrl;
@@ -357,7 +357,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
 
         // encrypt sample url, with sample private key
         $network   = new HerissonNetwork();
-        $signature = HerissonEncryption::i()->privateEncrypt($f->url, $e->private);
+        $signature = Herisson\Encryption::i()->privateEncrypt($f->url, $e->private);
         $postData  = array(                                                       
             'url'       => $f->url,
             'signature' => $signature,
@@ -388,7 +388,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
     {
         // create a fake request from sample site
         $f = new WpHerissonFriends();
-        $e = HerissonEncryption::i();
+        $e = Herisson\Encryption::i();
         $e->generateKeyPairs();
         $f->public_key = $e->public;
         $f->url        = $this->sampleUrl;
@@ -404,7 +404,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
 
         // encrypt sample url, with sample private key
         $network   = new HerissonNetwork();
-        $signature = HerissonEncryption::i()->privateEncrypt($f->url, $e->private);
+        $signature = Herisson\Encryption::i()->privateEncrypt($f->url, $e->private);
         $postData  = array(                                                       
             'url'       => $f->url,
             'signature' => $signature,
@@ -438,7 +438,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
     {
         // create a fake request from sample site
         $f = new WpHerissonFriends();
-        $e = HerissonEncryption::i();
+        $e = Herisson\Encryption::i();
         $e->generateKeyPairs();
         $f->public_key = $e->public;
         $f->url        = $this->herissonUrl;

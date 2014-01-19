@@ -80,7 +80,7 @@ class HerissonControllerAdminOption extends HerissonControllerAdmin
             }
             $complete_options = array_merge($options, $new_options);
             if (!array_key_exists('privateKey', $complete_options)) {
-                $encryption = HerissonEncryption::i()->generateKeyPairs();
+                $encryption = Herisson\Encryption::i()->generateKeyPairs();
                 $complete_options['publicKey'] = $encryption->public;
                 $complete_options['privateKey'] = $encryption->private;
                 echo "<b>Warning</b> : public/private keys have been regenerated<br>";

@@ -84,7 +84,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
                 $content = $network->download($this->url."/retrieve", $params);
                 $encryption_data = json_decode($content['data'], true);
-                $json_data = HerissonEncryption::i()->privateDecryptLongData($encryption_data['data'], $encryption_data['hash'], $encryption_data['iv']);
+                $json_data = Herisson\Encryption::i()->privateDecryptLongData($encryption_data['data'], $encryption_data['hash'], $encryption_data['iv']);
                 $bookmarks = json_decode($json_data, 1);
                 return $bookmarks;
 
@@ -124,8 +124,8 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         }
         $json_data = json_encode($data_bookmarks);
         try {
-            $json_display = HerissonEncryption::i()->publicEncryptLongData($json_data, $this->public_key);
-        } catch (HerissonEncryptionException $e) {
+            $json_display = Herisson\Encryption::i()->publicEncryptLongData($json_data, $this->public_key);
+        } catch (Herisson\Encryption\Exception $e) {
             HerissonNetwork::reply(417);
             echo $e->getMessage();
         }
@@ -137,7 +137,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         $options    = get_option('HerissonOptions');
         $url        = $this->url."/ask";
         $mysite     = get_option('siteurl')."/".$options['basePath'];
-        $signature  = HerissonEncryption::i()->privateEncrypt($mysite);
+        $signature  = Herisson\Encryption::i()->privateEncrypt($mysite);
         $postData = array(
             'url'       => $mysite,
             'signature' => $signature
@@ -175,7 +175,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
     public function validateFriend()
     {
-        $signature = HerissonEncryption::i()->privateEncrypt(HERISSON_LOCAL_URL);
+        $signature = Herisson\Encryption::i()->privateEncrypt(HERISSON_LOCAL_URL);
         $postData = array(
             'url'       => HERISSON_LOCAL_URL,
             'signature' => $signature

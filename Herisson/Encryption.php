@@ -1,6 +1,6 @@
 <?php
 /**
- * HerissonEncryption
+ * Herisson\Encryption
  *
  * PHP Version 5.3
  *
@@ -12,9 +12,10 @@
  * @see      None
  */
 
+namespace Herisson;
 
 /**
- * HerissonEncryption
+ * Herisson\Encryption
  * 
  * Handles public/private key asymetric encryption
  * 
@@ -25,12 +26,12 @@
  * @link     None
  * @see      None
  */
-class HerissonEncryption
+class Encryption
 {
 
     /**
      * singleton
-     * @var HerissonEncryption
+     * @var Herisson\Encryption
      */
     public static $i;
 
@@ -52,12 +53,12 @@ class HerissonEncryption
     /**
      * Creating singleton
      *
-     * @return HerissonEncryption instance
+     * @return Herisson\Encryption instance
      */
     public static function i()
     {
         if (is_null(self::$i)) {
-            self::$i = new HerissonEncryption();
+            self::$i = new Encryption();
         }
         return self::$i;
     }
@@ -160,7 +161,7 @@ class HerissonEncryption
         }
 
         if (!openssl_public_encrypt($data, $data_crypted, $key)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while encrypting with public key', HERISSON_TD));
         }
         return base64_encode($data_crypted);
@@ -180,7 +181,7 @@ class HerissonEncryption
             $key = $this->public;
         }
         if (!openssl_public_decrypt(base64_decode($data_crypted), $data, $key)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while decrypting with public key', HERISSON_TD));
         }
         return $data;
@@ -201,7 +202,7 @@ class HerissonEncryption
         }
 
         if (!openssl_private_encrypt($data, $data_crypted, $key)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while encrypting with private key', HERISSON_TD));
         }
         return base64_encode($data_crypted);
@@ -221,7 +222,7 @@ class HerissonEncryption
             $key = $this->private;
         }
         if (!openssl_private_decrypt(base64_decode($data_crypted), $data, $key)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while decrypting with private key', HERISSON_TD));
         }
         return $data;
@@ -249,13 +250,13 @@ class HerissonEncryption
         $iv = $this->createIV();
 
         if (!openssl_public_encrypt($hash, $hash_crypted, $key)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while encrypting hash with public key', HERISSON_TD));
         }
 
         $data_crypted = null;
         if (!($data_crypted = openssl_encrypt($data, self::$method, $hash, 0, $iv))) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
@@ -288,18 +289,18 @@ class HerissonEncryption
         }
 
         if (!openssl_public_decrypt(base64_decode($hash_crypted), $hash, $key)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while decrypting hash with public key', HERISSON_TD));
         }
 
         if (!($data = openssl_decrypt(base64_decode($data_crypted), self::$method, $hash, 0, base64_decode($iv)))) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
         // Check the hash
         if ($hash != $this->hash($data)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while comparing checksum of decrypted data', HERISSON_TD));
         }
        
@@ -328,13 +329,13 @@ class HerissonEncryption
         $iv = $this->createIV();
 
         if (!openssl_private_encrypt($hash, $hash_crypted, $key)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while encrypting hash with private key', HERISSON_TD));
         }
 
         $data_crypted = null;
         if (!($data_crypted = openssl_encrypt($data, self::$method, $hash, 0, $iv))) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
@@ -367,18 +368,18 @@ class HerissonEncryption
         }
 
         if (!openssl_private_decrypt(base64_decode($hash_crypted), $hash, $key)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while decrypting hash with private key', HERISSON_TD));
         }
 
         if (!($data = openssl_decrypt(base64_decode($data_crypted), self::$method, $hash, 0, base64_decode($iv)))) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while encrypting long data with encryption method', HERISSON_TD));
         }
 
         // Check the hash
         if ($hash != $this->hash($data)) {
-            throw new HerissonEncryptionException(
+            throw new Encryption\Exception(
                 __('Error while comparing checksum of decrypted data', HERISSON_TD));
         }
        
@@ -403,14 +404,14 @@ class HerissonEncryption
         $my_public_key  = $options['publicKey'];
         $my_private_key = $options['privateKey'];
 
-     $hash = HerissonEncryption::i()->hash($data);
+     $hash = Herisson\Encryption::i()->hash($data);
         if (!openssl_private_encrypt($hash, $hash_crypted, $my_public_key)) {
-         throw new HerissonEncryptionException(__('Error while encrypting bkacup hash with my public key', HERISSON_TD));
+         throw new Encryption\Exception(__('Error while encrypting bkacup hash with my public key', HERISSON_TD));
         }
      $data_crypted = null;
 
      if (!openssl_seal($data, $data_crypted, $seal_key, array($my_public_key))) {
-         throw new HerissonEncryptionException(__('Error while encrypting backup data with my public key<br>', HERISSON_TD));
+         throw new Encryption\Exception(__('Error while encrypting backup data with my public key<br>', HERISSON_TD));
         }
 
         return array(
@@ -422,25 +423,5 @@ class HerissonEncryption
     */
 
 }
-
-
-/**
- * HerissonEncryptionException
- * 
- * Handles encryption errors
- * 
- * @category Tools
- * @package  Herisson
- * @author   Thibault Taillandier <thibault@taillandier.name>
- * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
- * @link     None
- * @see      None
- */
-class HerissonEncryptionException extends Exception
-{
-
-
-}
-
 
 
