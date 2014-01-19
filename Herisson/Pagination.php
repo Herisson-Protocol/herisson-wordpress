@@ -12,9 +12,10 @@
  * @see      None
  */
 
+namespace Herisson;
 
 /**
- * Class: HerissonPagination
+ * Class: Herisson\Pagination
  *
  * @category Tools
  * @package  Herisson
@@ -23,25 +24,25 @@
  * @link     None
  * @see      None
  */
-class HerissonPagination
+class Pagination
 {
 
     /**
      * Singleton object
      *
-     * @var HerissonPagination
+     * @var Herisson\Pagination
      */
     public static $i;
 
     /**
      * Creating singleton
      *
-     * @return HerissonPagination instance
+     * @return Herisson\Pagination instance
      */
     public static function i()
     {
         if (is_null(self::$i)) {
-            self::$i = new HerissonPagination();
+            self::$i = new Pagination();
         }
         return self::$i;
     }

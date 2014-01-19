@@ -92,7 +92,7 @@ class WpHerissonFriendsTable extends Doctrine_Table
      */
     public static function getWhere($where, $data=array())
     {
-        $pagination = HerissonPagination::i()->getVars();
+        $pagination = Herisson\Pagination::i()->getVars();
         $friends = Doctrine_Query::create()
             ->from('WpHerissonFriends')
             ->where($where)

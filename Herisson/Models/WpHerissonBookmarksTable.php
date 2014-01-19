@@ -196,7 +196,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
             ->leftJoin('b.WpHerissonTags t')
             ->where($where);
         if ($paginate) {
-            $pagination = HerissonPagination::i()->getVars();
+            $pagination = Herisson\Pagination::i()->getVars();
             $q->limit($pagination['limit'])->offset($pagination['offset']);
         }
         $bookmarks = $q->execute($values);
