@@ -208,10 +208,9 @@ class Network
             global $http_codes;
             $this->error = 1;
             $this->http_message = $http_codes[$this->http_code];
-            throw new Network\Exception(
-                sprintf(__("The site %s returned a %s error (%s).", HERISSON_TD), $url, $this->http_code, $this->http_message),
-                $this->http_code
-            );
+            throw new Network\Exception(sprintf(__("The site %s returned a %s error (%s).", HERISSON_TD),
+                $url, $this->http_code, $this->http_message),
+                $this->http_code);
         }
 
         $content_type = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);

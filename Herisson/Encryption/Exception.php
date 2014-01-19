@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Herisson\Encryption\Exception
  *
