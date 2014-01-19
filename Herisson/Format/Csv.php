@@ -10,6 +10,7 @@
  * @see      None
  */
 
+namespace Herisson\Format;
 
 /**
  * Class to handle Basic CSV format
@@ -21,7 +22,7 @@
  * @link     None
  * @see      None
  */
-class HerissonFormatCsv extends HerissonFormat
+class Csv extends \Herisson\Format
 {
 
     /**
@@ -73,7 +74,7 @@ class HerissonFormatCsv extends HerissonFormat
             fputcsv($fcsv, $line, $this->delimiter);
         }
         fclose($fcsv);
-        Herisson\Export::forceDownload($filename, "herisson-bookmarks.csv");
+        \Herisson\Export::forceDownload($filename, "herisson-bookmarks.csv");
         unlink($filename);
     }
 
@@ -99,7 +100,7 @@ class HerissonFormatCsv extends HerissonFormat
                 if (isset($bookmark->$header) && array_key_exists($fieldNum, $line)) {
                     $bookmark->$header = $line[$fieldNum];
                 } else {
-                    throw new HerissonFormatException(__("Unknown column definition « $header » on the first line.", HERISSON_TD));
+                    throw new Exception(__("Unknown column definition « $header » on the first line.", HERISSON_TD));
                 }
             }
             $bookmarks[] = $bookmark;

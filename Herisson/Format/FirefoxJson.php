@@ -10,6 +10,7 @@
  * @see      None
  */
 
+namespace Herisson\Format;
 
 /**
  * Class to handle Firefox JSON bookmarks format
@@ -22,7 +23,7 @@
  * @link     http://docs.services.mozilla.com/sync/objectformats.html
  * @see      None
  */
-class HerissonFormatFirefoxJson extends HerissonFormat
+class FirefoxJson extends \Herisson\Format
 {
 
     /**
@@ -62,7 +63,7 @@ class HerissonFormatFirefoxJson extends HerissonFormat
                 'type'  => 'text/x-moz-place',
                 );
         }
-        Herisson\Export::forceDownloadContent(json_encode($root), "herisson-bookmarks.json");
+        \Herisson\Export::forceDownloadContent(json_encode($root), "herisson-bookmarks.json");
     }
 
     /**

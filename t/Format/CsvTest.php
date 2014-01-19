@@ -38,7 +38,7 @@ class CsvTest extends HerissonFormatTest
      */
     protected function setUp()
     {
-        $this->format = new HerissonFormatCsv();
+        $this->format = new Herisson\Format\Csv();
     }
 
     /**

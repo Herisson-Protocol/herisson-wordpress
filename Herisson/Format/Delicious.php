@@ -10,6 +10,7 @@
  * @see      None
  */
 
+namespace Herisson\Format;
 
 /**
  * Class to handle Basic Delicious format
@@ -21,7 +22,7 @@
  * @link     None
  * @see      None
  */
-class HerissonFormatDelicious extends HerissonFormat
+class Delicious extends \Herisson\Format
 {
 
     /**

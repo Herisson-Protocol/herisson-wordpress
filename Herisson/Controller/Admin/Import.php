@@ -43,9 +43,9 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
      * Redirects to indexAction() if an unknown format is supplied
      * Dispatch to an Herisson\Export method according to given format
      *
-     * @see HerissonFormat
+     * @see Herisson\Format
      *
-     * @throws HerissonFormatException if given export_format is unknown
+     * @throws Herisson\FormatException if given export_format is unknown
      *
      * @return void
      */
@@ -75,9 +75,9 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
             }
             $where = implode(' AND ', $where);
             $bookmarks = WpHerissonBookmarksTable::getWhere($where, $params);
-            $format = HerissonFormat::getFormatByKey($export_format);
+            $format = Herisson\Format::getFormatByKey($export_format);
             $format->export($bookmarks);
-        } catch(HerissonFormatException $e) {
+        } catch(Herisson\Format\Exception $e) {
             HerissonMessage::i()->addError($e->getMessage());
             $this->indexAction();
             $this->setView('index');
@@ -93,7 +93,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
      * Redirects to indexAction() if an unknown format is supplied
      * Dispatch to the right method according to given format
      *
-     * @throws HerissonFormatException if given export_format is unknown
+     * @throws Herisson\FormatException if given export_format is unknown
      *
      * @return void
      */
@@ -106,12 +106,12 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
             return;
         }
 
-        $format = HerissonFormat::getFormatByKey($import_format);
+        $format = Herisson\Format::getFormatByKey($import_format);
         try {
             $bookmarks = $format->import();
             $this->view->format = $format;
             $this->importList($bookmarks);
-        } catch(HerissonFormatException $e) {
+        } catch(Herisson\FormatException $e) {
             HerissonMessage::i()->addError($e->getMessage());
             $this->indexAction();
             $this->setView('index');
@@ -173,7 +173,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
     {
 
         $correctFormats = array();
-        $formats = HerissonFormat::getList();
+        $formats = Herisson\Format::getList();
 
         // Check for problems in format list
         foreach ($formats as $format) {
@@ -187,7 +187,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
                         ->addError(sprintf(__('Format « %s » defined in « %s » already exists in format « %s ». It will be ignored.', HERISSON_TD),
                         $format->keyword, $format->name, $format1->name));
                 }
-            } catch (HerissonFormatException $e) {
+            } catch (Herisson\Format\Exception $e) {
                 HerissonMessage::i()->addError($e->getMessage());
             }
         }

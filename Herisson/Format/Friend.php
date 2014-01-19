@@ -10,6 +10,7 @@
  * @see      None
  */
 
+namespace Herisson\Format;
 
 /**
  * Class to handle Friend bookmarks transfer
@@ -21,7 +22,7 @@
  * @link     None
  * @see      None
  */
-class HerissonFormatFriend extends HerissonFormat
+class Friend extends \Herisson\Format
 {
 
     /**
@@ -76,11 +77,11 @@ class HerissonFormatFriend extends HerissonFormat
     {
         $friendId = post('friendId');
         if (! $friendId) {
-            throw new HerissonFormatException("Missing friend Id");
+            throw new Exception("Missing friend Id");
         }
         $friend = WpHerissonFriendsTable::get(post('friendId'));
         if (! $friend->id) {
-            throw new HerissonFormatException("Unknown friend");
+            throw new Exception("Unknown friend");
         }
         $bookmarks = $friend->retrieveBookmarks();
 

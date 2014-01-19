@@ -10,6 +10,7 @@
  * @see      None
  */
 
+namespace Herisson\Format;
 
 /**
  * Class to handle Firefox HTML bookmarks format
@@ -23,7 +24,7 @@
  * @link     https://support.mozilla.org/fr/kb/exporter-marque-pages-firefox-fichier-html
  * @see      None
  */
-class HerissonFormatFirefoxHtml extends HerissonFormat
+class FirefoxHtml extends \Herisson\Format
 {
 
     /**
@@ -70,7 +71,7 @@ class HerissonFormatFirefoxHtml extends HerissonFormat
         </dl>
         ';
 
-        Herisson\Export::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
+        \Herisson\Export::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
     }
 
 

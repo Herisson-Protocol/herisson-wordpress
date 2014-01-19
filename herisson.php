@@ -68,6 +68,7 @@ require_once HERISSON_BASE_DIR . 'Herisson/Shell/Exception.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Network.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Network/Exception.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Format.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Format/Exception.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
 require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
 

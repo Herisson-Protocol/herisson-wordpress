@@ -12,9 +12,10 @@
  * @see      None
  */
 
+namespace Herisson;
 
 /**
- * Class: HerissonFormat
+ * Class: Herisson\Format
  *
  * This is a tools class with static methods
  *
@@ -25,7 +26,7 @@
  * @link     None
  * @see      None
  */
-class HerissonFormat
+class Format
 {
 
     /**
@@ -47,7 +48,7 @@ class HerissonFormat
     /**
      * Check method to verify if everything in the Format class is correctly defined
      *
-     * @throws HerissonFormatException
+     * @throws Herisson\Format\Exception
      * @return void
      */
     public function check()
@@ -56,7 +57,7 @@ class HerissonFormat
         $c = new ReflectionMethod($this, 'getForm');
         //echo $c->getDeclaringClass()->getName()." == ".get_class($this)."<br>";
         if ($c->getDeclaringClass()->getName() == get_class($this) && $this->type == 'file') {
-            throw new HerissonFormatException(
+            throw new Format\Exception(
                 __('Format « '.$this->name.' » in '.get_class($this).' has « type = file ».'
                .' It should not redefine a <code>getForm()</code> method', HERISSON_TD));
         }
@@ -89,7 +90,7 @@ class HerissonFormat
     /**
      * Check method to verify if the format class has an import method
      *
-     * @throws HerissonFormatException
+     * @throws Herisson\Format\Exception
      * @return true if the format can import, false otherwise
      */
     public function doImport()
@@ -101,7 +102,7 @@ class HerissonFormat
     /**
      * Check method to verify if the format class has an export method
      *
-     * @throws HerissonFormatException
+     * @throws Herisson\Format\Exception
      * @return true if the format can export, false otherwise
      */
     public function doExport()
@@ -126,7 +127,7 @@ class HerissonFormat
      *
      * @param string $keyword the keyword of the file format
      *
-     * @throws HerissonFormatException
+     * @throws Herisson\Format\Exception
      * @return an instance of the correct Format class
      */
     public static function getFormatByKey($keyword)
@@ -137,7 +138,7 @@ class HerissonFormat
                 return $format;
             }
         }
-        throw new HerissonFormatException("The « $keyword » format is not referenced");
+        throw new Format\Exception("The « $keyword » format is not referenced");
     }
 
 
@@ -154,12 +155,13 @@ class HerissonFormat
         if ($handle = opendir($dir)) {
             /* Ceci est la façon correcte de traverser un dossier. */
             while (false !== ($entry = readdir($handle))) {
-                if (!preg_match('/\.php$/', $entry)) {
+                if (!preg_match('/\.php$/', $entry) || $entry == "Exception") {
                     continue;
                 }
                 include_once $dir."/".$entry;
-                $classname    = get_class().basename($entry, ".php");
-                $formatList[] = new $classname;
+                $classname    = 'Herisson\Format\\'.$entry;
+                #get_class().basename($entry, ".php");
+                $formatList[] = $classname;
             }
             uasort($formatList, array('self', '_sortFormat'));
             closedir($handle);
@@ -172,14 +174,14 @@ class HerissonFormat
     /**
      * Check of correct configuration and parameters of imports
      *
-     * @throws HerissonFormatException
+     * @throws Herisson\Format\Exception
      *
      * @return void
      */
     protected function preImport()
     {
         if ($this->type == "file" && !isset($_FILES['import_file'])) { 
-            throw new HerissonFormatException(__("Bookmarks file not found.", HERISSON_TD));
+            throw new Format\Exception(__("Bookmarks file not found.", HERISSON_TD));
         }
     }
 
@@ -198,20 +200,4 @@ class HerissonFormat
 
 }
 
-
-/**
- * Class: HerissonFormatException
- *
- * @category Tools
- * @package  Herisson
- * @author   Thibault Taillandier <thibault@taillandier.name>
- * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
- * @link     None
- * @see      None
- */
-class HerissonFormatException extends Exception
-{
-
-
-}
 

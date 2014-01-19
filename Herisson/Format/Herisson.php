@@ -10,6 +10,7 @@
  * @see      None
  */
 
+namespace Herisson\Format;
 
 /**
  * Class to handle complete Herisson JSON bookmarks format
@@ -21,7 +22,7 @@
  * @link     https://github.com/Rivsen/firefox-json-boomark-read
  * @see      None
  */
-class HerissonFormatHerisson extends HerissonFormat
+class Herisson extends Herisson\Format
 {
 
     /**

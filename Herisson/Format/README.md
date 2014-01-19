@@ -12,7 +12,7 @@ File import
 
 
 
-    class HerissonFormatMyFormat extends HerissonFormat
+    class MyFormat extends Herisson\Format
     {
 
         /**
@@ -82,7 +82,7 @@ Other import
 
 
 
-    class HerissonFormatMyFormat extends HerissonFormat
+    class MyFormat extends Herisson\Format
     {
 
         /**
