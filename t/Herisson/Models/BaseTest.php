@@ -11,7 +11,7 @@
  * @link     None
  */
 
-namespace Herisson\Models;
+namespace Herisson\Model;
 
 require_once __DIR__."/../../Env.php";
 
@@ -85,7 +85,7 @@ class BaseTest extends \PHPUnit_Extensions_Database_TestCase
      */
     protected function getFixtures()
     {
-        return __DIR__."/../fixtures/".$this->table.".sql";
+        return __DIR__."/../../fixtures/".$this->table.".sql";
     }
  
     /**
@@ -95,7 +95,7 @@ class BaseTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getConnection()
     {
-        $manager = Doctrine_Manager::getInstance();
+        $manager = \Doctrine_Manager::getInstance();
         return $manager->getConnection('default');
     }
  
@@ -106,7 +106,7 @@ class BaseTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getDataSet()
     {
-        $dataSet = new PHPUnit_Extensions_Database_DataSet_MySQLDataSet();
+        $dataSet = new \PHPUnit_Extensions_Database_DataSet_MySQLDataSet();
         return $this->createMySQLXMLDataSet('fixtures/bookmarks.xml');
     }
 

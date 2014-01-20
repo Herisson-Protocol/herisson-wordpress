@@ -5,9 +5,9 @@
     <filter>
         <whitelist>
             <directory suffix=".php">../Herisson/</directory>
-        <exclude>
-            <directory>../Herisson/Models/generated/</directory>
-        </exclude>
+            <exclude>
+                <directory>../Herisson/Models/generated/</directory>
+            </exclude>
         </whitelist>
     </filter>
 

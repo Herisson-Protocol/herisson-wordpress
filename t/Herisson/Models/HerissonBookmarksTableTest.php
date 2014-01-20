@@ -11,6 +11,11 @@
  * @link     None
  */
 
+namespace Herisson\Model;
+
+use WpHerissonBookmarks;
+use WpHerissonBookmarksTable;
+
 require_once __DIR__."/../../Env.php";
 
 /**
@@ -26,7 +31,7 @@ require_once __DIR__."/../../Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonBookmarksTableTest extends HerissonModelTest
+class HerissonBookmarksTableTest extends BaseTest
 {
 
 

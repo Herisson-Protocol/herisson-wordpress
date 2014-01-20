@@ -24,7 +24,7 @@ define('HERISSON_DOCTRINE_DSN_TEST', 'mysql://' . DB_USER . ':' . DB_PASSWORD . 
 $doctrine = new Herisson\Doctrine(HERISSON_DOCTRINE_DSN_TEST);
 $doctrine->loadlibrary();
 
-#require_once __DIR__."/Herisson/Models/HerissonModelTest.php";
+require_once __DIR__."/Herisson/Models/BaseTest.php";
 require_once __DIR__."/../Herisson/Models/Exception.php";
 require_once __DIR__."/../Herisson/Models/WpHerissonFriends.php";
 require_once __DIR__."/../Herisson/Models/WpHerissonFriendsTable.php";
