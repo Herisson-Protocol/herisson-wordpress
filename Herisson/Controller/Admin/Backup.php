@@ -10,6 +10,8 @@
  * @see      HerissonControllerAdmin
  */
 
+namespace Herisson\Controller\Admin;
+
 require_once __DIR__."/../Admin.php";
 
 /**
@@ -22,7 +24,7 @@ require_once __DIR__."/../Admin.php";
  * @link     None
  * @see      HerissonControllerAdmin
  */
-class HerissonControllerAdminBackup extends HerissonControllerAdmin
+class Backup extends \Herisson\Controller\Admin
 {
 
     /**
@@ -45,7 +47,7 @@ class HerissonControllerAdminBackup extends HerissonControllerAdmin
      */
     function indexAction()
     {
-        $this->view->backups = Doctrine_Query::create()
+        $this->view->backups = \Doctrine_Query::create()
             ->from('WpHerissonBackups')
             ->execute();
 

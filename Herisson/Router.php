@@ -1,6 +1,6 @@
 <?php
 /**
- * Routeur
+ * Herisson\Router
  *
  * PHP Version 5.3
  *
@@ -12,9 +12,10 @@
  * @see      None
  */
 
+namespace Herisson;
 
 /**
- * Class: HerissonRouter
+ * Class: Herisson\Router
  *
  * @category Controller
  * @package  Herisson
@@ -23,7 +24,7 @@
  * @link     None
  * @see      None
  */
-class HerissonRouter
+class Router
 {
 
     /**
@@ -34,8 +35,9 @@ class HerissonRouter
     function route()
     {
         $pageName       = ucfirst(str_replace("herisson_", "", get('page')));
-        $baseController = "HerissonControllerAdmin";
+        $baseController = "\\Herisson\\Controller\\Admin\\";
         $controllerName = $baseController.$pageName;
+        echo $controllerName;
         $defaultName    = "Bookmark";
         if ($pageName == "Menu" || !class_exists($controllerName)) {
             $defaultController = $baseController.$defaultName;

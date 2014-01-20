@@ -10,20 +10,18 @@
  * @see      HerissonControllerAdmin
  */
 
+namespace Herisson\Controller\Admin;
+
+use WpHerissonBookmarksTable;
+use WpHerissonBookmarks;
+use WpHerissonScreenshotsTable;
+use Herisson\Encryption;
+use Herisson\Shell;
+
 require_once __DIR__."/../Admin.php";
 
-/*
-if (!isset($_SERVER['REQUEST_URI'])) {
-    $arr = explode("/", $_SERVER['PHP_SELF']);
-    $_SERVER['REQUEST_URI'] = "/" . $arr[count($arr) - 1];
-    if ( !empty($_SERVER['argv'][0]) ) {
-        $_SERVER['REQUEST_URI'] .= "?{$_SERVER['argv'][0]}";
-    }
-}
-*/
-
 /**
- * Class: HerissonControllerAdminOption
+ * Class: Herisson\Controller\Admin\Option
  *
  * @category Controller
  * @package  Herisson
@@ -32,7 +30,7 @@ if (!isset($_SERVER['REQUEST_URI'])) {
  * @link     None
  * @see      HerissonControllerAdmin
  */
-class HerissonControllerAdminOption extends HerissonControllerAdmin
+class Option extends \Herisson\Controller\Admin
 {
 
     /**
@@ -80,7 +78,7 @@ class HerissonControllerAdminOption extends HerissonControllerAdmin
             }
             $complete_options = array_merge($options, $new_options);
             if (!array_key_exists('privateKey', $complete_options)) {
-                $encryption = Herisson\Encryption::i()->generateKeyPairs();
+                $encryption = Encryption::i()->generateKeyPairs();
                 $complete_options['publicKey'] = $encryption->public;
                 $complete_options['privateKey'] = $encryption->private;
                 echo "<b>Warning</b> : public/private keys have been regenerated<br>";
@@ -99,10 +97,10 @@ class HerissonControllerAdminOption extends HerissonControllerAdmin
         sort($binaryTools);
         $this->view->binaries = array();
         foreach ($binaryTools as $binary) {
-            $this->view->binaries[$binary] = Herisson\Shell::getPath($binary);
+            $this->view->binaries[$binary] = Shell::getPath($binary);
         }
 
-        $this->view->platform = Herisson\Shell::shellExec('uname', '-a');
+        $this->view->platform = Shell::shellExec('uname', '-a');
 
         $this->view->screenshots = WpHerissonScreenshotsTable::getAll();
         $this->view->options = get_option('HerissonOptions');

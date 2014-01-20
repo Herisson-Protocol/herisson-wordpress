@@ -107,7 +107,7 @@ add_action('admin_menu', array('Herisson', 'addPages'));
 
 
 if (param('nomenu')) {
-    $c = new HerissonRouter();
+    $c = new Herisson\Router();
     $c->routeRaw();
 }
 

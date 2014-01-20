@@ -38,12 +38,12 @@ class Encryption
     /**
      * Public key
      */
-    public static $public;
+    public $public;
 
     /**
      * Private key
      */
-    public static $private;
+    public $private;
 
     /**
      * Encryption method for long data

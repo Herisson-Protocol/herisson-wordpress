@@ -22,7 +22,7 @@ namespace Herisson\Format;
  * @link     https://github.com/Rivsen/firefox-json-boomark-read
  * @see      None
  */
-class Herisson extends Herisson\Format
+class Herisson extends \Herisson\Format
 {
 
     /**

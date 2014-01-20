@@ -43,7 +43,7 @@ class Herisson
 
         unescapeGlobals();
 
-        $r = new HerissonRouter();
+        $r = new Herisson\Router();
 
         add_menu_page(__('Herisson', HERISSON_TD), __('Herisson', HERISSON_TD), 'manage_options', 'herisson_menu', array(&$r, 'route'), $icon_url);
         add_submenu_page('herisson_menu', '', '', 'manage_options', 'herisson_menu', array(&$r, 'route'));
@@ -191,7 +191,7 @@ class Herisson
         $path =explode("/", $_SERVER['REQUEST_URI']);
         if (sizeof($path) && $path[1] == $options['basePath']) {
             include HERISSON_BASE_DIR."/Herisson/Controller/Front/Index.php";
-            $c = new HerissonControllerFrontIndex();
+            $c = new Herisson\Controller\Front\Index();
             $c->route();
             exit;
         }

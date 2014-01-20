@@ -10,11 +10,12 @@
  * @see      HerissonController
  */
 
+namespace Herisson\Controller;
 
 require_once __DIR__."/../Controller.php";
 
 /**
- * Class: HerissonControllerFront
+ * Class: Herisson\Controller\Front
  *
  * @category Controller
  * @package  Herisson
@@ -23,7 +24,7 @@ require_once __DIR__."/../Controller.php";
  * @link     None
  * @see      HerissonController
  */
-class HerissonControllerFront extends HerissonController
+class Front extends \Herisson\Controller
 {
 
     /**

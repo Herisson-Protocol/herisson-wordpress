@@ -10,12 +10,17 @@
  * @see      HerissonControllerAdmin
  */
 
+namespace Herisson\Controller\Admin;
+
+use WpHerissonBookmarksTable;
+use WpHerissonBookmarks;
+use Herisson\Message;
+use Herisson\Format;
+
 require_once __DIR__."/../Admin.php";
 
-use Herisson\Message;
-
 /**
- * Class: HerissonControllerAdminImport
+ * Class: Herisson\Controller\Admin\Import
  *
  * @category Controller
  * @package  Herisson
@@ -24,7 +29,7 @@ use Herisson\Message;
  * @link     None
  * @see      HerissonControllerAdmin
  */
-class HerissonControllerAdminImport extends HerissonControllerAdmin
+class Import extends \Herisson\Controller\Admin
 {
 
     /**
@@ -77,9 +82,9 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
             }
             $where = implode(' AND ', $where);
             $bookmarks = WpHerissonBookmarksTable::getWhere($where, $params);
-            $format = Herisson\Format::getFormatByKey($export_format);
+            $format = Format::getFormatByKey($export_format);
             $format->export($bookmarks);
-        } catch(Herisson\Format\Exception $e) {
+        } catch(Format\Exception $e) {
             Message::i()->addError($e->getMessage());
             $this->indexAction();
             $this->setView('index');
@@ -108,7 +113,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
             return;
         }
 
-        $format = Herisson\Format::getFormatByKey($import_format);
+        $format = Format::getFormatByKey($import_format);
         try {
             $bookmarks = $format->import();
             $this->view->format = $format;
@@ -175,7 +180,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
     {
 
         $correctFormats = array();
-        $formats = Herisson\Format::getList();
+        $formats = Format::getList();
 
         // Check for problems in format list
         foreach ($formats as $format) {
@@ -189,7 +194,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
                         ->addError(sprintf(__('Format « %s » defined in « %s » already exists in format « %s ». It will be ignored.', HERISSON_TD),
                         $format->keyword, $format->name, $format1->name));
                 }
-            } catch (Herisson\Format\Exception $e) {
+            } catch (Format\Exception $e) {
                 Message::i()->addError($e->getMessage());
             }
         }

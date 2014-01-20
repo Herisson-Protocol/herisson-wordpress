@@ -12,6 +12,8 @@
 
 namespace Herisson\Format;
 
+use WpHerissonFriendsTable;
+
 /**
  * Class to handle Friend bookmarks transfer
  *

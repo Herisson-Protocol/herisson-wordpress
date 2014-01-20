@@ -10,12 +10,16 @@
  * @see      HerissonControllerAdmin
  */
 
+namespace Herisson\Controller\Admin;
+
 require_once __DIR__."/../Admin.php";
 
 use Herisson\Message;
+use WpHerissonFriendsTable;
+use WpHerissonFriends;
 
 /**
- * Class: HerissonControllerAdminFriend
+ * Class: Herisson\Controller\Admin\Friend
  *
  * @category Controller
  * @package  Herisson
@@ -24,7 +28,7 @@ use Herisson\Message;
  * @link     None
  * @see      HerissonControllerAdmin
  */
-class HerissonControllerAdminFriend extends HerissonControllerAdmin
+class Friend extends \Herisson\Controller\Admin
 {
 
     /**

@@ -434,7 +434,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
      *
      * @return array the bookmark as an array
      */
-    public function toArray()
+    public function toArray($deep = true, $prefixKey = false)
     {
         return array(
             "title"         => $this->title,

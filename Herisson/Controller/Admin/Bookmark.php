@@ -10,6 +10,12 @@
  * @see      HerissonControllerAdmin
  */
 
+namespace Herisson\Controller\Admin;
+
+use WpHerissonBookmarksTable;
+use WpHerissonBookmarks;
+use Herisson\Pagination;
+
 require_once __DIR__."/../Admin.php";
 
 /**
@@ -22,7 +28,7 @@ require_once __DIR__."/../Admin.php";
  * @link     None
  * @see      HerissonControllerAdmin
  */
-class HerissonControllerAdminBookmark extends HerissonControllerAdmin
+class Bookmark extends \Herisson\Controller\Admin
 {
 
     /**
@@ -145,7 +151,7 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
             $this->view->bookmarks = WpHerissonBookmarksTable::getAll(true);
             $this->view->countAll = sizeof(WpHerissonBookmarksTable::getAll());
         }
-        $this->view->pagination = Herisson\Pagination::i()->getVars();
+        $this->view->pagination = Pagination::i()->getVars();
     }
 
     /**
@@ -170,7 +176,7 @@ class HerissonControllerAdminBookmark extends HerissonControllerAdmin
         $this->view->bookmarks = WpHerissonBookmarksTable::getSearch($search, true);
         $this->view->countAll = sizeof(WpHerissonBookmarksTable::getSearch($search));
         $this->view->subtitle = __("Search results for &laquo;&nbsp;".esc_html($search)."&nbsp;&raquo;");
-        $this->view->pagination = Herisson\Pagination::i()->getVars();
+        $this->view->pagination = Pagination::i()->getVars();
         $this->setView('index');
     }
 

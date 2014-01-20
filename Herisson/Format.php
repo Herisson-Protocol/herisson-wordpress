@@ -54,7 +54,7 @@ class Format
     public function check()
     {
         // Check that getForm method are not defined in $type=file Format classes
-        $c = new ReflectionMethod($this, 'getForm');
+        $c = new \ReflectionMethod($this, 'getForm');
         //echo $c->getDeclaringClass()->getName()." == ".get_class($this)."<br>";
         if ($c->getDeclaringClass()->getName() == get_class($this) && $this->type == 'file') {
             throw new Format\Exception(
@@ -78,7 +78,7 @@ class Format
             return false;
         }
         // Check that import method is not in a parent class
-        $c = new ReflectionMethod($this, $methodName);
+        $c = new \ReflectionMethod($this, $methodName);
         //echo $c->getDeclaringClass()->getName()." == ".get_class($this)."<br>";
         if ($c->getDeclaringClass()->getName() == get_class($this)) {
             return true;
@@ -155,13 +155,12 @@ class Format
         if ($handle = opendir($dir)) {
             /* Ceci est la façon correcte de traverser un dossier. */
             while (false !== ($entry = readdir($handle))) {
-                if (!preg_match('/\.php$/', $entry) || $entry == "Exception") {
+                if (!preg_match('/\.php$/', $entry) || $entry == "Exception.php") {
                     continue;
                 }
                 include_once $dir."/".$entry;
-                $classname    = 'Herisson\Format\\'.$entry;
-                #get_class().basename($entry, ".php");
-                $formatList[] = $classname;
+                $classname    = '\\Herisson\\Format\\'.basename($entry, ".php");
+                $formatList[] = new $classname;
             }
             uasort($formatList, array('self', '_sortFormat'));
             closedir($handle);

@@ -12,10 +12,12 @@
  * @see      None
  */
 
+namespace Herisson;
+
 require_once "View.php";
 
 /**
- * Class: HerissonController
+ * Class: Herisson\Controller
  *
  * @category Controller
  * @package  Herisson
@@ -24,7 +26,7 @@ require_once "View.php";
  * @link     None
  * @see      None
  */
-class HerissonController
+class Controller
 {
 
     /**
@@ -40,7 +42,7 @@ class HerissonController
     /**
      * The Herisson view
      * 
-     * @see HerissonView
+     * @see Herisson\View
      */
     public $view;
 
@@ -69,8 +71,13 @@ class HerissonController
     {
         $this->options = get_option('HerissonOptions');
         $path          = explode("/", $_SERVER['REQUEST_URI']);
-        if (array_key_exists(2, $path) && strlen($path[2])) {
-            $this->action = $path[2];
+        if (isset($path[2])) {
+            $pathName = preg_replace("#\?.*#", "", $path[2]);
+            if (strlen($pathName) || $pathName == "/") {
+                $this->action = $pathName;
+            } else {
+                $this->action = "index";
+            }
         } else {
             $this->action = "index";
         }
@@ -79,14 +86,14 @@ class HerissonController
     }
 
     /**
-     * Create the HerissonView
+     * Create the View
      *
-     * Create a new HerissonView by default, by can be used to switch action view.
+     * Create a new View by default, by can be used to switch action view.
      *
      * @param string $action     the action name
      * @param string $controller the controller name
      *
-     * @see HerissonView
+     * @see Herisson\View
      * @return void
      */
     protected function setView($action=null, $controller=null)
@@ -97,8 +104,8 @@ class HerissonController
         if ($controller) {
             $this->name = $controller;
         }
-        if (!is_a($this->view, "HerissonView")) {
-            $this->view = new HerissonView($this->app, $this->name, $this->action);
+        if (!is_a($this->view, 'Herisson\\View')) {
+            $this->view = new View($this->app, $this->name, $this->action);
         } else {
             $this->view->setAction($this->action);
             $this->view->setController($this->name);

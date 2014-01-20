@@ -10,10 +10,15 @@
  * @see      HerissonControllerAdmin
  */
 
+namespace Herisson\Controller\Admin;
+
+use WpHerissonBookmarksTable;
+use WpHerissonBookmarks;
+
 require_once __DIR__."/../Admin.php";
 
 /**
- * Class: HerissonControllerAdminMaintenance
+ * Class: Herisson\Controller\Admin\Maintenance
  *
  * @category Controller
  * @package  Herisson
@@ -22,7 +27,7 @@ require_once __DIR__."/../Admin.php";
  * @link     None
  * @see      HerissonControllerAdmin
  */
-class HerissonControllerAdminMaintenance extends HerissonControllerAdmin
+class Maintenance extends \Herisson\Controller\Admin
 {
 
     /**

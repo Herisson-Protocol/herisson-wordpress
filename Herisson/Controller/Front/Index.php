@@ -10,6 +10,14 @@
  * @see      HerissonControllerFront
  */
 
+namespace Herisson\Controller\Front;
+
+use WpHerissonBookmarksTable;
+use WpHerissonFriendsTable;
+use WpHerissonFriends;
+use Herisson\Encryption;
+use Herisson\Network;
+
 require __DIR__."/../Front.php";
 
 /**
@@ -22,7 +30,7 @@ require __DIR__."/../Front.php";
  * @link     None
  * @see      HerissonController
  */
-class HerissonControllerFrontIndex extends HerissonControllerFront
+class Index extends \Herisson\Controller\Front
 {
 
     /**
@@ -41,7 +49,7 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
      *
      * Handled via HTTP Response code
      *
-     * TODO: Handle Herisson\Network replies as Exceptions
+     * TODO: Handle Network replies as Exceptions
      *
      * @return void
      */
@@ -49,27 +57,27 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
     {
 
         if ($this->options['acceptFriends'] == 0) {
-            Herisson\Network::reply(403, HERISSON_EXIT);
+            Network::reply(403, HERISSON_EXIT);
         }
         $signature = post('signature');
         $f = new WpHerissonFriends();
         $f->url = post('url');
         $f->reloadPublicKey();
-        if (Herisson\Encryption::i()->publicDecrypt($signature, $f->public_key) == $f->url) {
+        if (Encryption::i()->publicDecrypt($signature, $f->public_key) == $f->url) {
             $f->getInfo();
             if ($this->options['acceptFriends'] == 2) {
                 // Friend automatically accepted, so it's a 202 Accepted for further process response
-                Herisson\Network::reply(202);
+                Network::reply(202);
                 $f->is_active=1;
             } else {
                 // Friend request need to be manually processed, so it's a 200 Ok response
-                Herisson\Network::reply(200);
+                Network::reply(200);
                 $f->b_wantsyou=1;
                 $f->is_active=0;
             }
             $f->save();
         } else {
-            Herisson\Network::reply(417, HERISSON_EXIT);
+            Network::reply(417, HERISSON_EXIT);
         }
         exit;
     }
@@ -78,7 +86,7 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
     /**
      * Action to handle the ask from another site
      *
-     * TODO: Handle Herisson\Network replies as Exceptions
+     * TODO: Handle Network replies as Exceptions
      *
      * @return void
      */
@@ -112,24 +120,17 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
 
         $tag = get('tag');
         $search = get('search');
-        $params = array();
-        $q = Doctrine_Query::create()
-            ->from('WpHerissonBookmarks as b');
         if ($tag) {
-            $q = $q->leftJoin('b.WpHerissonTags t');
-            $q = $q->where("t.name=?");
-            $params = array($tag);
+            $bookmarks = WpHerissonBookmarksTable::getTag(array($tag),true);
         } else if ($search) {
-            $search = "%$search%";
-            $q = $q->leftJoin('b.WpHerissonTags t');
-            $q = $q->where("t.name LIKE ? OR b.url like ? OR b.title LIKE ? OR b.description LIKE ? OR b.content LIKE ?");
-            $params = array($search, $search, $search, $search, $search);
+            $bookmarks = WpHerissonBookmarksTable::getSearch($search,true);
+        } else {
+            $bookmarks = WpHerissonBookmarksTable::getAll(true);
         }
-        $this->view->bookmarks = $q->execute($params);
-        // $bookmarks = Doctrine_Query::create()->from('WpHerissonBookmarks')->execute();
+
+        $this->view->bookmarks = $bookmarks;
 
         $this->view->title = $this->options['sitename'];
-
 
         $this->view->friends = WpHerissonFriendsTable::getWhere("is_active=1");
 
@@ -203,18 +204,18 @@ class HerissonControllerFrontIndex extends HerissonControllerFront
 
         $f = WpHerissonFriendsTable::getOneWhere("url=? AND b_youwant=1", array($url));
         try {
-            if (Herisson\Encryption::i()->publicDecrypt($signature, $f->public_key) == $url) {
+            if (Encryption::i()->publicDecrypt($signature, $f->public_key) == $url) {
                 $f->b_youwant=0;
                 $f->is_active=1;
                 $f->save();
-                Herisson\Network::reply(200);
+                Network::reply(200);
                 echo "1";
                 exit;
             } else {
-                Herisson\Network::reply(417, HERISSON_EXIT);
+                Network::reply(417, HERISSON_EXIT);
             }
-        } catch (Herisson\Encryption\Exception $e) {
-            Herisson\Network::reply(417, HERISSON_EXIT);
+        } catch (Encryption\Exception $e) {
+            Network::reply(417, HERISSON_EXIT);
 
         }
     }

@@ -12,9 +12,10 @@
  * @see      None
  */
 
+namespace Herisson;
 
 /**
- * Class: HerissonView
+ * Class: Herisson\View
  *
  * @category Controller
  * @package  Herisson
@@ -23,7 +24,7 @@
  * @link     None
  * @see      None
  */
-class HerissonView
+class View
 {
 
     /**
