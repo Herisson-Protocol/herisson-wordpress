@@ -1,11 +1,11 @@
 <?php
-$errors = HerissonMessage::i()->getErrors();
-$success = HerissonMessage::i()->getSuccess();
+$errors = Herisson\Message::i()->getErrors();
+$success = Herisson\Message::i()->getSuccess();
 ?>
 
-<?php if (HerissonMessage::i()->hasErrors()) { ?>
+<?php if (Herisson\Message::i()->hasErrors()) { ?>
 <p class="herisson-errors">
-    <?php foreach (HerissonMessage::i()->getErrors() as $error) { ?>
+    <?php foreach (Herisson\Message::i()->getErrors() as $error) { ?>
     <?php echo $error; ?><br />
     <?php } ?>
 </p>
@@ -13,9 +13,9 @@ $success = HerissonMessage::i()->getSuccess();
 <?php } ?>
 
 
-<?php if (HerissonMessage::i()->hasSuccess()) { ?>
+<?php if (Herisson\Message::i()->hasSuccess()) { ?>
 <p class="herisson-success">
-    <?php foreach (HerissonMessage::i()->getSuccess() as $succes) { ?>
+    <?php foreach (Herisson\Message::i()->getSuccess() as $succes) { ?>
     <?php echo $succes; ?><br />
     <?php } ?>
 </p>

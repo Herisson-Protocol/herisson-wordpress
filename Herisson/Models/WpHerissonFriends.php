@@ -9,6 +9,8 @@
  * @link     None
  */
 
+use Herisson\Message;
+
 /**
  * ORM class to handle Friend object
  * 
@@ -42,7 +44,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
             $this->is_active=0;
             switch ($e->getCode()) {
             case 404:
-                HerissonMessage::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
+                Message::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
                 break;
             }
         }
@@ -65,7 +67,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         } catch (Herisson\Network\Exception $e) {
             switch ($e->getCode()) {
             case 404:
-                HerissonMessage::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
+                Message::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
                 break;
             }
         }
@@ -91,7 +93,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
             } catch (Herissoni\Network\Exception $e) {
                 switch ($e->getCode()) {
                 case 404:
-                    HerissonMessage::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
+                    Message::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
                     break;
                 }
             }
@@ -160,13 +162,13 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         } catch (Herisson\Network\Exception $e) {
             switch ($e->getCode()) {
             case 403:
-                HerissonMessage::i()->addError(__("This site refuses new friends.", HERISSON_TD));
+                Message::i()->addError(__("This site refuses new friends.", HERISSON_TD));
                 break;
             case 404:
-                HerissonMessage::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
+                Message::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
                 break;
             case 417:
-                HerissonMessage::i()->addError(__("Friend say you dont communicate correctly (key problems?).", HERISSON_TD));
+                Message::i()->addError(__("Friend say you dont communicate correctly (key problems?).", HERISSON_TD));
                 break;
                 
             }
@@ -192,7 +194,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
                 return false;
             }
         } catch (Herisson\Network\Exception $e) {
-            HerissonMessage::i()->addError($e->getMessage());
+            Message::i()->addError($e->getMessage());
             return false;
         }
     }

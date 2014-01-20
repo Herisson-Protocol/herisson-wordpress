@@ -18,7 +18,7 @@ use WpHerissonFriendsTable;
 
 use Herisson\Network;
 use Herisson\Encryption;
-use HerissonMessage;
+use Herisson\Message;
 
 require_once __DIR__."/../../Env.php";
 
@@ -461,7 +461,7 @@ bQJyE/oDbky7ktuCQeYIZIW31g2WaRsZZdZSKp5Ri1q/S9is4vYmOtGNdrQeCXA5
 
         $friend = $friends[0];
         $friend->validateFriend();
-        $msgs = HerissonMessage::i()->getErrors();
+        $msgs = Message::i()->getErrors();
         $msgs = array_reverse($msgs);
         $this->assertEquals(1, preg_match("/417/", $msgs[0]));
 

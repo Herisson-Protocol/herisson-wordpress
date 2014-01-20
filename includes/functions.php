@@ -61,10 +61,10 @@ function errorsDispatch($content, $errors)
     $error_code = $content->get_error_data("herisson");
     foreach ($errors as $code=>$message) {
         if ($error_code == $code) {
-            HerissonMessage::i()->addError($message);
+            Herisson\Message::i()->addError($message);
         }
     }
-    HerissonMessage::i()->addError(__($content->get_error_message("herisson"), HERISSON_TD));
+    Herisson\Message::i()->addError(__($content->get_error_message("herisson"), HERISSON_TD));
 }
 
 function formatSize($size)

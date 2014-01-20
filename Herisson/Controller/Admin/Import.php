@@ -12,6 +12,8 @@
 
 require_once __DIR__."/../Admin.php";
 
+use Herisson\Message;
+
 /**
  * Class: HerissonControllerAdminImport
  *
@@ -78,7 +80,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
             $format = Herisson\Format::getFormatByKey($export_format);
             $format->export($bookmarks);
         } catch(Herisson\Format\Exception $e) {
-            HerissonMessage::i()->addError($e->getMessage());
+            Message::i()->addError($e->getMessage());
             $this->indexAction();
             $this->setView('index');
         }
@@ -112,7 +114,7 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
             $this->view->format = $format;
             $this->importList($bookmarks);
         } catch(Herisson\FormatException $e) {
-            HerissonMessage::i()->addError($e->getMessage());
+            Message::i()->addError($e->getMessage());
             $this->indexAction();
             $this->setView('index');
         }
@@ -183,12 +185,12 @@ class HerissonControllerAdminImport extends HerissonControllerAdmin
                     $correctFormats[$format->keyword] = $format;
                 } else {
                     $format1 = $correctFormats[$format->keyword];
-                    HerissonMessage::i()
+                    Message::i()
                         ->addError(sprintf(__('Format « %s » defined in « %s » already exists in format « %s ». It will be ignored.', HERISSON_TD),
                         $format->keyword, $format->name, $format1->name));
                 }
             } catch (Herisson\Format\Exception $e) {
-                HerissonMessage::i()->addError($e->getMessage());
+                Message::i()->addError($e->getMessage());
             }
         }
 

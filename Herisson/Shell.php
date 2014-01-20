@@ -49,7 +49,7 @@ class Shell
         if (file_exists($fullBinary) && is_executable($fullBinary)) {
             $herissonOptions = get_option('HerissonOptions');
             if ($herissonOptions['debugMode']) {
-                HerissonMessage::i()->addSucces($fullBinary." ".$options);
+                Herisson\Message::i()->addSucces($fullBinary." ".$options);
             }
             exec($fullBinary." ".$options, $output);
             return implode("\n", $output);

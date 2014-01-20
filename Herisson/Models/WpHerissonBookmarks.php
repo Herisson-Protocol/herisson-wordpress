@@ -11,6 +11,8 @@
  * @link     None
  */
 
+use Herisson\Message;
+
 /**
  * ORM class to handle Bookmarks objects
  * 
@@ -164,7 +166,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
         if (preg_match("#<title>([^<]*)</title>#", $this->content, $match)) {
             $this->title = $match[1];
             if ($verbose) {
-                HerissonMessage::i()->addSucces(sprintf(__("Setting title : %s", HERISSON_TD), $this->title));
+                Message::i()->addSucces(sprintf(__("Setting title : %s", HERISSON_TD), $this->title));
             }
             return true;
         }
@@ -227,7 +229,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
                 if (!$status['error']) {
                     $this->_set('favicon_url', $faviconUrl);
                     if ($verbose) {
-                        HerissonMessage::i()->addSucces(sprintf(__("Setting favicon url : %s", HERISSON_TD), $faviconUrl));
+                        Message::i()->addSucces(sprintf(__("Setting favicon url : %s", HERISSON_TD), $faviconUrl));
                     }
                     return true;
                 }
@@ -262,11 +264,11 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             $content = $network->download($this->favicon_url);
             $this->_set('favicon_image', base64_encode($content['data']));
             if ($verbose) {
-                HerissonMessage::i()->addSucces(__("Retrieving favicon image URL", HERISSON_TD));
+                Message::i()->addSucces(__("Retrieving favicon image URL", HERISSON_TD));
             }
             return true;
         } catch (Herisson\Network\Exception $e) {
-            HerissonMessage::i()->addError($e->getMessage());
+            Message::i()->addError($e->getMessage());
         }
         return false;
     }
@@ -299,7 +301,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
                 if (preg_match('#^text#', $content['type'])) {
                     $this->_set('content', $content['data']);
                     if ($verbose) {
-                        HerissonMessage::i()->addSucces(__("Setting content from URL", HERISSON_TD));
+                        Message::i()->addSucces(__("Setting content from URL", HERISSON_TD));
                     }
                 } else {
                     $this->saveBinary($content);
@@ -307,7 +309,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
                 return true;
                 //$this->save();
             } catch (Herisson\Network\Exception $e) {
-                HerissonMessage::i()->addError($e->getMessage());
+                Message::i()->addError($e->getMessage());
                 return false;
             }
         }
@@ -341,7 +343,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             if ($file) {
                 Herisson\Shell::shellExec("mv", "\"$directory/$file\" \"".$this->getFullContentFile()."\"");
                 if ($verbose) {
-                    HerissonMessage::i()->addSucces(sprintf(__('<b>Downloading bookmark : <a href="%s">%s</a></b>', HERISSON_TD),
+                    Message::i()->addSucces(sprintf(__('<b>Downloading bookmark : <a href="%s">%s</a></b>', HERISSON_TD),
                         "/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=".$this->id, $this->title));
                 }
             }
@@ -609,10 +611,10 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             mkdir($this->getDir(), 0775, true);
             return true;
         } else if (file_exists($this->getDir()) && !is_dir($this->getDir())) {
-            HerissonMessage::i()->addError(__("Can't create directory ".$this->getDir().". A file already exists", HERISSON_TD));
+            Message::i()->addError(__("Can't create directory ".$this->getDir().". A file already exists", HERISSON_TD));
             return false;
         } else if (!is_writeable($this->getDir())) {
-            HerissonMessage::i()->addError(__("Directory ".$this->getDir()." exists, but is not writable.", HERISSON_TD));
+            Message::i()->addError(__("Directory ".$this->getDir()." exists, but is not writable.", HERISSON_TD));
             return false;
         }
         return true;

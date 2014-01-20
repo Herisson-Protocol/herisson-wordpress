@@ -1,6 +1,6 @@
 <?php
 /**
- * HerissonMessage 
+ * Herisson\Message 
  *
  * @category Tools
  * @package  Herisson
@@ -9,9 +9,10 @@
  * @link     None
  */
 
+namespace Herisson;
 
 /**
- * Class: HerissonMessage
+ * Class: Herisson\Message
  *
  * @category Tools
  * @package  Herisson
@@ -19,12 +20,12 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
  * @link     None
  */
-class HerissonMessage
+class Message
 {
 
     /**
      * singleton
-     * @var HerissonMessage
+     * @var Herisson\Message
      */
     public static $i;
 
@@ -45,12 +46,12 @@ class HerissonMessage
     /**
      * Creating singleton
      *
-     * @return HerissonMessage instance
+     * @return Herisson\Message instance
      */
     public static function i()
     {
         if (is_null(self::$i)) {
-            self::$i = new HerissonMessage();
+            self::$i = new Message();
             self::$i->errors = array();
             self::$i->success = array();
         }
