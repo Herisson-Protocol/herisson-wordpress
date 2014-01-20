@@ -37,7 +37,6 @@ class Router
         $pageName       = ucfirst(str_replace("herisson_", "", get('page')));
         $baseController = "\\Herisson\\Controller\\Admin\\";
         $controllerName = $baseController.$pageName;
-        echo $controllerName;
         $defaultName    = "Bookmark";
         if ($pageName == "Menu" || !class_exists($controllerName)) {
             $defaultController = $baseController.$defaultName;

@@ -17,9 +17,9 @@ require_once __DIR__."/../Env.php";
 
 
 /**
- * Class: HerissonEncryptionTest
+ * Class: Herisson\EncryptionTest
  * 
- * Test HerissonEncryption class
+ * Test Herisson\Encryption class
  *
  * @category Test
  * @package  Herisson
@@ -32,7 +32,7 @@ class EncryptionTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * The HerissonEncryption object
+     * The Herisson\Encryption object
      */
     public $e;
 

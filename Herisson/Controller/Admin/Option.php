@@ -12,8 +12,8 @@
 
 namespace Herisson\Controller\Admin;
 
-use WpHerissonBookmarksTable;
-use WpHerissonBookmarks;
+use Herisson\Model\WpHerissonBookmarksTable;
+use Herisson\Model\WpHerissonBookmarks;
 use WpHerissonScreenshotsTable;
 use Herisson\Encryption;
 use Herisson\Shell;
@@ -104,7 +104,6 @@ class Option extends \Herisson\Controller\Admin
 
         $this->view->screenshots = WpHerissonScreenshotsTable::getAll();
         $this->view->options = get_option('HerissonOptions');
-
 
     }
 

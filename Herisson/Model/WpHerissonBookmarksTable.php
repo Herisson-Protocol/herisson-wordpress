@@ -11,6 +11,14 @@
  * @link     None
  */
 
+namespace Herisson\Model;
+
+use Doctrine_Query;
+use Doctrine_Table;
+use Doctrine_Core;
+
+use Herisson\Pagination;
+
 /**
  * WpHerissonBookmarksTable
  *
@@ -58,7 +66,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
      * @param string $url     the bookmark url
      * @param array  $options the options parameters
      *
-     * @throws HerissonModelException if bookmark is duplicate
+     * @throws Herisson\Model\Exception if bookmark is duplicate
      *
      * @return the id of the bookmark created
      */
@@ -66,7 +74,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
     {
 
         if (self::checkDuplicate($url)) {
-            throw new HerissonModelException("Ignoring duplicate entry : $url");
+            throw new Exception("Ignoring duplicate entry : $url");
         }
         $bookmark = new WpHerissonBookmarks();
         $bookmark->url = $url;
@@ -119,7 +127,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
     {
         $bookmarks = Doctrine_Query::create()
             ->select('COUNT(*)')
-            ->from('WpHerissonBookmarks')
+            ->from('Herisson\\Model\\WpHerissonBookmarks')
             ->where($where)
             ->execute($values, Doctrine_Core::HYDRATE_NONE);
         return $bookmarks[0][0];
@@ -192,11 +200,11 @@ class WpHerissonBookmarksTable extends Doctrine_Table
     public static function getWhere($where, $values, $paginate=false)
     {
         $q = Doctrine_Query::create()
-            ->from('WpHerissonBookmarks b')
+            ->from('Herisson\Model\WpHerissonBookmarks b')
             ->leftJoin('b.WpHerissonTags t')
             ->where($where);
         if ($paginate) {
-            $pagination = Herisson\Pagination::i()->getVars();
+            $pagination = Pagination::i()->getVars();
             $q->limit($pagination['limit'])->offset($pagination['offset']);
         }
         $bookmarks = $q->execute($values);

@@ -11,6 +11,10 @@
  * @link     None
  */
 
+namespace Herisson\Model;
+
+use Doctrine_Query;
+
 use Herisson\Message;
 
 /**
@@ -22,7 +26,7 @@ use Herisson\Message;
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
  * @link     None
  */
-class WpHerissonBookmarks extends BaseWpHerissonBookmarks
+class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
 {
 
     public $prefix = null;
@@ -514,7 +518,7 @@ class WpHerissonBookmarks extends BaseWpHerissonBookmarks
             if (!trim($tag)) {
                 continue; 
             }
-            $t              = new WpHerissonTags();
+            $t              = new \WpHerissonTags();
             $t->name        = $tag;
             $t->bookmark_id = $this->id;
             $t->save();

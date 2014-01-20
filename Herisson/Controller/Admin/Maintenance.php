@@ -12,8 +12,8 @@
 
 namespace Herisson\Controller\Admin;
 
-use WpHerissonBookmarksTable;
-use WpHerissonBookmarks;
+use Herisson\Model\WpHerissonBookmarksTable;
+use Herisson\Model\WpHerissonBookmarks;
 
 require_once __DIR__."/../Admin.php";
 
@@ -52,8 +52,6 @@ class Maintenance extends \Herisson\Controller\Admin
     function indexAction()
     {
         if (post('maintenance')) {
-
-
             $condition = "
                 LENGTH(favicon_url)=?   or favicon_url is null or
                 LENGTH(favicon_image)=? or favicon_image is null or
@@ -75,19 +73,11 @@ class Maintenance extends \Herisson\Controller\Admin
         $full_content      = WpHerissonBookmarksTable::getWhere("LENGTH(content)=?         or content is null", array(0));
         $screenshot        = WpHerissonBookmarksTable::getWhere("LENGTH(content_image)=?   or content_image is null", array(0));
         $this->view->stats = array(
-            //            'favicon_url'       => WpHerissonBookmarksTable::getWhere("LENGTH(favicon_url)=?     or favicon_url is null", array(0)),
             'favicon'           => sizeof($favicon),
             'html_content'      => sizeof($html_content),
             'full_content'      => sizeof($full_content),
             'screenshot'        => sizeof($screenshot),
         );
-        /*
-        $this->view->bookmarks_no_favicon_url   = WpHerissonBookmarksTable::getWhere("LENGTH(favicon_url)=?     or favicon_url is null", array(0));
-        $this->view->bookmarks_no_favicon_image = WpHerissonBookmarksTable::getWhere("LENGTH(favicon_image)=?   or favicon_image is null", array(0));
-        $this->view->bookmarks_no_content       = WpHerissonBookmarksTable::getWhere("LENGTH(content)=?         or content is null", array(0));
-        $this->view->bookmarks_no_content_image = WpHerissonBookmarksTable::getWhere("LENGTH(content_image)=?   or content_image is null", array(0));
-        */
-
 
     }
 

@@ -12,13 +12,14 @@
 
 namespace Herisson\Controller\Front;
 
-use WpHerissonBookmarksTable;
+use Herisson\Model\WpHerissonBookmarksTable;
 use WpHerissonFriendsTable;
 use WpHerissonFriends;
+
 use Herisson\Encryption;
 use Herisson\Network;
 
-require __DIR__."/../Front.php";
+require_once __DIR__."/../Front.php";
 
 /**
  * Class: HerissonControllerAdminFront

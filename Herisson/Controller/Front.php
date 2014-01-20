@@ -7,7 +7,7 @@
  * @author   Thibault Taillandier <thibault@taillandier.name>
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
  * @link     None
- * @see      HerissonController
+ * @see      Herisson\Controller
  */
 
 namespace Herisson\Controller;
@@ -22,7 +22,7 @@ require_once __DIR__."/../Controller.php";
  * @author   Thibault Taillandier <thibault@taillandier.name>
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
  * @link     None
- * @see      HerissonController
+ * @see      Herisson\Controller
  */
 class Front extends \Herisson\Controller
 {

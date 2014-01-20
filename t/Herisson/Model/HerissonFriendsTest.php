@@ -16,6 +16,7 @@ namespace Herisson\Model;
 use WpHerissonFriends;
 use WpHerissonFriendsTable;
 
+use Herisson\ModelTest;
 use Herisson\Network;
 use Herisson\Encryption;
 use Herisson\Message;

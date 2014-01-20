@@ -13,6 +13,8 @@
 
 namespace Herisson\Format;
 
+use Herisson\Model\WpHerissonBookmarksTable;
+
 require_once __DIR__."/../../Env.php";
 
 /**
@@ -66,7 +68,7 @@ class Base extends \PHPUnit_Framework_TestCase
      */
     public function _getBookmarks()
     {
-        $bookmarks = \WpHerissonBookmarksTable::getAll(true);
+        $bookmarks = WpHerissonBookmarksTable::getAll(true);
         $this->assertTrue(is_array($bookmarks->toArray()));
         $this->assertCount(20, $bookmarks);
         return $bookmarks;

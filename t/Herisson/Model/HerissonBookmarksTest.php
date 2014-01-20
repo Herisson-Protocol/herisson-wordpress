@@ -13,14 +13,13 @@
 
 namespace Herisson\Model;
 
-use WpHerissonBookmarks;
-use WpHerissonBookmarksTable;
+use Herisson\ModelTest;
 
 require_once __DIR__."/../../Env.php";
 
 /**
  * Class: HerissonBookmarksTest
- * 
+ *
  * Test WpHerissonBookmarks class and ORM
  * Test bookmarks requests and validation
  *
@@ -31,7 +30,7 @@ require_once __DIR__."/../../Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonBookmarksTest extends BaseTest
+class HerissonBookmarksTest extends ModelTest
 {
 
     /**
@@ -85,7 +84,7 @@ class HerissonBookmarksTest extends BaseTest
 
         $bookmarks = WpHerissonBookmarksTable::getWhere('url=?', array($this->sampleUrl));
         foreach ($bookmarks as $bookmark) {
-            $this->assertEquals(get_class($bookmark), 'WpHerissonBookmarks');
+            $this->assertEquals(get_class($bookmark), 'Herisson\\Model\\WpHerissonBookmarks');
             $this->assertTrue(is_array($bookmark->toArray()));
         }
     }

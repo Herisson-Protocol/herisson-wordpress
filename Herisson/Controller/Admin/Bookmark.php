@@ -12,8 +12,9 @@
 
 namespace Herisson\Controller\Admin;
 
-use WpHerissonBookmarksTable;
-use WpHerissonBookmarks;
+use Herisson\Model\WpHerissonBookmarksTable;
+use Herisson\Model\WpHerissonBookmarks;
+use WpHerissonTagsTable;
 use Herisson\Pagination;
 
 require_once __DIR__."/../Admin.php";

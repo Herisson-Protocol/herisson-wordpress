@@ -13,8 +13,7 @@
 
 namespace Herisson\Model;
 
-use WpHerissonBookmarks;
-use WpHerissonBookmarksTable;
+use Herisson\ModelTest;
 
 require_once __DIR__."/../../Env.php";
 
@@ -31,7 +30,7 @@ require_once __DIR__."/../../Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class HerissonBookmarksTableTest extends BaseTest
+class HerissonBookmarksTableTest extends ModelTest
 {
 
 
@@ -201,7 +200,7 @@ class HerissonBookmarksTableTest extends BaseTest
         $g = WpHerissonBookmarksTable::get($f->id);
         $this->assertTrue(is_numeric($g->id));
         $this->assertEquals($f->id, $g->id);
-        $this->assertEquals(get_class($g), 'WpHerissonBookmarks');
+        $this->assertEquals(get_class($g), 'Herisson\\Model\\WpHerissonBookmarks');
         $this->assertEquals($f->url, $g->url);
         $this->assertEquals($f->title, $g->title);
         $this->assertEquals($f->description, $g->description);
@@ -217,13 +216,13 @@ class HerissonBookmarksTableTest extends BaseTest
     public function testGetNull()
     {
         $f = WpHerissonBookmarksTable::get(null);
-        $this->assertEquals(get_class($f), 'WpHerissonBookmarks');
+        $this->assertEquals(get_class($f), 'Herisson\\Model\\WpHerissonBookmarks');
         $this->assertEmpty($f->url);
         $this->assertEmpty($f->title);
         $this->assertEmpty($f->description);
 
         $f = WpHerissonBookmarksTable::get(123456789);
-        $this->assertEquals(get_class($f), 'WpHerissonBookmarks');
+        $this->assertEquals(get_class($f), 'Herisson\\Model\\WpHerissonBookmarks');
         $this->assertEmpty($f->url);
         $this->assertEmpty($f->title);
         $this->assertEmpty($f->description);
@@ -252,7 +251,7 @@ class HerissonBookmarksTableTest extends BaseTest
         $g->title       = $this->sampleName;
         $g->description = $this->sampleDescription;
 
-        $this->setExpectedException('Doctrine_Connection_Mysql_Exception');
+        $this->setExpectedException('\\Doctrine_Connection_Mysql_Exception');
         $g->save();
 
     }
@@ -353,7 +352,7 @@ class HerissonBookmarksTableTest extends BaseTest
             'content' => $this->sampleDescription,
         );
         $id = WpHerissonBookmarksTable::createBookmark($this->sampleUrl, $data);
-        $this->setExpectedException("HerissonModelException");
+        $this->setExpectedException("Herisson\Model\Exception");
 
         $id = WpHerissonBookmarksTable::createBookmark($this->sampleUrl, $data);
 

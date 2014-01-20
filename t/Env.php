@@ -24,10 +24,27 @@ define('HERISSON_DOCTRINE_DSN_TEST', 'mysql://' . DB_USER . ':' . DB_PASSWORD . 
 $doctrine = new Herisson\Doctrine(HERISSON_DOCTRINE_DSN_TEST);
 $doctrine->loadlibrary();
 
-require_once __DIR__."/Herisson/Model/BaseTest.php";
+// Model
+require_once __DIR__."/Herisson/ModelTest.php";
 require_once __DIR__."/../Herisson/Model/Exception.php";
 require_once __DIR__."/../Herisson/Model/WpHerissonFriends.php";
 require_once __DIR__."/../Herisson/Model/WpHerissonFriendsTable.php";
+
+
+// Controller
+require_once __DIR__."/Herisson/ControllerTest.php";
+require_once __DIR__."/../Herisson/View.php";
+require_once __DIR__."/../Herisson/Router.php";
+require_once __DIR__."/../Herisson/Controller.php";
+require_once __DIR__."/../Herisson/Controller/Admin.php";
+require_once __DIR__."/../Herisson/Controller/Admin/Backup.php";
+require_once __DIR__."/../Herisson/Controller/Admin/Bookmark.php";
+require_once __DIR__."/../Herisson/Controller/Admin/Friend.php";
+require_once __DIR__."/../Herisson/Controller/Admin/Import.php";
+require_once __DIR__."/../Herisson/Controller/Admin/Maintenance.php";
+require_once __DIR__."/../Herisson/Controller/Admin/Option.php";
+require_once __DIR__."/../Herisson/Controller/Front.php";
+require_once __DIR__."/../Herisson/Controller/Front/Index.php";
 
 // Format files
 require_once __DIR__."/Herisson/Format/Base.php";

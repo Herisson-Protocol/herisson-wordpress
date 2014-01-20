@@ -1,7 +1,5 @@
 <?php require __DIR__."/../header.php"; ?>
 
-<? print_r(sizeof($bookmarks)); ?>
-
     <div id="page">
         <h1>
             <?php echo sprintf(__("%s bookmarks", HERISSON_TD), $title); ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * HerissonModelException
+ * Herisson\Model\Exception
  * 
  * PHP Version 5.3
  * 
@@ -11,8 +11,10 @@
  * @link     None
  */
 
+namespace Herisson\Model;
+
 /**
- * HerissonModelException
+ * Herisson\Model\Exception
  *
  * @category Models
  * @package  Herisson
@@ -20,6 +22,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
  * @link     None
  */
-class HerissonModelException extends Exception
+class Exception extends \Exception
 {
+
 }
