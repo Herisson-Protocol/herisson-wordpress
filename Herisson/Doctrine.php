@@ -52,7 +52,7 @@ class Doctrine
     {
         $this->dsn = $dsn;
         // constants of plugin
-        $this->modelDir = dirname(__FILE__) . '/Models';
+        $this->modelDir = dirname(__FILE__) . '/Model';
         //define('HERISSON_DOCTRINE_SHORTCODES_DIR', dirname(__FILE__) . '/../vendor/doctrine/shortcodes');
         $GLOBALS['doctrine_models_folder_reset_processed'] = false;
 

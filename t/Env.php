@@ -25,9 +25,9 @@ $doctrine = new Herisson\Doctrine(HERISSON_DOCTRINE_DSN_TEST);
 $doctrine->loadlibrary();
 
 require_once __DIR__."/Herisson/Model/BaseTest.php";
-require_once __DIR__."/../Herisson/Models/Exception.php";
-require_once __DIR__."/../Herisson/Models/WpHerissonFriends.php";
-require_once __DIR__."/../Herisson/Models/WpHerissonFriendsTable.php";
+require_once __DIR__."/../Herisson/Model/Exception.php";
+require_once __DIR__."/../Herisson/Model/WpHerissonFriends.php";
+require_once __DIR__."/../Herisson/Model/WpHerissonFriendsTable.php";
 
 // Format files
 require_once __DIR__."/Herisson/Format/Base.php";
