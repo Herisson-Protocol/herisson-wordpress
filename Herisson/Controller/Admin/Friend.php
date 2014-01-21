@@ -15,8 +15,8 @@ namespace Herisson\Controller\Admin;
 require_once __DIR__."/../Admin.php";
 
 use Herisson\Message;
-use WpHerissonFriendsTable;
-use WpHerissonFriends;
+use Herisson\Model\WpHerissonFriendsTable;
+use Herisson\Model\WpHerissonFriends;
 
 /**
  * Class: Herisson\Controller\Admin\Friend

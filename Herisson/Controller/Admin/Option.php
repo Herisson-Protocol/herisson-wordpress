@@ -14,7 +14,7 @@ namespace Herisson\Controller\Admin;
 
 use Herisson\Model\WpHerissonBookmarksTable;
 use Herisson\Model\WpHerissonBookmarks;
-use WpHerissonScreenshotsTable;
+use Herisson\Model\WpHerissonScreenshotsTable;
 use Herisson\Encryption;
 use Herisson\Shell;
 

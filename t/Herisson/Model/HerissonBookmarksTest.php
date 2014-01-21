@@ -14,6 +14,7 @@
 namespace Herisson\Model;
 
 use Herisson\ModelTest;
+use Herisson\Shell;
 
 require_once __DIR__."/../../Env.php";
 
@@ -47,10 +48,10 @@ class HerissonBookmarksTest extends ModelTest
         parent::setUp();
 
         $this->fakeFields = array(
-            'url'           => 'url',
-            'hash'          => 'hash',
-            'title'         => 'title',
-            'description'   => 'description',
+            'url'           => $this->sampleUrl,
+            'hash'          => '4a50a998251d5f8ef307f0dbf977b981',
+            'title'         => $this->sampleName,
+            'description'   => $this->sampleDescription,
             'content'       => 'content',
             'favicon_url'   => 'favicon_url',
             'favicon_image' => 'favicon_image',
@@ -66,7 +67,26 @@ class HerissonBookmarksTest extends ModelTest
             'dirsize'       => 90,
         );
 
+        $this->hashDir  = "4/4a/4a50a998251d5f8ef307f0dbf977b981";
+        $this->dataPath = __DIR__."/../../../data/".$this->hashDir;
+
     }
+
+    /**
+     * Put back initial configuration
+     *
+     * Set options as they were 
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        // Cleanup getContentFromUrl data
+        Shell::shellExec('rm', ' -rf '.$this->dataPath);
+
+        parent::tearDown();
+    }
+
 
 
 
@@ -226,12 +246,42 @@ class HerissonBookmarksTest extends ModelTest
     }
 
     /**
-     * Dummy test TODO
+     * Basic test to call all maintenance method and check for Exception / Errors
      *
      * @return void
      */
-    public function testBookmark4()
+    public function testMaintenance()
     {
+        $b = $this->_getBookmark($this->fakeFields);
+        $b->save();
+        $b->maintenance();
+    }
+
+    /**
+     * Test getFullContentFromUrl and check that content exists
+     *
+     * @return void
+     */
+    public function testGetFullContentFromUrl()
+    {
+        $b = $this->_getBookmark($this->fakeFields);
+        $b->save();
+        ob_start();
+        $b->getFullContentFromUrl();
+        ob_clean();
+        $this->assertTrue(file_exists($this->dataPath));
+    }
+
+    /**
+     * Test getHashDir()
+     *
+     * @return void
+     */
+    public function testGetHashDir()
+    {
+        $b = $this->_getBookmark($this->fakeFields);
+        $b->save();
+        $this->assertEquals($b->getHashDir(), $this->hashDir);
     }
 
     /**
@@ -239,16 +289,7 @@ class HerissonBookmarksTest extends ModelTest
      *
      * @return void
      */
-    public function testBookmark5()
-    {
-    }
-
-    /**
-     * Dummy test TODO
-     *
-     * @return void
-     */
-    public function testBookmark6()
+    public function testGetDir()
     {
     }
 

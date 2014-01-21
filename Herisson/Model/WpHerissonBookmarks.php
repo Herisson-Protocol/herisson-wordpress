@@ -16,6 +16,8 @@ namespace Herisson\Model;
 use Doctrine_Query;
 
 use Herisson\Message;
+use Herisson\Network;
+use Herisson\Shell;
 
 /**
  * ORM class to handle Bookmarks objects
@@ -69,7 +71,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
 
 
     /**
-     * Check the bookmark url, and set the error attribute it the bookmark doesn't exists anymore
+     * Check the bookmark url, and set the error attribute if the bookmark doesn't exists anymore
      *
      * @param array $properties a list of properties to set for the bookmark
      *
@@ -100,7 +102,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
      */
     public function checkUrl()
     {
-        $network = new Herisson\Network();
+        $network = new Network();
         $status = $network->check($this->url);
         if ($status['error']) {
             $this->error = 1;
@@ -198,7 +200,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         if ($this->is_binary) {
             return false;
         }
-        $network = new Herisson\Network();
+        $network = new Network();
 
         preg_match_all('#<link[^>]*href="([^"]*)"#', $this->content, $match);
         $parsedUrl = parse_url($this->url);
@@ -263,7 +265,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
             || $this->is_binary) {
             return false;
         }
-        $network = new Herisson\Network();
+        $network = new Network();
         try {
             $content = $network->download($this->favicon_url);
             $this->_set('favicon_image', base64_encode($content['data']));
@@ -271,7 +273,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
                 Message::i()->addSucces(__("Retrieving favicon image URL", HERISSON_TD));
             }
             return true;
-        } catch (Herisson\Network\Exception $e) {
+        } catch (Network\Exception $e) {
             Message::i()->addError($e->getMessage());
         }
         return false;
@@ -298,7 +300,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
             return false;
         }
         if (!$this->content) {
-            $network = new Herisson\Network();
+            $network = new Network();
             try {
                 $content = $network->download($this->url);
                 $this->_set('content_type', $content['type']);
@@ -312,7 +314,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
                 }
                 return true;
                 //$this->save();
-            } catch (Herisson\Network\Exception $e) {
+            } catch (Network\Exception $e) {
                 Message::i()->addError($e->getMessage());
                 return false;
             }
@@ -339,13 +341,14 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
             return false;
         }
         if ($this->createDir()) {
-            Herisson\Shell::shellExec("wget",
+            Shell::shellExec("wget",
                 "--no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories ".
                 "-erobots=off -P $directory ".'"'.$this->url.'"');
             $this->calculateDirSize();
-            $file = basename($this->url);
-            if ($file) {
-                Herisson\Shell::shellExec("mv", "\"$directory/$file\" \"".$this->getFullContentFile()."\"");
+            $urlData = parse_url($this->url);
+            if (isset($urlData['path'])) {
+                $file = $urlData['path'];
+                Shell::shellExec("mv", "\"$directory/$file\" \"".$this->getFullContentFile()."\"");
                 if ($verbose) {
                     Message::i()->addSucces(sprintf(__('<b>Downloading bookmark : <a href="%s">%s</a></b>', HERISSON_TD),
                         "/wp-admin/admin.php?page=herisson_bookmarks&action=edit&id=".$this->id, $this->title));
@@ -363,7 +366,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
      *
      * @return void
      */
-    public function captureFromUrl()
+    public function captureFromUrl($verbose)
     {
         if (!$this->id
             || $this->error
@@ -403,7 +406,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
      */
     public function calculateDirSize()
     {
-        $size = Herisson\Shell::shellExec("du", " -b ".$this->getDir());
+        $size = Shell::shellExec("du", " -b ".$this->getDir());
         $this->_set('dirsize', $size);
         $this->save();
     }
@@ -635,6 +638,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
      */
     public function getHashDir()
     {
+        $this->setHashFromUrl();
         return substr($this->hash, 0, 1)."/".substr($this->hash, 0, 2)."/".$this->hash;
     }
 
@@ -705,6 +709,17 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
     {
         return $this->getDir()."/index.html";
 
+    }
+
+    /**
+     * Save the bookmark into the database
+     *
+     * @return void
+     */
+    public function save()
+    {
+        $this->setHashFromUrl();
+        parent::save();
     }
 
 }

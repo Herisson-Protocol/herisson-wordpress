@@ -9,7 +9,11 @@
  * @link     None
  */
 
+namespace Herisson\Model;
+
 use Herisson\Message;
+use Herisson\Network;
+use Herisson\Encryption;
 
 /**
  * ORM class to handle Friend object
@@ -22,13 +26,13 @@ use Herisson\Message;
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
  * @link     None
  */
-class WpHerissonFriends extends BaseWpHerissonFriends
+class WpHerissonFriends extends \BaseWpHerissonFriends
 {
 
     public function getInfo()
     {
         $url = $this->url."/info";
-        $network = new Herisson\Network();
+        $network = new Network();
         try  {
             $json_data = $network->download($url);
             $data = json_decode($json_data['data'], 1);
@@ -40,7 +44,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
                 $this->is_active=0;
             }
 
-        } catch (Herisson\Network\Exception $e) {
+        } catch (Network\Exception $e) {
             $this->is_active=0;
             switch ($e->getCode()) {
             case 404:
@@ -58,13 +62,13 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
     public function reloadPublicKey()
     {
-        $network = new Herisson\Network();
+        $network = new Network();
         try {
 
             $content = $network->download($this->url."/publickey");
             $this->_set('public_key', $content['data']);
 
-        } catch (Herisson\Network\Exception $e) {
+        } catch (Network\Exception $e) {
             switch ($e->getCode()) {
             case 404:
                 Message::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
@@ -80,17 +84,17 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         $options = get_option('HerissonOptions');
         $my_public_key = $options['publicKey'];
         if (function_exists('curl_init')) {
-            $network = new Herisson\Network();
+            $network = new Network();
             $params['key'] = $my_public_key;
             try {
 
                 $content = $network->download($this->url."/retrieve", $params);
                 $encryption_data = json_decode($content['data'], true);
-                $json_data = Herisson\Encryption::i()->privateDecryptLongData($encryption_data['data'], $encryption_data['hash'], $encryption_data['iv']);
+                $json_data = Encryption::i()->privateDecryptLongData($encryption_data['data'], $encryption_data['hash'], $encryption_data['iv']);
                 $bookmarks = json_decode($json_data, 1);
                 return $bookmarks;
 
-            } catch (Herissoni\Network\Exception $e) {
+            } catch (Network\Exception $e) {
                 switch ($e->getCode()) {
                 case 404:
                     Message::i()->addError(__("This site is not a Herisson site or is closed.", HERISSON_TD));
@@ -126,9 +130,9 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         }
         $json_data = json_encode($data_bookmarks);
         try {
-            $json_display = Herisson\Encryption::i()->publicEncryptLongData($json_data, $this->public_key);
-        } catch (Herisson\Encryption\Exception $e) {
-            Herisson\Network::reply(417);
+            $json_display = Encryption::i()->publicEncryptLongData($json_data, $this->public_key);
+        } catch (Encryption\Exception $e) {
+            Network::reply(417);
             echo $e->getMessage();
         }
         return json_encode($json_display);
@@ -139,12 +143,12 @@ class WpHerissonFriends extends BaseWpHerissonFriends
         $options    = get_option('HerissonOptions');
         $url        = $this->url."/ask";
         $mysite     = get_option('siteurl')."/".$options['basePath'];
-        $signature  = Herisson\Encryption::i()->privateEncrypt($mysite);
+        $signature  = Encryption::i()->privateEncrypt($mysite);
         $postData = array(
             'url'       => $mysite,
             'signature' => $signature
         );
-        $network = new Herisson\Network();
+        $network = new Network();
         try {
             $content = $network->download($url, $postData);
             switch ($content['code']) {
@@ -159,7 +163,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
                 $this->save();
                 break;
             }
-        } catch (Herisson\Network\Exception $e) {
+        } catch (Network\Exception $e) {
             switch ($e->getCode()) {
             case 403:
                 Message::i()->addError(__("This site refuses new friends.", HERISSON_TD));
@@ -177,12 +181,12 @@ class WpHerissonFriends extends BaseWpHerissonFriends
 
     public function validateFriend()
     {
-        $signature = Herisson\Encryption::i()->privateEncrypt(HERISSON_LOCAL_URL);
+        $signature = Encryption::i()->privateEncrypt(HERISSON_LOCAL_URL);
         $postData = array(
             'url'       => HERISSON_LOCAL_URL,
             'signature' => $signature
         );
-        $network = new Herisson\Network();
+        $network = new Network();
         try {
             $content = $network->download($this->url."/validate", $postData);
             if ($content['data'] === "1") {
@@ -193,7 +197,7 @@ class WpHerissonFriends extends BaseWpHerissonFriends
             } else {
                 return false;
             }
-        } catch (Herisson\Network\Exception $e) {
+        } catch (Network\Exception $e) {
             Message::i()->addError($e->getMessage());
             return false;
         }

@@ -48,7 +48,7 @@ class Backup extends \Herisson\Controller\Admin
     function indexAction()
     {
         $this->view->backups = \Doctrine_Query::create()
-            ->from('WpHerissonBackups')
+            ->from('Herisson\Model\WpHerissonBackups')
             ->execute();
 
     }

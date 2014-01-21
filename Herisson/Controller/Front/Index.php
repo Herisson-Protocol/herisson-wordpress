@@ -13,8 +13,8 @@
 namespace Herisson\Controller\Front;
 
 use Herisson\Model\WpHerissonBookmarksTable;
-use WpHerissonFriendsTable;
-use WpHerissonFriends;
+use Herisson\Model\WpHerissonFriendsTable;
+use Herisson\Model\WpHerissonFriends;
 
 use Herisson\Encryption;
 use Herisson\Network;

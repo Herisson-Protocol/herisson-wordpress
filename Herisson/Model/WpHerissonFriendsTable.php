@@ -9,6 +9,14 @@
  * @link     None
  */
 
+namespace Herisson\Model;
+
+use Doctrine_Query;
+use Doctrine_Table;
+use Doctrine_Core;
+
+use Herisson\Pagination;
+
 /**
  * ORM class to handle the database table relation.
  * 
@@ -48,7 +56,7 @@ class WpHerissonFriendsTable extends Doctrine_Table
             return new WpHerissonFriends();
         }
         $friends = Doctrine_Query::create()
-            ->from('WpHerissonFriends')
+            ->from('Herisson\Model\WpHerissonFriends')
             ->where("id=?")
             ->execute(array($friendId));
         foreach ($friends as $friend) {
@@ -92,9 +100,9 @@ class WpHerissonFriendsTable extends Doctrine_Table
      */
     public static function getWhere($where, $data=array())
     {
-        $pagination = Herisson\Pagination::i()->getVars();
+        $pagination = Pagination::i()->getVars();
         $friends = Doctrine_Query::create()
-            ->from('WpHerissonFriends')
+            ->from('Herisson\Model\WpHerissonFriends')
             ->where($where)
             ->limit($pagination['limit'])
             ->offset($pagination['offset'])
@@ -114,7 +122,7 @@ class WpHerissonFriendsTable extends Doctrine_Table
     public static function getOneWhere($where, $data=array())
     {
         $friends = Doctrine_Query::create()
-            ->from('WpHerissonFriends')
+            ->from('Herisson\Model\WpHerissonFriends')
             ->where($where)
             ->limit(1)
             ->execute($data);
@@ -126,3 +134,4 @@ class WpHerissonFriendsTable extends Doctrine_Table
 
 
 }
+
