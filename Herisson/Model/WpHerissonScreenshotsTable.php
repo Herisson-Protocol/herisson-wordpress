@@ -35,8 +35,14 @@ class WpHerissonScreenshotsTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('WpHerissonScreenshots');
     }
- 
-    public static function getAll() {
+
+    /**
+     * Get all screenshots tools
+     *
+     * @return array the list of screenshots tools
+     */
+    public static function getAll()
+    {
         $screenshots = Doctrine_Query::create()
             ->from('Herisson\Model\WpHerissonScreenshots')
             ->orderby("id")
@@ -44,7 +50,15 @@ class WpHerissonScreenshotsTable extends Doctrine_Table
         return $screenshots;
     }
 
-    public static function get($id) {
+    /**
+     * Get one screenshots tool from id
+     *
+     * @param integer $id the id of the screenshot tool
+     *
+     * @return mixed the screenshot tool object
+     */
+    public static function get($id)
+    {
         if (!is_numeric($id)) {
             return new WpHerissonScreenshots();
         }

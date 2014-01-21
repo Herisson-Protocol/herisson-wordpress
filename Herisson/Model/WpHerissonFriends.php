@@ -29,6 +29,13 @@ use Herisson\Encryption;
 class WpHerissonFriends extends \BaseWpHerissonFriends
 {
 
+    /**
+     * Get info data from a friend
+     *
+     * Do a network hit to retrieve friend's info
+     *
+     * @return void
+     */
     public function getInfo()
     {
         $url = $this->url."/info";
@@ -54,12 +61,26 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         }
     }
 
+    /**
+     * Set the Url of a friend, and retrieve the public key from it
+     *
+     * @param string $url the url of the friend
+     *
+     * @return void
+     */
     public function setUrl($url)
     {
         parent::_set('url', rtrim($url, '/'));
         $this->reloadPublicKey();
     }
 
+    /**
+     * Reload the public key from the friend
+     *
+     * Do a network hit to retrieve the public key
+     *
+     * @return void
+     */
     public function reloadPublicKey()
     {
         $network = new Network();
@@ -78,6 +99,13 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
     }
 
 
+    /**
+     * Get all the bookmarks from a friend
+     *
+     * @param array $params the optional parameters to specify which bookmarks to retrieve
+     *
+     * @return string the json encode data for friend's bookmarks
+     */
     public function retrieveBookmarks($params=array())
     {
         
@@ -104,14 +132,20 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         }
     }
 
+    /**
+     * Generate bookmarks data
+     *
+     * @param array $params the optional parameters to specify which bookmarks to retrieve
+     *
+     * @return string the json encode data for friend's bookmarks
+     */
     public function generateBookmarksData($params=array())
     {
         $options = get_option('HerissonOptions');
         $my_private_key = $options['privateKey'];
         $q = Doctrine_Query::create()
             ->from('WpHerissonBookmarks as b')
-            ->where('is_public=1')
-            ;
+            ->where('is_public=1');
         if (array_key_exists('tag', $params)) {
             $q = $q->leftJoin('b.WpHerissonTags t');
             $q = $q->where("t.name=?");
@@ -138,6 +172,13 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         return json_encode($json_display);
     }
 
+    /**
+     * Ask a site for friend
+     *
+     * Do network hit to the friend's url and add it to our friends list
+     *
+     * @return void
+     */
     public function askForFriend()
     {
         $options    = get_option('HerissonOptions');
@@ -179,6 +220,13 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         }
     }
 
+    /**
+     * Validate a friend
+     *
+     * Do network hit to the friend's url and validate it's request
+     *
+     * @return true if validation was succesful, false otherwise
+     */
     public function validateFriend()
     {
         $signature = Encryption::i()->privateEncrypt(HERISSON_LOCAL_URL);

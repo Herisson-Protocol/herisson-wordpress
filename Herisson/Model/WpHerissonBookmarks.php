@@ -364,6 +364,8 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
      * Use the wkhtmltoimage tool to create the PNG image
      * If the screenshot has been created, create a thumbnail and calculate the new dir size.
      *
+     * @param boolean $verbose wether this method should verbose messages
+     *
      * @return void
      */
     public function captureFromUrl($verbose)
@@ -438,6 +440,9 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
 
     /**
      * Export the bookmark as an array with all fields
+     *
+     * @param boolean $deep      param to comply with strict standards Doctrine_Record::toArray()
+     * @param boolean $prefixKey param to comply with strict standards Doctrine_Record::toArray()
      *
      * @return array the bookmark as an array
      */
