@@ -319,58 +319,6 @@ class HerissonBookmarksTableTest extends ModelTest
 
 
     /**
-     * Test checkDuplicate method
-     *
-     * @return void
-     */
-    public function testCreateBookmark()
-    {
-
-        $data = array(
-            'title'   => $this->sampleName,
-            'content' => $this->sampleDescription,
-        );
-        $id = WpHerissonBookmarksTable::createBookmark($this->sampleUrl, $data);
-        $this->assertGreaterThanOrEqual(1, $id);
-        $bookmark = WpHerissonBookmarksTable::get($id);
-        $this->assertEquals($bookmark->url, $this->sampleUrl);
-        $this->assertEquals($bookmark->title, $this->sampleName);
-        $this->assertEquals($bookmark->content, $this->sampleDescription);
-
-
-    }
-
-    /**
-     * Test checkDuplicate method
-     *
-     * @return void
-     */
-    public function testCreateBookmarkDuplicate()
-    {
-        $data = array(
-            'title'   => $this->sampleName,
-            'content' => $this->sampleDescription,
-        );
-        $id = WpHerissonBookmarksTable::createBookmark($this->sampleUrl, $data);
-        $this->setExpectedException("Herisson\Model\Exception");
-
-        $id = WpHerissonBookmarksTable::createBookmark($this->sampleUrl, $data);
-
-
-    }
-
-
-    /**
-     * Test checkDuplicate method
-     *
-     * @return void
-     */
-    public function testCheckDuplicate4()
-    {
-    }
-
-
-    /**
      * Test adding a new bookmark and delete it
      *
      * @return void

@@ -13,6 +13,8 @@
 
 namespace Herisson\Format;
 
+use Herisson\FormatTest;
+
 require_once __DIR__."/../../Env.php";
 
 /**
@@ -27,7 +29,7 @@ require_once __DIR__."/../../Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class CsvTest extends Base
+class CsvTest extends FormatTest
 {
 
 

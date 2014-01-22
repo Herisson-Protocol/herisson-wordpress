@@ -12,6 +12,9 @@
 
 namespace Herisson\Format;
 
+use Herisson\Export;
+use Herisson\Model\WpHerissonBookmarksTable;
+
 /**
  * Class to handle complete Herisson JSON bookmarks format
  *
@@ -52,7 +55,7 @@ class Herisson extends \Herisson\Format
         foreach ($bookmarks as $bookmark) { 
             $list[] = $bookmark->toArray();
         }
-        Herisson\Export::forceDownloadContent(json_encode($list), "herisson-bookmarks.json");
+        Export::forceDownloadContent(json_encode($list), "herisson-bookmarks.json");
     }
 
 
@@ -72,6 +75,9 @@ class Herisson extends \Herisson\Format
         $bookmarks = json_decode($content, 1);
 
         foreach ($bookmarks as $i=>$bookmark) {
+            WpHerissonBookmarksTable::createBookmark($bookmark);
+            
+
             $bookmarks[$i]['is_public'] = $bookmark['public'];
             $bookmarks[$i]['tags'] = implode(',', $bookmark['tags']);
             $bookmarks[$i]['favicon_image'] = "";

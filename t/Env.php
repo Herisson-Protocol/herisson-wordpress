@@ -47,7 +47,7 @@ require_once __DIR__."/../Herisson/Controller/Front.php";
 require_once __DIR__."/../Herisson/Controller/Front/Index.php";
 
 // Format files
-require_once __DIR__."/Herisson/Format/Base.php";
+require_once __DIR__."/Herisson/FormatTest.php";
 require_once __DIR__."/../Herisson/Export.php";
 require_once __DIR__."/../Herisson/Format.php";
 require_once __DIR__."/../Herisson/Format/Csv.php";

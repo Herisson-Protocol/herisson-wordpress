@@ -147,12 +147,11 @@ class Index extends \Herisson\Controller\Front
      */
     function infoAction()
     {
-
-        echo json_encode(array(
+        $this->view->infos = array(
             'sitename'   => $this->options['sitename'],
             'adminEmail' => $this->options['adminEmail'],
             'version' => HERISSON_VERSION,
-        ));
+        );
     }
 
     /**

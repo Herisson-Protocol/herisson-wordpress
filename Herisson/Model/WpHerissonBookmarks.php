@@ -53,6 +53,35 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         ));
     }
 
+    /**
+     * Create a new bookmark based on an url and options
+     *
+     * @param string $url     the bookmark url
+     * @param array  $options the options parameters
+     *
+     * @throws Herisson\Model\Exception if bookmark is duplicate
+     *
+     * @return the id of the bookmark created
+     */
+    public static function createBookmark($options=array())
+    {
+
+        if (!isset($options['url'])) {
+            throw new Exception(__("Missing Url. Can't create bookmark"));
+        }
+        $url = $options['url'];
+        if (WpHerissonBookmarksTable::checkDuplicate($url)) {
+            throw new Exception(__("Ignoring duplicate entry : $url"));
+        }
+        $bookmark = new WpHerissonBookmarks();
+        $bookmark->setProperties($options);
+        $bookmark->save();
+        if (array_key_exists('tags', $options) && $options['tags']) {
+            $bookmark->setTags($options['tags']);
+        }
+        return $bookmark->id;
+    }
+
 
     /** Properties **/
     /**

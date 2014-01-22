@@ -70,6 +70,7 @@ class HerissonBookmarksTest extends ModelTest
         $this->hashDir  = "4/4a/4a50a998251d5f8ef307f0dbf977b981";
         $this->dataPath = __DIR__."/../../../data/".$this->hashDir;
 
+        ob_start();
     }
 
     /**
@@ -85,8 +86,65 @@ class HerissonBookmarksTest extends ModelTest
         Shell::shellExec('rm', ' -rf '.$this->dataPath);
 
         parent::tearDown();
+        ob_clean();
     }
 
+
+    /**
+     * Test checkDuplicate method
+     *
+     * @return void
+     */
+    public function testCreateBookmark()
+    {
+
+        $data = array(
+            'title'   => $this->sampleName,
+            'content' => $this->sampleDescription,
+            'url'     => $this->sampleUrl,
+        );
+        $id = WpHerissonBookmarks::createBookmark($data);
+        $this->assertGreaterThanOrEqual(1, $id);
+        $bookmark = WpHerissonBookmarksTable::get($id);
+        $this->assertEquals($bookmark->url, $this->sampleUrl);
+        $this->assertEquals($bookmark->title, $this->sampleName);
+        $this->assertEquals($bookmark->content, $this->sampleDescription);
+    }
+
+
+    /**
+     * Test createBookmark static method, and verify we can't add a duplicate
+     *
+     * @return void
+     */
+    public function testCreateBookmarkDuplicate()
+    {
+        $data = array(
+            'title'   => $this->sampleName,
+            'content' => $this->sampleDescription,
+            'url'     => $this->sampleUrl,
+        );
+        $id = WpHerissonBookmarks::createBookmark($data);
+        $this->setExpectedException("Herisson\Model\Exception");
+
+        $id = WpHerissonBookmarks::createBookmark($data);
+    }
+
+
+    /**
+     * Test createBookmark static method, and verify url is mandatory
+     *
+     * @return void
+     */
+    public function testCreateBookmarkMissingUrl()
+    {
+        $data = array(
+            'title'   => $this->sampleName,
+            'content' => $this->sampleDescription,
+        );
+        $this->setExpectedException("Herisson\Model\Exception");
+        $id = WpHerissonBookmarks::createBookmark($data);
+    }
 
 
 
@@ -282,15 +340,6 @@ class HerissonBookmarksTest extends ModelTest
         $b = $this->_getBookmark($this->fakeFields);
         $b->save();
         $this->assertEquals($b->getHashDir(), $this->hashDir);
-    }
-
-    /**
-     * Dummy test TODO
-     *
-     * @return void
-     */
-    public function testGetDir()
-    {
     }
 
 

@@ -11,17 +11,15 @@
  * @link     None
  */
 
-namespace Herisson\Format;
+namespace Herisson;
 
 use Herisson\Model\WpHerissonBookmarksTable;
 
-require_once __DIR__."/../../Env.php";
+require_once __DIR__."/../Env.php";
 
 /**
- * Format
+ * FormatTest
  * 
- * Test HerissonEncryption class
- *
  * @category Test
  * @package  Herisson
  * @author   Thibault Taillandier <thibault@taillandier.name>
@@ -29,7 +27,7 @@ require_once __DIR__."/../../Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class Base extends \PHPUnit_Framework_TestCase
+class FormatTest extends \PHPUnit_Framework_TestCase
 {
 
     /**

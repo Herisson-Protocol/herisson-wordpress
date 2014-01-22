@@ -32,6 +32,8 @@ use Herisson\Pagination;
  */
 class WpHerissonBookmarksTable extends Doctrine_Table
 {
+
+
     /**
      * Returns an instance of this class.
      *
@@ -60,31 +62,6 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         return false;
     }
 
-    /**
-     * Create a new bookmark based on an url and options
-     *
-     * @param string $url     the bookmark url
-     * @param array  $options the options parameters
-     *
-     * @throws Herisson\Model\Exception if bookmark is duplicate
-     *
-     * @return the id of the bookmark created
-     */
-    public static function createBookmark($url, $options=array())
-    {
-
-        if (self::checkDuplicate($url)) {
-            throw new Exception("Ignoring duplicate entry : $url");
-        }
-        $bookmark = new WpHerissonBookmarks();
-        $bookmark->url = $url;
-        $bookmark->setProperties($options);
-        $bookmark->save();
-        if (array_key_exists('tags', $options) && $options['tags']) {
-            $bookmark->setTags($options['tags']);
-        }
-        return $bookmark->id;
-    }
 
     /**
      * Get a bookmark from the id
@@ -104,6 +81,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         }
         return new WpHerissonBookmarks();
     }
+
 
     /**
      * Count all the bookmarks in the table
@@ -132,6 +110,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
             ->execute($values, Doctrine_Core::HYDRATE_NONE);
         return $bookmarks[0][0];
     }
+
 
     /**
      * Retrieve all bookmarks
@@ -173,6 +152,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         );
         return self::getWhere(implode(' OR ', $where), $params, $paginate);
     }
+
 
     /**
      * Search for bookmarks based on tag name
