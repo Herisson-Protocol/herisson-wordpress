@@ -1,6 +1,6 @@
 <?php
 /**
- * CsvTest
+ * HerissonTest
  *
  * PHP Version 5.3
  *
@@ -19,7 +19,7 @@ use Herisson\Model\WpHerissonBookmarksTable;
 require_once __DIR__."/../../Env.php";
 
 /**
- * Class: CsvTest
+ * Class: HerissonTest
  * 
  * Test HerissonEncryption class
  *
@@ -30,7 +30,7 @@ require_once __DIR__."/../../Env.php";
  * @link     None
  * @see      PHPUnit_Framework_TestCase
  */
-class CsvTest extends FormatTest
+class HerissonTest extends FormatTest
 {
 
 
@@ -43,8 +43,8 @@ class CsvTest extends FormatTest
      */
     protected function setUp()
     {
-        $this->format = new Csv();
-        $this->sampleFile = __DIR__."/../../fixtures/format.csv.csv";
+        $this->format = new Herisson();
+        $this->sampleFile = __DIR__."/../../fixtures/format.herisson.json";
         parent::setUp();
     }
 
@@ -60,8 +60,9 @@ class CsvTest extends FormatTest
         $this->format->export($this->_getBookmarks());
         $output = ob_get_clean();
         //file_put_contents($this->sampleFile, $output);
-        $this->assertCount(22, explode("\n", $output));
         $this->assertRegexp('/fdn/', $output);
+        $bookmarks = json_decode($output, true);
+        $this->assertCount(20, $bookmarks);
         
     }
 

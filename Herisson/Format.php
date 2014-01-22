@@ -112,6 +112,35 @@ class Format
 
 
     /**
+     * Get the uploaded filename
+     *
+     * @return the filename of the uploaded file
+     */
+    public function getFilename()
+    {
+        if (!isset($_FILES['import_file']['tmp_name'])) {
+            throw new Format\Exception("File is missing in \$_FILES variable");
+        }
+        return $_FILES['import_file']['tmp_name'];
+    }
+
+
+    /**
+     * Get the file cDefault getForm method
+     *
+     * @return the content of uploaded filename
+     */
+    public function getFileContent()
+    {
+        $filename = $this->getFilename();
+        if (!file_exists($filename)) {
+            throw new Format\Exception("File $filename is missing");
+        }
+        return file_get_contents($filename);
+    }
+
+
+    /**
      * Default getForm method
      *
      * @return void

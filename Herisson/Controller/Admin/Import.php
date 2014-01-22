@@ -154,13 +154,18 @@ class Import extends \Herisson\Controller\Admin
                 if (!strlen($bookmark['url'])) {
                     print_r($bookmark);
                 }
-                WpHerissonBookmarksTable::createBookmark($bookmark['url'], array(
+                WpHerissonBookmarks::createBookmark($bookmark);
+                /*
+                array(
+
+                    '
                     'favicon_url'=> array_key_exists('favicon_url', $bookmark) ? $bookmark['favicon_url'] : "",
                     'favicon_image'=>array_key_exists('favicon_image', $bookmark) ? $bookmark['favicon_image'] : "",
                     'title'=>$bookmark['title'],
                     'is_public'=>array_key_exists('private', $bookmark) && $bookmark['private'] ? 0 : 1,
                     'tags'=> $tags,
                 ));
+                 */
             }
         }
         echo '<p class="herisson-success">'.sprintf(__("Successfully add %s bookmarks !", HERISSON_TD), $nb).'</p>';

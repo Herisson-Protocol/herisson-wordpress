@@ -56,28 +56,27 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
     /**
      * Create a new bookmark based on an url and options
      *
-     * @param string $url     the bookmark url
-     * @param array  $options the options parameters
+     * @param array $fields the fields parameters
      *
      * @throws Herisson\Model\Exception if bookmark is duplicate
      *
      * @return the id of the bookmark created
      */
-    public static function createBookmark($options=array())
+    public static function createBookmark($fields=array())
     {
 
-        if (!isset($options['url'])) {
+        if (!isset($fields['url'])) {
             throw new Exception(__("Missing Url. Can't create bookmark"));
         }
-        $url = $options['url'];
+        $url = $fields['url'];
         if (WpHerissonBookmarksTable::checkDuplicate($url)) {
             throw new Exception(__("Ignoring duplicate entry : $url"));
         }
         $bookmark = new WpHerissonBookmarks();
-        $bookmark->setProperties($options);
+        $bookmark->setProperties($fields);
         $bookmark->save();
-        if (array_key_exists('tags', $options) && $options['tags']) {
-            $bookmark->setTags($options['tags']);
+        if (array_key_exists('tags', $fields) && $fields['tags']) {
+            $bookmark->setTags($fields['tags']);
         }
         return $bookmark->id;
     }
@@ -477,6 +476,8 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
      */
     public function toArray($deep = true, $prefixKey = false)
     {
+        return parent::toArray($deep, $prefixKey);
+        /*
         return array(
             "title"         => $this->title,
             "url"           => $this->url,
@@ -484,6 +485,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
             "content"       => $this->content,
             "tags"          => $this->getTagsArray(),
         );
+         */
     }
 
     /**

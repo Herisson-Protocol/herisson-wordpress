@@ -74,8 +74,7 @@ class FirefoxJson extends \Herisson\Format
     public function import()
     {
         $this->preImport();
-        $filename = $_FILES['import_file']['tmp_name'];
-        $items = json_decode(file_get_contents($filename), true);
+        $items = json_decode($this->getFileContent(), true);
 
         $bookmarks = array();
         if (isset($items['children'])) {

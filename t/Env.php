@@ -51,6 +51,7 @@ require_once __DIR__."/Herisson/FormatTest.php";
 require_once __DIR__."/../Herisson/Export.php";
 require_once __DIR__."/../Herisson/Format.php";
 require_once __DIR__."/../Herisson/Format/Csv.php";
+require_once __DIR__."/../Herisson/Format/Herisson.php";
 
 
 /**

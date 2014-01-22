@@ -191,4 +191,17 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         return $bookmarks;
     }
 
+    /**
+     * Truncate the table, delete all bookmarks from database
+     *
+     * @return void
+     */
+    public static function truncate()
+    {
+        $bookmarks = self::getAll();
+        foreach ($bookmarks as $bookmark) {
+            $bookmark->delete();
+        }
+    }
+
 }

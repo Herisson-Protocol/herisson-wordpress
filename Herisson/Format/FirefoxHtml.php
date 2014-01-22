@@ -88,7 +88,7 @@ class FirefoxHtml extends \Herisson\Format
     {
         $this->preImport();
         include HERISSON_VENDOR_DIR."firefox/bookmarks.class.php";
-        $filename = $_FILES['import_file']['tmp_name'];
+        $filename = $this->getFilename();
         // Parsing bookmarks file
         $bookmarks = new Bookmarks();
         $bookmarks->parse($filename);

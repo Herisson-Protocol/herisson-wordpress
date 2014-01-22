@@ -12,6 +12,8 @@
 
 namespace Herisson\Format;
 
+use Herisson\Model\WpHerissonBookmarks;
+
 /**
  * Class to handle Basic CSV format
  *
@@ -88,8 +90,7 @@ class Csv extends \Herisson\Format
     {
         $this->preImport();
 
-        $filename  = $_FILES['import_file']['tmp_name'];
-        $fh        = fopen($filename, 'r');
+        $fh        = fopen($this->getFilename(), 'r');
         $headers   = fgetcsv($fh, 0, $this->delimiter);
         $bookmarks = array();
 
