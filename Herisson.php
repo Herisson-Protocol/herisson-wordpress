@@ -194,7 +194,7 @@ class Herisson
         $options = get_option('HerissonOptions');
         $path =explode("/", $_SERVER['REQUEST_URI']);
         if (sizeof($path) && $path[1] == $options['basePath']) {
-            include HERISSON_BASE_DIR."/Herisson/Controller/Front/Index.php";
+            include_once HERISSON_BASE_DIR."/Herisson/Controller/Front/Index.php";
             $c = new Herisson\Controller\Front\Index();
             $c->route();
             exit;
