@@ -5,9 +5,8 @@
     <?php foreach ($friends as $friend) { ?>
     <div class="friend">
         <?php echo $friend->name; ?>'s bookmarks<br/>
-        <?php $bookmarks = $friend->retrieveBookmarks($_GET); ?>
-        <?php if (sizeof($bookmarks)) { ?>
-            <?php foreach ($bookmarks as $bookmark) { ?>
+        <?php if (sizeof($friendBookmarks[$friend->id])) { ?>
+            <?php foreach ($friendBookmarks[$friend->id] as $bookmark) { ?>
      <div class="bookmark">
       <a href="<?php echo $bookmark['url']?>"><?php echo $bookmark['title']?></a><?php echo $bookmark['description'] ? $bookmark['description'] : ''; ?><br>
      </div>

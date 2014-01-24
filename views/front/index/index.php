@@ -39,5 +39,8 @@
     </div>
 
 <?php
-require "friends.php";
+includePartial(__DIR__."/friends.php", array(
+    'friendBookmarks' => $friendBookmarks,
+    'friends' => $friends
+));
 require __DIR__."/../footer.php";

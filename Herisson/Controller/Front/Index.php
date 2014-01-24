@@ -134,6 +134,10 @@ class Index extends \Herisson\Controller\Front
         $this->view->title = $this->options['sitename'];
 
         $this->view->friends = WpHerissonFriendsTable::getWhere("is_active=1");
+        foreach ($this->view->friends as $friendId => $friend) {
+            $this->view->friendBookmarks[$friend->id] = $friend->retrieveBookmarks($_GET);
+
+        }
 
     }
 

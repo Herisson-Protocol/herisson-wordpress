@@ -153,6 +153,37 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         return self::getWhere(implode(' OR ', $where), $params, $paginate);
     }
 
+    /*
+    public static function getSearch($search, $paginate=false)
+    {
+        $q = Doctrine_Query::create();
+        $q = self::addSearch($q, $params=array(), $search);
+        return $q->execute($params
+        return self::getWhere(implode(' OR ', $where), $params, $paginate);
+    }
+
+    public static function addSearch($query, &$params, $search) {
+        $where = array(
+            't.name LIKE ?',
+            'b.title LIKE ?',
+            'b.url LIKE ?',
+            'b.description LIKE ?',
+            //'b.content LIKE ?',
+        );
+        
+        $params = array_merge($params,
+            array(
+                "%".$search."%",
+                "%".$search."%",
+                "%".$search."%",
+                "%".$search."%",
+                //"%".$search."%",
+            )
+        );
+        $query->where(implode(' OR ', $where));
+        return $query;
+    }
+     */
 
     /**
      * Search for bookmarks based on tag name
@@ -203,5 +234,42 @@ class WpHerissonBookmarksTable extends Doctrine_Table
             $bookmark->delete();
         }
     }
+
+
+    /**
+     * Get one item with where paremeters
+     *
+     * @param string $where the sql condition
+     * @param array  $data  the value parameters
+     *
+     * @return the corresponding instance of WpHerissonFriends or a new one
+     */
+    public static function getBookmarksData($options, $public)
+    {
+        $params = array($public);
+        $q = Doctrine_Query::create()
+            ->from('Herisson\Model\WpHerissonBookmarks as b')
+            ->where('is_public=?');
+        $bookmarks = $q->execute($params);
+        return $bookmarks;
+
+        if (array_key_exists('tag', $options)) {
+            $q->leftJoin('b.WpHerissonTags t')
+                ->where("t.name=?");
+            $params[] = $options['tag'];
+        }
+
+        if (array_key_exists('search', $options)) {
+            $search = "%".$options['search']."%";
+            $q->leftJoin('b.WpHerissonTags t')
+                ->where("(t.name LIKE ? OR b.url like ? OR b.title LIKE ? OR b.description LIKE ? OR b.content LIKE ?)");
+            $params = array_merge($params,
+                array($search, $search, $search, $search, $search)
+            );
+        }
+        $bookmarks = $q->execute($params);
+        return $bookmarks;
+    }
+
 
 }

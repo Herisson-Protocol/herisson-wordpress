@@ -477,15 +477,21 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
     public function toArray($deep = true, $prefixKey = false)
     {
         return parent::toArray($deep, $prefixKey);
-        /*
+    }
+
+    /**
+     * Export the bookmark as an array with limited fields
+     *
+     * @return array the bookmark as an array
+     */
+    public function toSmallArray()
+    {
         return array(
             "title"         => $this->title,
             "url"           => $this->url,
             "description"   => $this->description,
-            "content"       => $this->content,
             "tags"          => $this->getTagsArray(),
         );
-         */
     }
 
     /**

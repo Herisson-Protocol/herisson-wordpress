@@ -108,7 +108,7 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
      */
     public function retrieveBookmarks($params=array())
     {
-        
+
         $options = get_option('HerissonOptions');
         $my_public_key = $options['publicKey'];
         if (function_exists('curl_init')) {
@@ -117,7 +117,6 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
             try {
 
                 $content = $network->download($this->url."/retrieve", $params);
-                print_r($content['data']);
                 $encryption_data = json_decode($content['data'], true);
                 $json_data = Encryption::i()->privateDecryptLongData($encryption_data['data'], $encryption_data['hash'], $encryption_data['iv']);
                 $bookmarks = json_decode($json_data, 1);
@@ -144,24 +143,11 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
     {
         $options = get_option('HerissonOptions');
         $my_private_key = $options['privateKey'];
-        $q = Doctrine_Query::create()
-            ->from('WpHerissonBookmarks as b')
-            ->where('is_public=1');
-        if (array_key_exists('tag', $params)) {
-            $q = $q->leftJoin('b.WpHerissonTags t');
-            $q = $q->where("t.name=?");
-            $params = array($params['tag']);
-        } else if (array_key_exists('search', $params)) {
-            $search = "%".$params['search']."%";
-            $q = $q->leftJoin('b.WpHerissonTags t');
-            $q = $q->where("t.name LIKE ? OR b.url like ? OR b.title LIKE ? OR b.description LIKE ? OR b.content LIKE ?");
-            $params = array($search, $search, $search, $search, $search);
-        }
-        $bookmarks = $q->execute($params);
+        $bookmarks = WpHerissonBookmarksTable::getBookmarksData($params, 1);
 
         $data_bookmarks = array();
         foreach ($bookmarks as $bookmark) {
-            $data_bookmarks[] = $bookmark->toArray();
+            $data_bookmarks[] = $bookmark->toSmallArray();
         }
         $json_data = json_encode($data_bookmarks);
         try {
