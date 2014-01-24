@@ -117,6 +117,7 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
             try {
 
                 $content = $network->download($this->url."/retrieve", $params);
+                print_r($content['data']);
                 $encryption_data = json_decode($content['data'], true);
                 $json_data = Encryption::i()->privateDecryptLongData($encryption_data['data'], $encryption_data['hash'], $encryption_data['iv']);
                 $bookmarks = json_decode($json_data, 1);

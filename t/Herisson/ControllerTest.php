@@ -32,7 +32,7 @@ abstract class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * The HerissonEncryption object
+     * The Herisson\Controller object
      */
     public $controller;
 
@@ -40,7 +40,7 @@ abstract class ControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Configuration
      *
-     * Create sample data, and Encryption object
+     * Create sample data, and object
      *
      * @return void
      */

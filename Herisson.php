@@ -12,6 +12,10 @@
  * @see      None
  */
 
+use Herisson\Model\WpHerissonFriendsTable;
+use Herisson\Router;
+use Herisson\Encryption;
+
 /**
  * Class: Herisson
  *
@@ -43,7 +47,7 @@ class Herisson
 
         unescapeGlobals();
 
-        $r = new Herisson\Router();
+        $r = new Router();
 
         add_menu_page(__('Herisson', HERISSON_TD), __('Herisson', HERISSON_TD), 'manage_options', 'herisson_menu', array(&$r, 'route'), $icon_url);
         add_submenu_page('herisson_menu', '', '', 'manage_options', 'herisson_menu', array(&$r, 'route'));
@@ -134,7 +138,7 @@ class Herisson
         }
 
         // Generate a couple of public/private key to handle encryption between this site and friends
-        $encryption = Herisson\Encryption::i()->generateKeyPairs();
+        $encryption = Encryption::i()->generateKeyPairs();
 
         $defaultOptions = array(
             'formatDate'                => 'd/m/Y',

@@ -12,6 +12,8 @@
 
 namespace Herisson\Format;
 
+use Herisson\Export;
+
 /**
  * Class to handle Firefox HTML bookmarks format
  * See HTML file format in the @link parameter
@@ -71,7 +73,7 @@ class FirefoxHtml extends \Herisson\Format
         </dl>
         ';
 
-        \Herisson\Export::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
+        Export::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
     }
 
 
@@ -90,7 +92,7 @@ class FirefoxHtml extends \Herisson\Format
         include HERISSON_VENDOR_DIR."firefox/bookmarks.class.php";
         $filename = $this->getFilename();
         // Parsing bookmarks file
-        $bookmarks = new Bookmarks();
+        $bookmarks = new \Bookmarks();
         $bookmarks->parse($filename);
         $bookmarks->bookmarksFileMd5 = md5_file($filename);
 

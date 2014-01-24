@@ -63,7 +63,6 @@ class HerissonTest extends FormatTest
         $this->assertRegexp('/fdn/', $output);
         $bookmarks = json_decode($output, true);
         $this->assertCount(20, $bookmarks);
-        
     }
 
 
@@ -78,7 +77,6 @@ class HerissonTest extends FormatTest
         $_FILES['import_file']['tmp_name'] = $this->sampleFile;
         $bookmarks = $this->format->import();
         $this->assertCount(20, $bookmarks);
-        
     }
 
 

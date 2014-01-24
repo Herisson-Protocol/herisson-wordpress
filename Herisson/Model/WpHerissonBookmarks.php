@@ -752,10 +752,10 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
      *
      * @return void
      */
-    public function save()
+    public function save(Doctrine_Connection $conn = null)
     {
         $this->setHashFromUrl();
-        parent::save();
+        parent::save($conn);
     }
 
 }

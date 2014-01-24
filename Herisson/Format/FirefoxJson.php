@@ -12,6 +12,9 @@
 
 namespace Herisson\Format;
 
+use Herisson\Export;
+use Herisson\Model\WpHerissonBookmarks;
+
 /**
  * Class to handle Firefox JSON bookmarks format
  *
@@ -59,11 +62,11 @@ class FirefoxJson extends \Herisson\Format
         foreach ($bookmarks as $bookmark) { 
             $root['children'][] = array(
                 'title' => $bookmark->title,
-                'url'   => $bookmark->url,
+                'uri'   => $bookmark->url,
                 'type'  => 'text/x-moz-place',
                 );
         }
-        \Herisson\Export::forceDownloadContent(json_encode($root), "herisson-bookmarks.json");
+        Export::forceDownloadContent(json_encode($root), "herisson-bookmarks.json");
     }
 
     /**
