@@ -221,7 +221,7 @@ class Format
      *
      * @return the strcmp() result of format names
      */
-    private function _sortFormat($a, $b)
+    private static function _sortFormat($a, $b)
     {
         return strcmp($a->name, $b->name);
     }

@@ -48,8 +48,19 @@ class Backup extends \Herisson\Controller\Admin
     function indexAction()
     {
         $this->view->backups = \Doctrine_Query::create()
-            ->from('Herisson\Model\WpHerissonBackups')
+            ->from('Herisson\Model\WpHerissonBackups b')
             ->execute();
+
+        
+        $friends = \Doctrine_Query::create()
+            ->from('Herisson\Model\WpHerissonFriends f')
+            ->execute();
+        $this->view->friends = array();
+        foreach ($friends as $friend) {
+            $this->view->friends[$friend->id] = $friend->name;
+        }
+
+
 
     }
 

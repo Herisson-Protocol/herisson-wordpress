@@ -1,31 +1,70 @@
 <div class="wrap">
 
-    <h2><?php echo __("Backups", HERISSON_TD); ?></h2>
+    <h2><?php echo __("Backup of my friends", HERISSON_TD); ?></h2>
 
-<?php if (sizeof($backups)) { ?>
-    <table class="form-table" width="100%" cellspacing="2" cellpadding="5">
+    <?php if (sizeof($backups)) { ?>
+        <table class="widefat post " cellspacing="0">
+            <tr>
+                <th style="width: 10%"><?php echo __('Friend', HERISSON_TD)?></th>
+                <th style="width: 15%"><?php echo __('Size', HERISSON_TD)?></th>
+                <th style="width: 25%"><?php echo __('Number of bookmarks', HERISSON_TD)?></th>
+                <th style="width:  5%"><?php echo __('Date', HERISSON_TD)?></th>
+                <th style="width: 10%"><?php echo __('Action', HERISSON_TD)?></th>
+            </tr>
+                <?php foreach ($backups as $backup) { ?>
+            <tr>
+                <td>
+                    <?php echo $friends[$backup->friend_id]; ?>
+                </td>
+                <td>
+                    <?php echo $backup->size?>
+                </td>
+                <td>
+                    <?php echo $backup->nb?>
+                </td>
+                <td>
+                    <?php echo $backup->creation?>
+                </td>
+            </tr>
+            <?php } ?>
+        </table>
+    <?php } else { ?>
+        <?php echo __("No backups yet.", HERISSON_TD); ?>
+    <?php } ?>
 
-        <?php foreach ($backups as $backup) { ?>
 
-        <tr valign="top">
-            <th scope="row"><?php echo __('Import bookmarks', HERISSON_TD); ?>:</th>
-            <td style="width: 400px">
-                <?php echo __('Source', HERISSON_TD); ?> : 
-                <select name="import_source">
-                    <option value="firefox"><?php echo __('Firefox', HERISSON_TD); ?></option>
-                </select>
-                <br/>
-                <?php echo __('File', HERISSON_TD); ?> :
-                <input type="file" name="import_file" />
-            </td>
-            <td>
-                <input type="submit" class="button" value="<?php echo __("Import bookmarks", HERISSON_TD); ?>" />
-            </td>
-        </tr>
-        <?php } ?>
-    </table>
-<?php } else { ?>
-    <?php echo __("No backups yet.", HERISSON_TD); ?>
-<?php } ?>
+    <h2><?php echo __("My backups", HERISSON_TD); ?></h2>
+
+    <?php if (sizeof($localbackups)) { ?>
+        <table class="widefat post " cellspacing="0">
+            <tr>
+                <th style="width: 10%"><?php echo __('Friend', HERISSON_TD)?></th>
+                <th style="width: 15%"><?php echo __('Size', HERISSON_TD)?></th>
+                <th style="width: 25%"><?php echo __('Number of bookmarks', HERISSON_TD)?></th>
+                <th style="width:  5%"><?php echo __('Date', HERISSON_TD)?></th>
+                <th style="width: 10%"><?php echo __('Action', HERISSON_TD)?></th>
+            </tr>
+                <?php foreach ($localbackups as $localbackup) { ?>
+            <tr>
+                <td>
+                    <?php echo $friends[$localbackup->friend_id]; ?>
+                </td>
+                <td>
+                    <?php echo $localbackup->size?>
+                </td>
+                <td>
+                    <?php echo $localbackup->nb?>
+                </td>
+                <td>
+                    <?php echo $localbackup->creation?>
+                </td>
+            </tr>
+            <?php } ?>
+        </table>
+    <?php } else { ?>
+        <?php echo __("No backups yet.", HERISSON_TD); ?>
+    <?php } ?>
+
+
 </div>
 

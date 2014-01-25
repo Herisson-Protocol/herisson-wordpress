@@ -115,7 +115,7 @@ CREATE TABLE `#PREFIX#herisson_screenshots`
 );
 
 --  ---------------------------------------------------------------------------
---   screenshots
+--   backups
 --  ---------------------------------------------------------------------------
 
 CREATE TABLE `#PREFIX#herisson_backups`
@@ -123,6 +123,21 @@ CREATE TABLE `#PREFIX#herisson_backups`
 	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
 	`size` int(10),
 	`nb` int(10),
+	`creation` datetime,
+	`friend_id` INTEGER(10) NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY `friend_id`(`friend_id`)
+);
+
+--  ---------------------------------------------------------------------------
+--   localbackups
+--  ---------------------------------------------------------------------------
+
+CREATE TABLE `#PREFIX#herisson_localbackups`
+(
+	`id` INTEGER(10)  NOT NULL AUTO_INCREMENT,
+	`size` int(10),
+	`filename` varchar(255),
 	`creation` datetime,
 	`friend_id` INTEGER(10) NOT NULL,
 	PRIMARY KEY (`id`),

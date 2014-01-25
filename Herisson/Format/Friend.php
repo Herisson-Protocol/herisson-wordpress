@@ -12,7 +12,7 @@
 
 namespace Herisson\Format;
 
-use WpHerissonFriendsTable;
+use Herisson\Model\WpHerissonFriendsTable;
 
 /**
  * Class to handle Friend bookmarks transfer

@@ -88,8 +88,8 @@ class Delicious extends \Herisson\Format
             $this->setView('index');
             exit;
         }
-        include HERISSON_VENDOR_DIR."delicious/DeliciousBrownies.php";
-        $d = new DeliciousBrownies;
+        include_once HERISSON_VENDOR_DIR."delicious/DeliciousBrownies.php";
+        $d = new \DeliciousBrownies;
         $d->setUsername($username);
         $d->setPassword($password);
         // Call https://api.del.icio.us/v1/posts/all

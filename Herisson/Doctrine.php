@@ -126,7 +126,7 @@ class Doctrine
         // detect if models exists and generate if not
         // Must be uncommented to initiate Models
         /*
-        if (countFilesInDir($this->modelDir) . '/generated/*.php') {
+        if ($this->countFilesInDir($this->modelDir) . '/generated/*.php') {
             \Doctrine_Core::generateModelsFromDb($this->modelDir, array('default'),
                 array('generateTableClasses' => true));
         }
