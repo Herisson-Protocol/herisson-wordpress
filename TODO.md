@@ -5,14 +5,19 @@ Front
 
 Maintenance
 -----------
-* Export firefox / csv / json
 * Optionaly export private bookmarks
 * Optionaly export tags / search
+
+Refactoring
+-----------
+* Refactor Network with nice try/catch Exceptions mechanism
+* Refactor to avoid Message singletons
 
 Backups
 -------
 * Add a backup feature to backup my bookmarks with my public key to my friends
 * Configuration of authorization from friend backups
+* Add backup size limit in local folder
 
 Bookmarks
 ---------
@@ -41,8 +46,13 @@ Documentation
 -------------
 * Generate PHPDoc
 
+Doctrine
+--------
+* Update to Doctrine 2
+
 Install
 -------
 * Set chmod 755 to directories: log, data, screenshots, Herisson/Models/generated/
+* Add a check for permissions on special folders
 * Check that WpHerisson* Models class are correctly named if DB prefix != wp_
 

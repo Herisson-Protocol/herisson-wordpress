@@ -68,6 +68,21 @@ class FirefoxJsonTest extends FormatTest
 
 
     /**
+     * Test size of the exportData method
+     * 
+     * @return void
+     */
+    public function testExportData()
+    {
+        $output = $this->format->exportData($this->_getBookmarks());
+        $this->assertRegexp('/fdn/', $output);
+        $bookmarks = json_decode($output, true);
+        $this->assertCount(20, $bookmarks['children']);
+        
+    }
+
+
+    /**
      * Test import method
      * 
      * @return void

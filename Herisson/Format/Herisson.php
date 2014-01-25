@@ -35,13 +35,26 @@ class Herisson extends \Herisson\Format
      */
     public function __construct()
     {
-        $this->name    = "Herisson (Complete format)";
-        $this->type    = "file";
-        $this->keyword = "herisson";
+        $this->name     = "Herisson (Complete format)";
+        $this->type     = "file";
+        $this->keyword  = "herisson";
+        $this->filename = "herisson-bookmarks.json";
     }
 
     /**
-     * Generate JSON bookmarks file and send it to the user
+     * Export bookmarks and send it to the user
+     *
+     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
+     *
+     * @return void
+     */
+    public function export($bookmarks)
+    {
+        Export::forceDownloadContent($this->exportData($bookmarks), $this->filename);
+    }
+
+    /**
+     * Generate JSON bookmarks file
      *
      * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
      *
@@ -49,13 +62,13 @@ class Herisson extends \Herisson\Format
      *
      * @return void
      */
-    public function export($bookmarks)
+    public function exportData($bookmarks)
     {
         $list = array();
         foreach ($bookmarks as $bookmark) {
             $list[] = $bookmark->toArray();
         }
-        Export::forceDownloadContent(json_encode($list), "herisson-bookmarks.json");
+        return json_encode($list);
     }
 
 

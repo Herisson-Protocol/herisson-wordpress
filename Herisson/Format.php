@@ -44,6 +44,11 @@ class Format
      */
     public $type;
 
+    /**
+     * Export filename
+     */
+    public $filename;
+
 
     /**
      * Check method to verify if everything in the Format class is correctly defined

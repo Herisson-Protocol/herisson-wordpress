@@ -13,6 +13,7 @@
 namespace Herisson\Format;
 
 use Herisson\Model\WpHerissonBookmarks;
+use Herisson\Export;
 
 /**
  * Class to handle Basic CSV format
@@ -37,6 +38,7 @@ class Csv extends \Herisson\Format
         $this->name      = "CSV (Basic format)";
         $this->type      = "file";
         $this->keyword   = "csv";
+        $this->filename  = "herisson-bookmarks.csv";
         $this->delimiter = ';';
         $this->columns   = array(
             'title',
@@ -47,7 +49,7 @@ class Csv extends \Herisson\Format
 
 
     /**
-     * Generate CSV bookmarks file and send it to the user
+     * Export bookmarks and send it to the user
      *
      * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
      *
@@ -56,6 +58,21 @@ class Csv extends \Herisson\Format
      * @return void
      */
     public function export($bookmarks)
+    {
+        Export::forceDownloadContent($this->exportData($bookmarks), $this->filename);
+    }
+
+
+    /**
+     * Generate CSV bookmarks file
+     *
+     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
+     *
+     * @see WpHerissonBookmarks
+     *
+     * @return void
+     */
+    public function exportData($bookmarks)
     {
         $filename = tempnam('/tmp/', 'csv');
         $fcsv  = fopen($filename, 'w+');
@@ -76,8 +93,9 @@ class Csv extends \Herisson\Format
             fputcsv($fcsv, $line, $this->delimiter);
         }
         fclose($fcsv);
-        \Herisson\Export::forceDownload($filename, "herisson-bookmarks.csv");
+        $content = file_get_contents($filename);
         unlink($filename);
+        return $content;
     }
 
 

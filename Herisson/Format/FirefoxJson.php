@@ -36,13 +36,14 @@ class FirefoxJson extends \Herisson\Format
      */
     public function __construct()
     {
-        $this->name    = "JSON (Firefox format)";
-        $this->type    = "file";
-        $this->keyword = "firefox_json";
+        $this->name     = "JSON (Firefox format)";
+        $this->type     = "file";
+        $this->keyword  = "firefox_json";
+        $this->filename = "herisson-bookmarks.json";
     }
 
     /**
-     * Generate JSON bookmarks file and send it to the user
+     * Export bookmarks and send it to the user
      *
      * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
      *
@@ -52,7 +53,21 @@ class FirefoxJson extends \Herisson\Format
      */
     public function export($bookmarks)
     {
+        Export::forceDownloadContent($this->exportData($bookmarks), $this->filename);
+    }
 
+
+    /**
+     * Generate JSON bookmarks data
+     *
+     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
+     *
+     * @see WpHerissonBookmarks
+     *
+     * @return void
+     */
+    public function exportData($bookmarks)
+    {
         $root = array(
             'title' => 'Herisson-export-'.date('Y-m-d'),
             'type' => 'text/x-moz-place-container',
@@ -66,7 +81,7 @@ class FirefoxJson extends \Herisson\Format
                 'type'  => 'text/x-moz-place',
                 );
         }
-        Export::forceDownloadContent(json_encode($root), "herisson-bookmarks.json");
+        return json_encode($root);
     }
 
     /**

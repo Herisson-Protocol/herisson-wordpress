@@ -36,13 +36,14 @@ class FirefoxHtml extends \Herisson\Format
      */
     public function __construct()
     {
-        $this->name    = "HTML (Firefox format)";
-        $this->type    = "file";
-        $this->keyword = "firefox_html";
+        $this->name     = "HTML (Firefox format)";
+        $this->type     = "file";
+        $this->keyword  = "firefox_html";
+        $this->filename = "herisson-bookmarks-firefox.html";
     }
 
     /**
-     * Generate Firefox bookmarks file and send it to the user
+     * Export bookmarks and send it to the user
      *
      * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
      *
@@ -52,7 +53,20 @@ class FirefoxHtml extends \Herisson\Format
      */
     public function export($bookmarks)
     {
-         //$bookmarks = WpHerissonBookmarksTable::getAll();
+        Export::forceDownloadContent($this->exportData($bookmarks), $this->filename);
+    }
+
+    /**
+     * Generate Firefox bookmarks file
+     *
+     * @param array $bookmarks a bookmarks array, made of WpHerissonBookmarks items
+     *
+     * @see WpHerissonBookmarks
+     *
+     * @return void
+     */
+    public function exportData($bookmarks)
+    {
          $now       = time();
          $name      = "Herisson bookmarks ".date('Y-m-d H-i-s');
          $content   = '
@@ -72,8 +86,7 @@ class FirefoxHtml extends \Herisson\Format
         $content .= '</dl>
         </dl>
         ';
-
-        Export::forceDownloadContent($content, "herisson-bookmarks-firefox.html");
+        return $content;
     }
 
 

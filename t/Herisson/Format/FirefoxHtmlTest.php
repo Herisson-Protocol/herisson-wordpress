@@ -68,6 +68,21 @@ class FirefoxHtmlTest extends FormatTest
 
 
     /**
+     * Test size of the exportData method
+     * 
+     * @return void
+     */
+    public function testExportData()
+    {
+        $output = $this->format->exportData($this->_getBookmarks());
+        $this->assertRegexp("#<dl>#", $output);
+        #$this->assertCount(22, explode("\n", $output));
+        $this->assertRegexp('/fdn/', $output);
+        
+    }
+
+
+    /**
      * Test import method
      * 
      * @return void
