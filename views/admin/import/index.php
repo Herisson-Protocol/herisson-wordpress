@@ -11,7 +11,7 @@ jQuery(document).ready(function() {
 });
 </script>
 <div class="wrap">
-    <?php includePartial(__DIR__."/../elements/messages.php", array()); ?>
+    <?php $this->includePartial(__DIR__."/../elements/messages.php", array()); ?>
     <table class="form-table" width="100%" cellspacing="2" cellpadding="5">
         <tr>
             <td colspan="3">

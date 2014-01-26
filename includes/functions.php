@@ -56,26 +56,6 @@ function escape($data)
     // esc_sql($str);
 }
 
-function errorsDispatch($content, $errors)
-{
-    $error_code = $content->get_error_data("herisson");
-    foreach ($errors as $code=>$message) {
-        if ($error_code == $code) {
-            Herisson\Message::i()->addError($message);
-        }
-    }
-    Herisson\Message::i()->addError(__($content->get_error_message("herisson"), HERISSON_TD));
-}
-
-function includePartial($view, $data)
-{
-    foreach ($data as $var=>$value) {
-        $$var = $value;
-    }
-    include $view;
-}
-
-
 /**
  * Unescape globals variables $_POST, $_GET, $_REQUEST and $_COOKIE
  *

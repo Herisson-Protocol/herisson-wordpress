@@ -1,6 +1,6 @@
 
 <div class="wrap">
-    <?php includePartial(__DIR__."/../elements/messages.php", array()); ?>
+    <?php $this->includePartial(__DIR__."/../elements/messages.php", array()); ?>
 
     <h2><?php echo __("Herisson configuration", HERISSON_TD); ?></h2>
 

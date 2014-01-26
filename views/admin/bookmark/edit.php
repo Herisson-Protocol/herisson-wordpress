@@ -1,5 +1,5 @@
 <div class="wrap">
-    <?php includePartial(__DIR__."/../elements/messages.php", array()); ?>
+    <?php $this->includePartial(__DIR__."/../elements/messages.php", array()); ?>
     <h2>
     <?php if ($id) { ?>
         <?php echo __("Edit Bookmark", HERISSON_TD); ?>

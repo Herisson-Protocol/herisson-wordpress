@@ -1,7 +1,7 @@
 
 <div class="wrap">
     
-    <?php includePartial(__DIR__."/../elements/messages.php", array()); ?>
+    <?php $this->includePartial(__DIR__."/../elements/messages.php", array()); ?>
     <span style="float: right">
         <form method="get" action="<?php echo get_option('siteurl'); ?>/wp-admin/admin.php?page=herisson_bookmark">
             <input type="hidden" name="page" value="herisson_bookmark" />
@@ -60,7 +60,7 @@
         </tr>
 <?php } ?>
     </table>
-    <?php includePartial(__DIR__."/../elements/pagination.php", array(
+    <?php $this->includePartial(__DIR__."/../elements/pagination.php", array(
         'all' => $countAll,
         'max' => sizeof($bookmarks),
         'limit' => $pagination['limit'],

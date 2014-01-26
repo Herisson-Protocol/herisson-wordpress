@@ -1,6 +1,6 @@
 
 <div class="wrap">
-    <?php includePartial(__DIR__."/../elements/messages.php", array()); ?>
+    <?php $this->includePartial(__DIR__."/../elements/messages.php", array()); ?>
     <?php if (Herisson\Message::i()->hasSuccess()) { ?>
     <p class="herisson-success">
         <?php echo __("Maintenance has been done, here are the results after the maintenance operation. Some of the errors may not be fixable.", HERISSON_TD)?>

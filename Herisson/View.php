@@ -108,10 +108,27 @@ class View
         foreach (get_object_vars($this) as $attr=>$value) {
             $$attr = $value;
         }
+        
         //echo "viewFile : $this->viewFile<br>";
         if (file_exists($this->viewFile)) {
             include $this->viewFile;
         }
+    }
+
+    /**
+     * Include a sub view, and passing data to this subview
+     *
+     * @param string $view the view name
+     * @param array  $data the data with named variables
+     *
+     * @return void
+     */
+    function includePartial($view, $data)
+    {
+        foreach ($data as $var=>$value) {
+            $$var = $value;
+        }
+        include $view;
     }
 
 }
