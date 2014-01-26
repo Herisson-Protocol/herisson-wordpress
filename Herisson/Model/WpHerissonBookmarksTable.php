@@ -16,8 +16,10 @@ namespace Herisson\Model;
 use Doctrine_Query;
 use Doctrine_Table;
 use Doctrine_Core;
+use Herisson\Doctrine;
 
 use Herisson\Pagination;
+use Herisson\Folder;
 
 /**
  * WpHerissonBookmarksTable
@@ -270,6 +272,21 @@ class WpHerissonBookmarksTable extends Doctrine_Table
         $bookmarks = $q->execute($params);
         return $bookmarks;
     }
+
+
+    /**
+     * Get size of the bookmarks table
+     *
+     * @return the formatted table size
+     */
+    public static function getTableSize()
+    {
+        $res = Doctrine::execute("SHOW TABLE STATUS Where Name like '%_bookmarks'");
+        $tableInfo = $res->fetch();
+        $size = $tableInfo['Data_length'];
+        return Folder::formatSize($size);
+    }
+
 
 
 }

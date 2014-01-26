@@ -191,6 +191,39 @@
                     <input type="checkbox" name="debugMode" id="debug_mode" value="1" <?php if ($options['debugMode']) { ?> checked="checked"<?php } ?> />
                 </td>
             </tr>
+
+
+
+            <tr valign="top">
+                <th scope="row" colspan="2">
+                    <h2><?php echo __("Handling backups", HERISSON_TD); ?></h2>
+                </th>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="acceptBackups">
+                        <?php echo __("Accept friends backups", HERISSON_TD); ?>
+                    </label>:
+                </th>
+                <td>
+                    <select name="acceptBackups">
+                        <option value="0" <?php echo ($options['acceptBackups'] == "0" ? ' selected="selected"' : '');?>><?php echo __("Never (automatically)", HERISSON_TD); ?></option>
+                        <option value="1" <?php echo ($options['acceptBackups'] == "1" ? ' selected="selected"' : '');?>><?php echo __("Always (automatically)", HERISSON_TD); ?></option>
+                    </select>
+                    <p>
+                        <?php echo __("This concerns only people that try push their backups to your site, and is refused if your backup folder size is not reached.", HERISSON_TD); ?><br/>
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="backupFolderSize"><?php echo __("Backup folder size", HERISSON_TD); ?></label>:</th>
+                <td>
+                <input type="text" name="backupFolderSize" id="backupFolderSize" style="width:6em; text-align: right" value="<?php echo intval($options['backupFolderSize']); ?>" /> MB (or <?php echo \Herisson\Folder::formatSize(intval($options['backupFolderSize'])*1000*1000); ?>)
+                    <p>
+                        <?php echo __("Limits the total size of the backup folder. Once the size is reach, friends backups are no longer accepted.", HERISSON_TD); ?>
+                    </p>
+                </td>
+            </tr>
         </table>
 
         <input type="hidden" name="action" value="index" />

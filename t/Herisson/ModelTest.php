@@ -13,6 +13,8 @@
 
 namespace Herisson;
 
+use Herisson\Doctrine;
+
 require_once __DIR__."/../Env.php";
 
 /**
@@ -96,8 +98,7 @@ class ModelTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getConnection()
     {
-        $manager = \Doctrine_Manager::getInstance();
-        return $manager->getConnection('default');
+        return Doctrine::getConnection();
     }
  
     /**

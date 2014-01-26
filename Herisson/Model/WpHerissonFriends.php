@@ -207,6 +207,7 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         }
     }
 
+
     /**
      * Validate a friend
      *
@@ -235,6 +236,38 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         } catch (Network\Exception $e) {
             Message::i()->addError($e->getMessage());
             return false;
+        }
+    }
+
+
+    /**
+     * Check if the friend accepts backups
+     *
+     * Do network hit to the friend's url
+     *
+     * @return true if validation was succesful, false otherwise
+     */
+    public function acceptsBackups()
+    {
+        $signature = Encryption::i()->privateEncrypt(HERISSON_LOCAL_URL);
+        $postData = array(
+            'url'       => HERISSON_LOCAL_URL,
+            'signature' => $signature
+        );
+        $network = new Network();
+        try {
+            $content = $network->download($this->url."/acceptsbackups", $postData);
+            return intval($content['data']);
+        } catch (Network\Exception $e) {
+            switch ($e->getCode()) {
+            case 403:
+                return 0;
+                break;
+            case 406:
+                return 2;
+                break;
+            }
+            return $e->getCode();
         }
     }
 

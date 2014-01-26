@@ -18,6 +18,7 @@ use Herisson\Model\WpHerissonFriends;
 
 use Herisson\Encryption;
 use Herisson\Network;
+use Herisson\Folder;
 
 require_once __DIR__."/../Front.php";
 
@@ -44,6 +45,34 @@ class Index extends \Herisson\Controller\Front
         $this->name = "index";
         parent::__construct();
     }
+
+    /**
+     * Action to handle the accepsBackups requests
+     *
+     * Handled via HTTP Response code
+     *
+     * TODO: Handle Network replies as Exceptions
+     *
+     * @return void
+     */
+    function acceptsbackupsAction()
+    {
+
+        if ($this->options['acceptBackups'] == 0) {
+            Network::reply(403, HERISSON_EXIT);
+            exit;
+        }
+
+        $dirsize = Folder::getFolderSize(HERISSON_BACKUP_DIR);
+        if ($dirsize > $this->options['backupFolderSize']) {
+            Network::reply(406, HERISSON_EXIT);
+            exit;
+        }
+
+        echo "1";
+
+    }
+
 
     /**
      * Action to handle the ask from another site

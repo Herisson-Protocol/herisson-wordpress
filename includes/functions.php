@@ -67,16 +67,6 @@ function errorsDispatch($content, $errors)
     Herisson\Message::i()->addError(__($content->get_error_message("herisson"), HERISSON_TD));
 }
 
-function formatSize($size)
-{
-    $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
-    for ($i = 0; $size >= 1024 && $i < 4; $i++) {
-        $size /= 1024;
-    }
-    return round($size, 2).' '.$units[$i];
-}
-
-
 function includePartial($view, $data)
 {
     foreach ($data as $var=>$value) {

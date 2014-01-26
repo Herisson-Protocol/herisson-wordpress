@@ -171,7 +171,7 @@
                         <label for="size-0"><?php echo __("Archive size", HERISSON_TD); ?>:</label>
                     </th>
                     <td>
-                        <?php echo formatSize($existing->dirsize); ?>
+                        <?php echo \Herisson\Folder::formatSize($existing->dirsize); ?>
                     </td>
                 </tr>
                 <?php } ?>

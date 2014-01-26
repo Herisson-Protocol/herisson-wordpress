@@ -22,6 +22,7 @@ Backups
 Bookmarks
 ---------
 * Enable multiple deletes
+* Split WpHerissonBookmarks model with new WpHerissonBookmarksData class, to avoid WpHerissonBookmarks complexity
 
 Divers
 ------

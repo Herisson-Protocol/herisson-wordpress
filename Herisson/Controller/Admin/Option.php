@@ -17,6 +17,7 @@ use Herisson\Model\WpHerissonBookmarks;
 use Herisson\Model\WpHerissonScreenshotsTable;
 use Herisson\Encryption;
 use Herisson\Shell;
+use Herisson\Message;
 
 require_once __DIR__."/../Admin.php";
 
@@ -42,6 +43,24 @@ class Option extends \Herisson\Controller\Admin
     {
         $this->name = "option";
         parent::__construct();
+        $this->allowedoptions = array(
+            'acceptFriends',
+            'acceptBackups',
+            'adminEmail',
+            'backupFolderSize',
+            'basePath',
+            'bookmarksPerPage',
+            'checkHttpImport',
+            'convertPath',
+            'debugMode',
+            'screenshotTool',
+            'search',
+            'sitename',
+            'spiderOptionFavicon',
+            'spiderOptionFullPage',
+            'spiderOptionScreenshot',
+            'spiderOptionTextOnly',
+        );
     }
 
     /**
@@ -57,23 +76,7 @@ class Option extends \Herisson\Controller\Admin
         if (post('action') == 'index') {
             $options = get_option('HerissonOptions');
             $new_options = array();
-            $allowedoptions = array(
-                'acceptFriends',
-                'adminEmail',
-                'basePath',
-                'bookmarksPerPage',
-                'checkHttpImport',
-                'convertPath',
-                'debugMode',
-                'screenshotTool',
-                'search',
-                'sitename',
-                'spiderOptionFavicon',
-                'spiderOptionFullPage',
-                'spiderOptionScreenshot',
-                'spiderOptionTextOnly',
-            );
-            foreach ($allowedoptions as $option) {
+            foreach ($this->allowedoptions as $option) {
                 $new_options[$option] = post($option);
             }
             $complete_options = array_merge($options, $new_options);
@@ -81,7 +84,7 @@ class Option extends \Herisson\Controller\Admin
                 $encryption = Encryption::i()->generateKeyPairs();
                 $complete_options['publicKey'] = $encryption->public;
                 $complete_options['privateKey'] = $encryption->private;
-                echo "<b>Warning</b> : public/private keys have been regenerated<br>";
+                Message::i()->addError("<b>Warning</b> : public/private keys have been regenerated");
             }
             update_option('HerissonOptions', $complete_options);
         }

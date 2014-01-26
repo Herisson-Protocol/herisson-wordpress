@@ -73,6 +73,7 @@ class Controller
         $path          = explode("/", $_SERVER['REQUEST_URI']);
         if (isset($path[2])) {
             $pathName = preg_replace("#\?.*#", "", $path[2]);
+            $pathName = strtolower($pathName);
             if (strlen($pathName) || $pathName == "/") {
                 $this->action = $pathName;
             } else {

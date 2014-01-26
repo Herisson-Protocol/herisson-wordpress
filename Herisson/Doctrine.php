@@ -58,6 +58,7 @@ class Doctrine
 
     }
 
+
     /**
      * Load Doctrine library
      *
@@ -111,6 +112,7 @@ class Doctrine
         }
     }
 
+
     /**
      * Generate and load all database models
      *
@@ -136,6 +138,7 @@ class Doctrine
         \Doctrine::loadModels($this->modelDir . '/generated');
         \Doctrine::loadModels($this->modelDir);
     }
+
 
     /**
      * Count the number of files in a directory
@@ -182,6 +185,30 @@ class Doctrine
         }
         
         return rmdir($dir);
+    }
+
+
+    /**
+     * Get the doctrine Connection to make raw request
+     *
+     * @return the Doctrine_Connection object
+     */
+    public static function getConnection() {
+        return \Doctrine_Manager::getInstance()->getConnection('default');
+    }
+
+
+    /**
+     * Execute raw SQL queries
+     *
+     * @param string $sql    the sql query
+     * @param array  $params the values parameters
+     *
+     * @return the sql statement that will need fetching
+     */
+    public static function execute($sql, $params=array()) {
+        $conn = self::getConnection();
+        return $conn->execute($sql, $params);
     }
 
 
