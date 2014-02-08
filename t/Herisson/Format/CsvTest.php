@@ -57,7 +57,7 @@ class CsvTest extends FormatTest
     public function testExport()
     {
         ob_start();
-        $this->format->export($this->_getBookmarks());
+        $this->format->export($this->getBookmarks());
         $output = ob_get_clean();
         //file_put_contents($this->sampleFile, $output);
         $this->assertCount(22, explode("\n", $output));
@@ -72,7 +72,7 @@ class CsvTest extends FormatTest
      */
     public function testExportData()
     {
-        $output = $this->format->exportData($this->_getBookmarks());
+        $output = $this->format->exportData($this->getBookmarks());
         $this->assertCount(22, explode("\n", $output));
         $this->assertRegexp('/fdn/', $output);
         

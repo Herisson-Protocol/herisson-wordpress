@@ -61,6 +61,7 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         }
     }
 
+
     /**
      * Set the Url of a friend, and retrieve the public key from it
      *
@@ -73,6 +74,7 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         parent::_set('url', rtrim($url, '/'));
         $this->reloadPublicKey();
     }
+
 
     /**
      * Reload the public key from the friend
@@ -132,6 +134,7 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         }
     }
 
+
     /**
      * Generate bookmarks data
      *
@@ -158,6 +161,7 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
         }
         return json_encode($json_display);
     }
+
 
     /**
      * Ask a site for friend
@@ -265,6 +269,77 @@ class WpHerissonFriends extends \BaseWpHerissonFriends
                 break;
             case 406:
                 return 2;
+                break;
+            }
+            return $e->getCode();
+        }
+    }
+
+
+    /**
+     * Send backup data to this friend
+     *
+     * Do network hit to the friend's url
+     * We cipher our bookmarks data with our public key, so only we can read our bookmarks with our private key
+     *
+     * @param string $data the bookmark json data
+     *
+     * @return true if backup was succesful, false otherwise
+     */
+    public function sendBackup($data)
+    {
+        $signature   = Encryption::i()->privateEncrypt(HERISSON_LOCAL_URL);
+        $cryptedData = Encryption::i()->publicEncryptLongData($data);
+        //print_r($data);
+        $postData    = array(
+            'url'        => HERISSON_LOCAL_URL,
+            'signature'  => $signature,
+            'backupData' => serialize($cryptedData),
+        );
+        $network = new Network();
+        try {
+            $content = $network->download($this->url."/sendbackup", $postData);
+            return intval($content['data']);
+        } catch (Network\Exception $e) {
+            switch ($e->getCode()) {
+            case 417:
+                return 0;
+                break;
+            }
+            return $e->getCode();
+        }
+    }
+
+
+    /**
+     * Download backup data from this friend
+     *
+     * Do network hit to the friend's url
+     * We decipher our bookmarks data with our private key, because only we can read our bookmarks
+     *
+     * @return true if backup was succesful, false otherwise
+     */
+    public function downloadBackup()
+    {
+        $signature   = Encryption::i()->privateEncrypt(HERISSON_LOCAL_URL);
+        $postData    = array(
+            'url'        => HERISSON_LOCAL_URL,
+            'signature'  => $signature,
+        );
+        $network = new Network();
+        try {
+            $content = $network->download($this->url."/downloadbackup", $postData);
+
+            // FIXME We should not have to use stripslashes here !!
+            $encryptionData = unserialize(stripslashes($content['data']));
+
+            $data = Encryption::i()->privateDecryptLongData($encryptionData['data'], $encryptionData['hash'], $encryptionData['iv']);
+            return $data;
+
+        } catch (Network\Exception $e) {
+            switch ($e->getCode()) {
+            case 417:
+                return 0;
                 break;
             }
             return $e->getCode();

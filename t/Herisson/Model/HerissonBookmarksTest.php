@@ -324,9 +324,7 @@ class HerissonBookmarksTest extends ModelTest
     {
         $b = $this->_getBookmark($this->fakeFields);
         $b->save();
-        ob_start();
         $b->getFullContentFromUrl();
-        ob_clean();
         $this->assertTrue(file_exists($this->dataPath));
     }
 

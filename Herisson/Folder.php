@@ -32,14 +32,18 @@ class Folder
     /**
      * Format a file/directory size
      *
+     * This method use 1000 multiplier to convert size,
+     * because it's the official Kilo/Mega/Giga multiplier.
+     * cf http://en.wikipedia.org/wiki/Octet_%28computing%29
+     *
      * @param integer $size the size to format
      *
      * @return the formatted size
      */
     public static function formatSize($size)
     {
-        $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
-        for ($i = 0; $size >= 1000 && $i < 4; $i++) {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        for ($i = 0; $size >= 1000 && $i < sizeof($units); $i++) {
             $size /= 1000;
         }
         return round($size, 2).' '.$units[$i];

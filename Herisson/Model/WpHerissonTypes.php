@@ -13,10 +13,6 @@
 
 namespace Herisson\Model;
 
-use Doctrine_Query;
-use Doctrine_Table;
-use Doctrine_Core;
-
 /**
  * WpHerissonTypes
  *

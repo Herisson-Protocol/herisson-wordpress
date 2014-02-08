@@ -241,8 +241,8 @@ class WpHerissonBookmarksTable extends Doctrine_Table
     /**
      * Get one item with where paremeters
      *
-     * @param string $where the sql condition
-     * @param array  $data  the value parameters
+     * @param array   $options the options array
+     * @param integer $public  wether the bookmark is public or not
      *
      * @return the corresponding instance of WpHerissonFriends or a new one
      */
@@ -266,8 +266,7 @@ class WpHerissonBookmarksTable extends Doctrine_Table
             $q->leftJoin('b.WpHerissonTags t')
                 ->where("(t.name LIKE ? OR b.url like ? OR b.title LIKE ? OR b.description LIKE ? OR b.content LIKE ?)");
             $params = array_merge($params,
-                array($search, $search, $search, $search, $search)
-            );
+                array($search, $search, $search, $search, $search));
         }
         $bookmarks = $q->execute($params);
         return $bookmarks;

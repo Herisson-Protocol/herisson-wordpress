@@ -48,7 +48,7 @@ class View
     public $viewFile;
 
     /**
-     * The Wordpression options array
+     * The Wordpress options array
      */
     public $options;
 

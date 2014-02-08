@@ -40,4 +40,62 @@ class WpHerissonLocalbackupsTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('WpHerissonLocalbackups');
     }
+
+    /**
+     * Get the WpHerissonLocalbackups match the id
+     *
+     * @param integer $backupId the id of the backup
+     *
+     * @return the matching WpHerissonLocalbackups or new one
+     */
+    public static function get($backupId)
+    {
+        if (!is_numeric($backupId)) {
+            return new WpHerissonLocalbackups();
+        }
+        return self::getOneWhere("id=?", array($backupId));
+    }
+
+    /**
+     * Get a WpHerissonLocalbackups list with where condition
+     *
+     * @param string $where the sql condition
+     * @param array  $data  the value parameters
+     *
+     * @return an array of matching WpHerissonLocalbackups
+     */
+    public static function getWhere($where, $data=array())
+    {
+        $pagination = Pagination::i()->getVars();
+        $backups = Doctrine_Query::create()
+            ->from('Herisson\Model\WpHerissonLocalbackups')
+            ->where($where)
+            ->limit($pagination['limit'])
+            ->offset($pagination['offset'])
+            ->execute($data);
+        return $backups;
+    }
+
+
+    /**
+     * Get one item with where paremeters
+     *
+     * @param string $where the sql condition
+     * @param array  $data  the value parameters
+     *
+     * @return the corresponding instance of WpHerissonLocalbackups or a new one
+     */
+    public static function getOneWhere($where, $data=array())
+    {
+        $backups = Doctrine_Query::create()
+            ->from('Herisson\Model\WpHerissonLocalbackups')
+            ->where($where)
+            ->limit(1)
+            ->execute($data);
+        foreach ($backups as $backup) {
+            return $backup;
+        }
+        return new WpHerissonLocalbackups();
+    }
+
 }

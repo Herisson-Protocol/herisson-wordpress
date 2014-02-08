@@ -1,9 +1,22 @@
 <?php
 /**
+ * Herisson 
+ *
+ * PHP Version 5.3
+ *
+ * @category Herisson
+ * @package  Herisson
+ * @author   Thibault Taillandier <thibault@taillandier.name>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPL v3
+ * @link     None
+ * @see      None
+ */
+/**
 Plugin Name: Herisson
 Version: 0.1
 Plugin URI: 
-Description: Herisson displays bookmarks you own. It allows you to develop a complete list of tagged bookmarks and friends you are sharing them with.
+Description: Herisson displays bookmarks you own. It allows you to develop
+a complete list of tagged bookmarks and friends you are sharing them with.
 Author: Thibault Taillandier
 Author URI: http://blog.taillandier.name/
 License: GPL2
@@ -45,7 +58,7 @@ define('HERISSON_MENU_MULTIPLE', 2);
 
 define('HERISSON_EXIT', 1);
 
-define('HERISSON_PLUGIN_URL', plugin_dir_url( __FILE__ ));
+define('HERISSON_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 require_once HERISSON_WP_BASE_DIR."/wp-includes/plugin.php";
 //require_once HERISSON_WP_BASE_DIR."/wp-load.php";
@@ -60,6 +73,7 @@ require_once HERISSON_WP_BASE_DIR."/wp-admin/includes/plugin.php";
 // Include other functionality
 require_once HERISSON_BASE_DIR . 'Herisson.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Doctrine.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Export.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Pagination.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Message.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Folder.php';
@@ -71,6 +85,7 @@ require_once HERISSON_BASE_DIR . 'Herisson/Network.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Network/Exception.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Format.php';
 require_once HERISSON_BASE_DIR . 'Herisson/Format/Exception.php';
+require_once HERISSON_BASE_DIR . 'Herisson/Model/Exception.php';
 require_once HERISSON_INCLUDES_DIR . 'functions.php';
 require_once HERISSON_INCLUDES_DIR . 'screenshots.php';
 
@@ -86,8 +101,10 @@ require_once HERISSON_BASE_DIR."/Herisson/Controller/Admin/Option.php";
 
 
 
-// Initiate the database connexion with the same informations as the Wordpress installation.
-define('HERISSON_DOCTRINE_DSN', 'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME);
+// Initiate the database connexion
+// with the same informations as the Wordpress installation.
+define('HERISSON_DOCTRINE_DSN',
+    'mysql://' . DB_USER . ':' . DB_PASSWORD . '@' . DB_HOST . '/' . DB_NAME);
 $doctrine = new Herisson\Doctrine(HERISSON_DOCTRINE_DSN);
 $doctrine->loadlibrary();
 
@@ -103,7 +120,7 @@ add_action('plugins_loaded', array('Herisson', 'checkVersions'));
 register_activation_hook('herisson/herisson.php', array('Herisson', 'install'));
 
 
-add_action( 'send_headers', array('Herisson', 'router'));
+add_action('send_headers', array('Herisson', 'router'));
 
 add_action('admin_menu', array('Herisson', 'addPages'));
 

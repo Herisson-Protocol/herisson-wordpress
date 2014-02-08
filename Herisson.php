@@ -13,8 +13,9 @@
  */
 
 use Herisson\Model\WpHerissonFriendsTable;
-use Herisson\Router;
+
 use Herisson\Encryption;
+use Herisson\Router;
 
 /**
  * Class: Herisson

@@ -55,14 +55,7 @@ class WpHerissonFriendsTable extends Doctrine_Table
         if (!is_numeric($friendId)) {
             return new WpHerissonFriends();
         }
-        $friends = Doctrine_Query::create()
-            ->from('Herisson\Model\WpHerissonFriends')
-            ->where("id=?")
-            ->execute(array($friendId));
-        foreach ($friends as $friend) {
-            return $friend;
-        }
-        return new WpHerissonFriends();
+        return self::getOneWhere("id=?", array($friendId));
     }
 
     /**

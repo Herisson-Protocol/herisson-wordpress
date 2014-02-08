@@ -12,11 +12,14 @@
 
 namespace Herisson\Controller\Admin;
 
-use Herisson\Model\WpHerissonBookmarksTable;
-use Herisson\Model\WpHerissonFriendsTable;
 use Doctrine_Query;
 use Herisson\Doctrine;
+use Herisson\Export;
 use Herisson\Message;
+use Herisson\Model\WpHerissonBackups;
+use Herisson\Model\WpHerissonBackupsTable;
+use Herisson\Model\WpHerissonBookmarksTable;
+use Herisson\Model\WpHerissonFriendsTable;
 
 require_once __DIR__."/../Admin.php";
 
@@ -43,6 +46,7 @@ class Backup extends \Herisson\Controller\Admin
         $this->name = "backup";
         parent::__construct();
     }
+
 
     /**
      * Add a new backup
@@ -79,14 +83,79 @@ class Backup extends \Herisson\Controller\Admin
         }
 
         $bookmarks = WpHerissonBookmarksTable::getAll();
-        $herissonBookmarks = Herisson\Format\Herisson::exportData($bookmarks);
-        //$friend->sendBackup($herissonBookmarks);
+        include_once HERISSON_BASE_DIR."/Herisson/Format/Herisson.php";
+        $format = new \Herisson\Format\Herisson();
+        $herissonBookmarks = $format->exportData($bookmarks);
+        //print_r($herissonBookmarks);
+        $res = $friend->sendBackup($herissonBookmarks);
+        //echo $res;
+        if ($res) {
+            // TODO : Delete backups from that friend before adding a new one
+            $backup            = new WpHerissonBackups();
+            $backup->friend_id = $friend->id;
+            $backup->size      = strlen($herissonBookmarks);
+            $backup->nb        = sizeof($bookmarks);
+            $backup->creation  = date('Y-m-d H:i:s');
+            $backup->save();
+        }
 
 
         // Redirects to Backups list
         $this->indexAction();
         $this->setView('index');
     }
+
+
+    /**
+     * Download a backup from friend
+     *
+     * @return void
+     */
+    private function _retrieve()
+    {
+
+        $friend = WpHerissonFriendsTable::get(get('id'));
+        if (! $friend->id) {
+            Message::i()->addError(__("Friend could not be found", HERISSON_TD));
+            $this->indexAction();
+            $this->setView('index');
+            return;
+        }
+
+        return $friend->downloadBackup();
+
+    }
+
+
+    /**
+     * Download a backup from a friend
+     *
+     * @return void
+     */
+    function downloadAction()
+    {
+        $data         = $this->_retrieve();
+        $this->layout = false;
+        // FIXME This fails
+        Export::forceDownloadContent($data, 'herisson.tar.gz');
+
+    }
+
+
+    /**
+     * Download and import a backup from a friend
+     *
+     * @return void
+     */
+    function importAction()
+    {
+        $data       = $this->_retrieve();
+        $bookmarks  = json_decode($data, 1);
+        $controller = new \Herisson\Controller\Admin\Import();
+        $controller->importList($bookmarks);
+        $controller->route();
+    }
+
 
     /**
      * Action to list existing backups
@@ -105,10 +174,8 @@ class Backup extends \Herisson\Controller\Admin
             ->from('Herisson\Model\WpHerissonLocalbackups b')
             ->execute();
 
-        $this->view->nbBookmarks = WpHerissonBookmarksTable::countAll();
-
+        $this->view->nbBookmarks   = WpHerissonBookmarksTable::countAll();
         $this->view->sizeBookmarks = WpHerissonBookmarksTable::getTableSize();
-
         
         $friends = \Doctrine_Query::create()
             ->from('Herisson\Model\WpHerissonFriends f')

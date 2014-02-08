@@ -193,7 +193,8 @@ class Doctrine
      *
      * @return the Doctrine_Connection object
      */
-    public static function getConnection() {
+    public static function getConnection()
+    {
         return \Doctrine_Manager::getInstance()->getConnection('default');
     }
 
@@ -206,7 +207,8 @@ class Doctrine
      *
      * @return the sql statement that will need fetching
      */
-    public static function execute($sql, $params=array()) {
+    public static function execute($sql, $params=array())
+    {
         $conn = self::getConnection();
         return $conn->execute($sql, $params);
     }

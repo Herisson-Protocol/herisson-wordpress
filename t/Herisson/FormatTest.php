@@ -13,10 +13,11 @@
 
 namespace Herisson;
 
+require_once __DIR__."/../Env.php";
+
 use Herisson\Model\WpHerissonBookmarksTable;
 use Herisson\ModelTest;
 
-require_once __DIR__."/../Env.php";
 
 /**
  * FormatTest
@@ -73,7 +74,7 @@ class FormatTest extends ModelTest
      * 
      * @return void
      */
-    public function _getBookmarks()
+    protected function getBookmarks()
     {
         $bookmarks = WpHerissonBookmarksTable::getAll(true);
         $this->assertTrue(is_array($bookmarks->toArray()));

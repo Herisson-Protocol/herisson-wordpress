@@ -47,6 +47,7 @@ class Router
         $controller->route();
     }
 
+
     /**
      * Handles routing in Wordpress Plugin Admin Zone, in raw format.
      * 

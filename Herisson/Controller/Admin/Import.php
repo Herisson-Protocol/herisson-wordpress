@@ -12,10 +12,11 @@
 
 namespace Herisson\Controller\Admin;
 
-use Herisson\Model\WpHerissonBookmarksTable;
 use Herisson\Model\WpHerissonBookmarks;
-use Herisson\Message;
+use Herisson\Model\WpHerissonBookmarksTable;
+
 use Herisson\Format;
+use Herisson\Message;
 
 require_once __DIR__."/../Admin.php";
 
@@ -32,6 +33,7 @@ require_once __DIR__."/../Admin.php";
 class Import extends \Herisson\Controller\Admin
 {
 
+
     /**
      * Constructor
      *
@@ -42,6 +44,7 @@ class Import extends \Herisson\Controller\Admin
         $this->name = "import";
         parent::__construct();
     }
+
 
     /**
      * Action to export this site's bookmarks to a file
@@ -68,14 +71,14 @@ class Import extends \Herisson\Controller\Admin
         try {
             include_once __DIR__."/../../Export.php";
             $options = post('exportOptions');
-            $where = array();
-            $params = array();
+            $where   = array();
+            $params  = array();
             if (isset($options['private']) && !$options['private']) {
-                $where[] = "is_public=?";
+                $where[]  = "is_public=?";
                 $params[] = 1;
             }
             if (isset($options['keyword']) && $options['keyword']) {
-                $where[] = '(t.name LIKE ? OR b.title LIKE ? OR b.url LIKE ?)';
+                $where[]  = '(t.name LIKE ? OR b.title LIKE ? OR b.url LIKE ?)';
                 $params[] = "%".$options['keyword']."%";
                 $params[] = "%".$options['keyword']."%";
                 $params[] = "%".$options['keyword']."%";
@@ -125,6 +128,7 @@ class Import extends \Herisson\Controller\Admin
         }
     }
 
+
     /** 
      * Display the imported bookmarks list to make the user decide which bookmarks he wants to import into his Herisson site
      * 
@@ -137,6 +141,7 @@ class Import extends \Herisson\Controller\Admin
         $this->view->bookmarks = $bookmarks;
         $this->setView('importList');
     }
+
 
     /**
      * Handle the validation of bookmarks to import after the user choose which bookmarks he wants to import
@@ -151,28 +156,25 @@ class Import extends \Herisson\Controller\Admin
             if (array_key_exists('import', $bookmark) && $bookmark['import']) { 
                 $nb++;
                 $tags = array_key_exists('tags', $bookmark) ? explode(",", $bookmark['tags']) : array();
+                /*
                 if (!strlen($bookmark['url'])) {
                     print_r($bookmark);
                 }
-                WpHerissonBookmarks::createBookmark($bookmark);
-                /*
-                array(
-
-                    '
-                    'favicon_url'=> array_key_exists('favicon_url', $bookmark) ? $bookmark['favicon_url'] : "",
-                    'favicon_image'=>array_key_exists('favicon_image', $bookmark) ? $bookmark['favicon_image'] : "",
-                    'title'=>$bookmark['title'],
-                    'is_public'=>array_key_exists('private', $bookmark) && $bookmark['private'] ? 0 : 1,
-                    'tags'=> $tags,
-                ));
                  */
+                try {
+                    WpHerissonBookmarks::createBookmark($bookmark);
+                } catch (\Herisson\Model\Exception $e) {
+                    Message::i()->addError($e->getMessage());
+                    continue;              
+                }
             }
         }
-        echo '<p class="herisson-success">'.sprintf(__("Successfully add %s bookmarks !", HERISSON_TD), $nb).'</p>';
+        Message::i()->addSucces(sprintf(__("Successfully add %s bookmarks !", HERISSON_TD), $nb));
         $this->indexAction();
         $this->setView('index');
 
     }
+
 
     /**
      * Display import and maintenance options page

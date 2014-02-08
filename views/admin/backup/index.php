@@ -52,13 +52,17 @@
                     <?php echo $friends[$backup->friend_id]->name; ?>
                 </td>
                 <td>
-                    <?php echo $backup->size?>
+                    <?php echo \Herisson\Folder::formatSize($backup->size); ?>
                 </td>
                 <td>
                     <?php echo $backup->nb?>
                 </td>
                 <td>
                     <?php echo $backup->creation?>
+                </td>
+                <td>
+                    <a href="<?php echo get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup&action=download&id=<?php echo $backup->friend_id?>">Download</a>
+                    <a href="<?php echo get_option('siteurl')?>/wp-admin/admin.php?page=herisson_backup&action=import&id=<?php echo $backup->friend_id?>">Import</a>
                 </td>
             </tr>
             <?php } ?>
@@ -86,7 +90,7 @@
                     <?php echo $friends[$localbackup->friend_id]->name; ?>
                 </td>
                 <td>
-                    <?php echo $localbackup->size?>
+                    <?php echo \Herisson\Folder::formatSize($localbackup->size); ?>
                 </td>
                 <td>
                     <?php echo $localbackup->filename?>

@@ -10,7 +10,9 @@ Maintenance
 
 Refactoring
 -----------
-* Refactor Network with nice try/catch Exceptions mechanism
+* Refactor Network with nice try/catch Exceptions mechanism, and delete global
+* Create a FriendCommunicator with Network and Friend object as parameter
+* Create a BookmarkData object
 * Refactor to avoid Message singletons
 
 Backups

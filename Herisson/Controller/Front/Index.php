@@ -12,13 +12,15 @@
 
 namespace Herisson\Controller\Front;
 
-use Herisson\Model\WpHerissonBookmarksTable;
-use Herisson\Model\WpHerissonFriendsTable;
-use Herisson\Model\WpHerissonFriends;
-
 use Herisson\Encryption;
-use Herisson\Network;
+use Herisson\Export;
 use Herisson\Folder;
+use Herisson\Model\WpHerissonBookmarksTable;
+use Herisson\Model\WpHerissonFriends;
+use Herisson\Model\WpHerissonFriendsTable;
+use Herisson\Model\WpHerissonLocalbackups;
+use Herisson\Model\WpHerissonLocalbackupsTable;
+use Herisson\Network;
 
 require_once __DIR__."/../Front.php";
 
@@ -35,6 +37,7 @@ require_once __DIR__."/../Front.php";
 class Index extends \Herisson\Controller\Front
 {
 
+
     /**
      * Constructor
      *
@@ -45,6 +48,7 @@ class Index extends \Herisson\Controller\Front
         $this->name = "index";
         parent::__construct();
     }
+
 
     /**
      * Action to handle the accepsBackups requests
@@ -57,7 +61,104 @@ class Index extends \Herisson\Controller\Front
      */
     function acceptsbackupsAction()
     {
+        $this->_checkBackup();
 
+        echo "1";
+
+    }
+
+
+    /**
+     * Action to handle the sendBackup requests
+     *
+     * Handled via HTTP Response code
+     *
+     * @return void
+     */
+    function sendbackupAction()
+    {
+
+        // TODO : Check ini_get(post_max_size)
+        $this->_checkBackup();
+        
+        $signature  = post('signature');
+        $url        = post('url');
+        $backupData = post('backupData');
+        //error_log($backupData);
+
+        $friend = WpHerissonFriendsTable::getOneWhere("url=?", array($url));
+        try {
+            if (Encryption::i()->publicDecrypt($signature, $friend->public_key) == $url) {
+
+                // Save the file in backup folder
+                $filename = hash('md5', $backupData).".data";
+                $fullfilename = HERISSON_BACKUP_DIR."/".$filename;
+                file_put_contents($fullfilename, $backupData);
+                
+                // Insert localbackup into
+                $backup            = new WpHerissonLocalbackups();
+                $backup->friend_id = $friend->id;
+                $backup->size      = strlen($backupData);
+                $backup->filename  = $fullfilename;
+                $backup->creation  = date('Y-m-d H:i:s');
+                $backup->save();
+                
+                Network::reply(200);
+                echo "1";
+                exit;
+            } else {
+                Network::reply(417, HERISSON_EXIT);
+            }
+        } catch (Encryption\Exception $e) {
+            Network::reply(417, HERISSON_EXIT);
+
+        }
+
+    }
+
+
+
+    /**
+     * Action to handle the sendBackup requests
+     *
+     * Handled via HTTP Response code
+     *
+     * @return void
+     */
+    function downloadbackupAction()
+    {
+
+        $signature  = post('signature');
+        $url        = post('url');
+
+        $friend = WpHerissonFriendsTable::getOneWhere("url=?", array($url));
+        try {
+            if (Encryption::i()->publicDecrypt($signature, $friend->public_key) == $url) {
+
+                $backup = WpHerissonLocalbackupsTable::getOneWhere('friend_id=?', array($friend->id));
+                Export::forceDownload($backup->filename, 'herisson.data');
+
+            } else {
+                Network::reply(417, HERISSON_EXIT);
+            }
+        } catch (Encryption\Exception $e) {
+            Network::reply(417, HERISSON_EXIT);
+
+        }
+
+    }
+
+
+    /**
+     * Checks wether this site accept backups, and if there is enough rooms left
+     *
+     * Handled via HTTP Response code
+     *
+     * @return void
+     */
+    private function _checkBackup()
+    {
+        
         if ($this->options['acceptBackups'] == 0) {
             Network::reply(403, HERISSON_EXIT);
             exit;
@@ -68,8 +169,6 @@ class Index extends \Herisson\Controller\Front
             Network::reply(406, HERISSON_EXIT);
             exit;
         }
-
-        echo "1";
 
     }
 
@@ -138,6 +237,7 @@ class Index extends \Herisson\Controller\Front
     }
     */
 
+
     /**
      * Action to display homepage of Herisson site
      *
@@ -170,6 +270,7 @@ class Index extends \Herisson\Controller\Front
 
     }
 
+
     /**
      * Action to display Herisson site informations
      *
@@ -187,6 +288,7 @@ class Index extends \Herisson\Controller\Front
         );
     }
 
+
     /**
      * Action to display Herisson site public key
      *
@@ -199,6 +301,7 @@ class Index extends \Herisson\Controller\Front
     {
         echo $this->options['publicKey'];
     }
+
 
     /**
      * Action to send all the bookmarks data to a known friend
@@ -221,6 +324,7 @@ class Index extends \Herisson\Controller\Front
             exit;
         }
     }
+
 
     /**
      * Action to handle validation of a pending request for friendship.
@@ -252,6 +356,7 @@ class Index extends \Herisson\Controller\Front
 
         }
     }
+
 
 }
 

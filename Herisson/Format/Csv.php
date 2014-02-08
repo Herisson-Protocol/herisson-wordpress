@@ -47,7 +47,6 @@ class Csv extends \Herisson\Format
     }
 
 
-
     /**
      * Export bookmarks and send it to the user
      *

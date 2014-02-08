@@ -66,6 +66,9 @@ class Maintenance extends \Herisson\Controller\Admin
             }
         }
 
+
+        // TODO Check for correct backups
+
         $bookmarks         = WpHerissonBookmarksTable::getAll();
         $this->view->total = sizeof($bookmarks);
         $favicon           = WpHerissonBookmarksTable::getWhere("LENGTH(favicon_image)=?   or favicon_image is null", array(0));

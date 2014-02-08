@@ -93,6 +93,8 @@ class Friend extends \Herisson\Controller\Admin
             $friend->delete();
         }
 
+        // TODO delete related backups and localbackups
+
         // Redirect to Friends list
         $this->indexAction();
         $this->setView('index');
@@ -137,6 +139,10 @@ class Friend extends \Herisson\Controller\Admin
                 } else {
                     Message::i()->addSucces(__("Friend has been added, but needs to be validated by its owner"));
                 }
+                // Return to list after creating new friend.
+                $this->indexAction();
+                $this->setView('index');
+                return;
             } else {
                 Message::i()->addSucces(__("Friend saved"));
             }

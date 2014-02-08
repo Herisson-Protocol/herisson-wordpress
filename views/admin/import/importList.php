@@ -19,7 +19,7 @@
             $i++;
      
             if ($bookmark['url']) { 
-                if (WpHerissonBookmarksTable::checkDuplicate($bookmark['url'])) { 
+                if (Herisson\Model\WpHerissonBookmarksTable::checkDuplicate($bookmark['url'])) { 
                     $status = array(
                         "message" => __("Duplicate", HERISSON_TD),
                         "title" => __('This bookmark already exists'),

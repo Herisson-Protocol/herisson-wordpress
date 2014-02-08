@@ -37,6 +37,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
     public $screenshotSmall  = "_screenshot_small.png";
     public $screenshotSmall0 = "_screenshot_small-0.png";
 
+
     /**
      * Setup method to initiate tables relations.
      *
@@ -52,6 +53,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
             'foreign' => 'bookmark_id'
         ));
     }
+
 
     /**
      * Create a new bookmark based on an url and options
@@ -136,6 +138,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
             $this->error = 1;
         }
     }
+
 
     /**
      * Start maintenance for this bookmark
@@ -370,7 +373,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         }
         if ($this->createDir()) {
             Shell::shellExec("wget",
-                "--no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories ".
+                "-q --no-parent --timestamping --convert-links --page-requisites --no-directories --no-host-directories ".
                 "-erobots=off -P $directory ".'"'.$this->url.'"');
             $this->calculateDirSize();
             $urlData = parse_url($this->url);
@@ -479,6 +482,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         return parent::toArray($deep, $prefixKey);
     }
 
+
     /**
      * Export the bookmark as an array with limited fields
      *
@@ -493,6 +497,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
             "tags"          => $this->getTagsArray(),
         );
     }
+
 
     /**
      * Export the bookmark as a json string with toArray() structure
@@ -524,6 +529,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         return $list;
     }
 
+
     /**
      * Add a list of tags to the bookmark
      *
@@ -542,6 +548,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         $all     = array_unique(array_merge($current, $new));
         $this->setTags($all);
     }
+
 
     /**
      * Set the given list of tags, this replaces all the bookmarks tags with these
@@ -618,6 +625,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         return get_option('siteurl')."/wp-content/plugins/herisson/data/".$this->getHashDir();
     }
 
+
     /**
      * Get the URL of the thumbnail screenshot of the bookmark
      *
@@ -627,6 +635,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
     {
         return $this->getDirUrl()."/".$this->getThumbName();
     }
+
 
     /**
      * Get the URL of the screenshot of the bookmark
@@ -638,6 +647,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         return $this->getDirUrl()."/".$this->screenshot;
     }
 
+
     /**
      * Get the dirname of bookmark files
      *
@@ -647,6 +657,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
     {
         return HERISSON_DATA_DIR.$this->getHashDir();
     }
+
 
     /**
      * Create the bookmark dir of the bookmark files
@@ -669,6 +680,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         return true;
     }
 
+
     /**
      * Get the hash directory name
      *
@@ -683,6 +695,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         $this->setHashFromUrl();
         return substr($this->hash, 0, 1)."/".substr($this->hash, 0, 2)."/".$this->hash;
     }
+
 
     /**
      * Get the thumbnail filename (in case the screenshot was to big and was splitted
@@ -700,6 +713,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         }
     }
 
+
     /**
      * Get full name of the thumbnail filename
      *
@@ -710,6 +724,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
         return $this->getDir()."/".$this->getThumbName();
     }
 
+
     /**
      * Get full name of the screenshot filename
      *
@@ -719,6 +734,7 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
     {
         return $this->getDir()."/".$this->screenshot;
     }
+
 
     /**
      * Check if a screenshot exists for the bookmark
@@ -753,8 +769,11 @@ class WpHerissonBookmarks extends \BaseWpHerissonBookmarks
 
     }
 
+
     /**
      * Save the bookmark into the database
+     *
+     * @param Doctrine_Connection $conn the connection object
      *
      * @return void
      */

@@ -43,6 +43,7 @@ class Export
         unlink($temp);
     }
 
+
     /**
      * Send a file to gzip and send to the browser
      *
@@ -59,6 +60,7 @@ class Export
             unlink($gzip);
         }
     }
+
 
     /**
      * Force a file to be downloaded by the browser (not displayed inline)
@@ -91,6 +93,7 @@ class Export
         }
         return;
     }
+
 
     /**
      * Gzip a file

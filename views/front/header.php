@@ -2,11 +2,10 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title><?=$title?></title>
-	<link rel="stylesheet" href="http://japon.taillandier.name/wp-content/themes/Japan/style.css" type="text/css" media="screen" />
+	<title><?php echo $title; ?></title>
+	<link rel="stylesheet" href="/wp-content/themes/Japan/style.css" type="text/css" media="screen" />
 	<link rel="shortcut icon" href="/favicon.ico" />
 	<meta name='robots' content='noindex,nofollow' />
-	<link rel='stylesheet' id='admin-bar-css'  href='http://japon.taillandier.name/wp-includes/css/admin-bar.css?ver=3.4.1' type='text/css' media='all' />
 	<style type="text/css" media="screen">
 	html { margin-top: 28px !important; }
 		* html body { margin-top: 28px !important; }
