@@ -12,7 +12,7 @@ Herisson for Wordpress is an open source implementation of the [Herisson protoco
 
 Description
 -----------
-The plugin Wordpress can be downloaded here :
+The plugin Wordpress can be downloaded here : #NEED LINK HERE#
 
 It allows you to handle
 * Bookmarks

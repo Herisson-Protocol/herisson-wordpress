@@ -1,7 +1,7 @@
 Front
 -----
 * Improve search with keyword/tags in the frontend, and factorize it with backoffice search
-* css
+* sass + webfonts
 
 Maintenance
 -----------
@@ -10,7 +10,7 @@ Maintenance
 
 Refactoring
 -----------
-* Refactor Network with nice try/catch Exceptions mechanism, and delete global
+* Refactor Network with nice try/catch Exceptions mechanism, and delete globals
 * Create a FriendCommunicator with Network and Friend object as parameter
 * Create a BookmarkData object
 * Refactor to avoid Message singletons
@@ -29,6 +29,7 @@ Bookmarks
 Divers
 ------
 * Translate in french
+* Translate in esperanto
 * Add package header
 
 Options
@@ -49,13 +50,17 @@ Documentation
 -------------
 * Generate PHPDoc
 
-Doctrine
---------
-* Update to Doctrine 2
+ORM
+---
+* Switch to ORM/Framework : Doctrine 2 / Propel / Silen
 
 Install
 -------
 * Set chmod 755 to directories: log, data, screenshots, Herisson/Models/generated/
 * Add a check for permissions on special folders
 * Check that WpHerisson* Models class are correctly named if DB prefix != wp_
+
+Security
+--------
+* Avoid XSS from locally backuped javascript
 
